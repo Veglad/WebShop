@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">WebShop</string>
     <string name="buy">Buy</string>
+    <string name="price_format">"%s $"</string>
 </resources>
