@@ -30,6 +30,7 @@ class ProductsRecyclerAdapter(private val productList: List<Product>)
         fun bindProduct(product: Product) {
             with(product) {
                 Picasso.get().load(imageUrl).into(view.productImage)
+                view.productImage.contentDescription = String.format(view.context.getString(R.string.image_content_text_format), name)
                 view.productTitle.text = name
                 view.productDescription.text = description
                 view.productPrice.text = String.format(view.context.getString(R.string.price_format), price)
