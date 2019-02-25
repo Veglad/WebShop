@@ -14,19 +14,67 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val productsRecyclerAdapter = ProductsRecyclerAdapter(fakeProducts())
-        with(productsRecyclerView){
+        val productsRecyclerAdapter = ProductsRecyclerAdapter(getProducts())
+        with(productsRecyclerView) {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
         }
     }
 
-    private fun fakeProducts() = mutableListOf<Product>().apply {
-        add(Product(0, "Iphone X", "Some description about IPhone", 1099.0, "https://i.allo.ua/media/catalog/product/cache/1/image/425x295/799896e5c6c37e11608b9f8e1d047d15/a/p/apple_iphone_x_64gb_mqac2_space_grey_4.jpg"))
-        add(Product(1, "Iphone XS", "Some description about IPhone XS", 1200.0, "https://hotline.ua/img/tx/178/178801049_s265.jpg"))
-        add(Product(0, "Iphone X", "Some description about IPhone", 1099.0, "https://i.allo.ua/media/catalog/product/cache/1/image/425x295/799896e5c6c37e11608b9f8e1d047d15/a/p/apple_iphone_x_64gb_mqac2_space_grey_4.jpg"))
-        add(Product(1, "Iphone XS", "Some description about IPhone XS", 1200.0, "https://hotline.ua/img/tx/178/178801049_s265.jpg"))
-        add(Product(0, "Iphone X", "Some description about IPhone", 1099.0, "https://i.allo.ua/media/catalog/product/cache/1/image/425x295/799896e5c6c37e11608b9f8e1d047d15/a/p/apple_iphone_x_64gb_mqac2_space_grey_4.jpg"))
-        add(Product(1, "Iphone XS", "Some description about IPhone XS", 1200.0, "https://hotline.ua/img/tx/178/178801049_s265.jpg"))
+    private fun getProducts() = mutableListOf<Product>().apply {
+        add(
+            Product(
+                0,
+                "Iphone X",
+                "Some description about IPhone",
+                1099.0,
+                "https://i.allo.ua/media/catalog/product/cache/1/image/425x295/799896e5c6c37e11608b9f8e1d047d15/a/p/apple_iphone_x_64gb_mqac2_space_grey_4.jpg"
+            )
+        )
+        add(
+            Product(
+                1,
+                "Iphone XS",
+                "Some description about IPhone XS",
+                1200.0,
+                "https://hotline.ua/img/tx/178/178801049_s265.jpg"
+            )
+        )
+        add(
+            Product(
+                0,
+                "Iphone X",
+                "Some description about IPhone",
+                1099.0,
+                "https://i.allo.ua/media/catalog/product/cache/1/image/425x295/799896e5c6c37e11608b9f8e1d047d15/a/p/apple_iphone_x_64gb_mqac2_space_grey_4.jpg"
+            )
+        )
+        add(
+            Product(
+                1,
+                "Iphone XS",
+                "Some description about IPhone XS",
+                1200.0,
+                "https://hotline.ua/img/tx/178/178801049_s265.jpg"
+            )
+        )
+        add(
+            Product(
+                0,
+                "Iphone X",
+                "Some description about IPhone",
+                1099.0,
+                "https://i.allo.ua/media/catalog/product/cache/1/image/425x295/799896e5c6c37e11608b9f8e1d047d15/a/p/apple_iphone_x_64gb_mqac2_space_grey_4.jpg"
+            )
+        )
+        add(
+            Product(
+                1,
+                "Iphone XS",
+                "Some description about IPhone XS",
+                1200.0,
+                "https://hotline.ua/img/tx/178/178801049_s265.jpg"
+            )
+        )
     }
 }
