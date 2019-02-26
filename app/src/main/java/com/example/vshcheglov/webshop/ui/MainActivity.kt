@@ -9,10 +9,13 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.data.NetworkService
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
+import com.example.vshcheglov.webshop.utils.isNetworkAvailable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_main_primary.*
+import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,13 +28,27 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        productsRecyclerAdapter = ProductsRecyclerAdapter(productList)
-        with(productsRecyclerView) {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = productsRecyclerAdapter
+        loadProductsIfInternetAvailable()
+    }
+
+    private fun loadProductsIfInternetAvailable() {
+        if (isNetworkAvailable(this)) {
+            activityMainPrimaryLayout.visibility = View.VISIBLE
+            activityMainErrorLayout.visibility = View.GONE
+            productsRecyclerAdapter = ProductsRecyclerAdapter(productList)
+            with(productsRecyclerView) {
+                layoutManager = LinearLayoutManager(this@MainActivity)
+                adapter = productsRecyclerAdapter
+            }
+            initSwipeRefresh()
+            fetchProducts()
+        } else {
+            activityMainErrorLayout.visibility = View.VISIBLE
+            activityMainPrimaryLayout.visibility = View.GONE
+            tryAgainButton.setOnClickListener {
+                loadProductsIfInternetAvailable()
+            }
         }
-        initSwipeRefresh()
-        fetchProducts()
     }
 
     private fun initSwipeRefresh() {
