@@ -10,6 +10,7 @@ import com.example.vshcheglov.webshop.data.NetworkService
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
-
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var productList: List<Product> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,26 +30,39 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
         }
+        initSwipeRefresh()
         fetchProducts()
     }
 
+    private fun initSwipeRefresh() {
+        productsSwipeRefreshLayout.setOnRefreshListener {
+            fetchProducts()
+        }
+    }
+
     private fun fetchProducts() {
-        loadingProgressBar.visibility = View.VISIBLE
-        val result = NetworkService.getAllDevices()
+        productsSwipeRefreshLayout.isRefreshing = true
+        val disposable = NetworkService.getAllDevices()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
                 override fun onSuccess(productList: List<Product>) {
                     productsRecyclerAdapter.productList = productList
                     productsRecyclerAdapter.notifyDataSetChanged()
-                    loadingProgressBar.visibility = View.GONE
+                    productsSwipeRefreshLayout.isRefreshing = false
                 }
 
                 override fun onError(e: Throwable) {
-                    Toast.makeText(this@MainActivity, "Error while getting data", Toast.LENGTH_SHORT)
-                    loadingProgressBar.visibility = View.GONE
+                    Toast.makeText(this@MainActivity, resources.getString(R.string.loading_products_error), Toast.LENGTH_SHORT).show()
+                    productsSwipeRefreshLayout.isRefreshing = false
                 }
 
             })
+        compositeDisposable.add(disposable)
+    }
+
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        super.onDestroy()
     }
 }
