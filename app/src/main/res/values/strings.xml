@@ -3,4 +3,9 @@
     <string name="buy">Buy</string>
     <string name="price_format">"%s $"</string>
     <string name="image_content_text_format">"%s image"</string>
+    <string name="loading_products_error">Products loading error</string>
+    <string name="no_internet_connection_warning">Check the internet connection and try again.</string>
+    <string name="try_again_button">Try again</string>
+    <string name="tittle_error_main_layout">Something went wrong</string>
+    <string name="description_error_main_layout">Check the Internet connection and try again.</string>
 </resources>

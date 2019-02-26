@@ -1,7 +1,5 @@
 package com.example.vshcheglov.webshop.domain
 
-import com.beust.klaxon.Json
-
 data class Product(
     var id: Int = -1,
     var name: String = "",
