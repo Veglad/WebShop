@@ -26,7 +26,10 @@ class ProductsRecyclerAdapter(productList: List<Product>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(productList[position]) {
-            Glide.with(holder.view.context).load(imageUrl).into(holder.view.productImage)
+            Glide.with(holder.view.context)
+                .load(imageUrl)
+                .error(R.drawable.no_image)
+                .into(holder.view.productImage)
             holder.view.productImage.contentDescription = String.format(
                 holder.view.context.getString(com.example.vshcheglov.webshop.R.string.image_content_text_format),
                 name
