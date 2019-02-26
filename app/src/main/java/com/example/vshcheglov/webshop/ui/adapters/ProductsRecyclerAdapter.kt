@@ -9,10 +9,8 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.product_recycler_item.view.*
 
-class ProductsRecyclerAdapter(productList: List<Product>) :
+class ProductsRecyclerAdapter(var productList: List<Product>) :
     RecyclerView.Adapter<ProductsRecyclerAdapter.ViewHolder>() {
-
-    var productList: List<Product> = productList
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)

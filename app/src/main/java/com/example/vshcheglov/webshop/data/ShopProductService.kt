@@ -3,7 +3,7 @@ package com.example.vshcheglov.webshop.data
 import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single
 
-interface DataSource {
+interface ShopProductService {
     fun getAllDevices(): Single<List<Product>>
 
     fun getDevice(id: Long): Single<Product>

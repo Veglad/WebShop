@@ -3,6 +3,7 @@ package com.example.vshcheglov.webshop.ui
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
@@ -21,8 +22,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
-    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
-    private var productList: List<Product> = mutableListOf()
+    private val compositeDisposable = CompositeDisposable()
+    private var productList = mutableListOf<Product>()
+
+    private var isActivityActive = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             activityMainErrorLayout.visibility = View.GONE
             productsRecyclerAdapter = ProductsRecyclerAdapter(productList)
             with(productsRecyclerView) {
-                layoutManager = LinearLayoutManager(this@MainActivity)
+                layoutManager =  LinearLayoutManager(this@MainActivity)
                 adapter = productsRecyclerAdapter
             }
             initSwipeRefresh()
@@ -64,18 +67,33 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
                 override fun onSuccess(productList: List<Product>) {
-                    productsRecyclerAdapter.productList = productList
-                    productsRecyclerAdapter.notifyDataSetChanged()
-                    productsSwipeRefreshLayout.isRefreshing = false
+                    if(isActivityActive) {
+                        productsRecyclerAdapter.productList = productList
+                        productsRecyclerAdapter.notifyDataSetChanged()
+                        productsSwipeRefreshLayout.isRefreshing = false
+                    }
                 }
 
                 override fun onError(e: Throwable) {
-                    Toast.makeText(this@MainActivity, resources.getString(R.string.loading_products_error), Toast.LENGTH_SHORT).show()
-                    productsSwipeRefreshLayout.isRefreshing = false
+                    if(isActivityActive) {
+                        Toast.makeText(this@MainActivity, resources.getString(R.string.loading_products_error), Toast.LENGTH_SHORT).show()
+                        productsSwipeRefreshLayout.isRefreshing = false
+                    }
                 }
 
             })
         compositeDisposable.add(disposable)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isActivityActive = false
+    }
+
+    override fun onResume() {
+        super.onResume()
+        isActivityActive = true
+        loadProductsIfInternetAvailable()
     }
 
     override fun onDestroy() {
