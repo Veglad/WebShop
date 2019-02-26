@@ -3,14 +3,13 @@ package com.example.vshcheglov.webshop.ui
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.data.NetworkService
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
-import com.example.vshcheglov.webshop.utils.isNetworkAvailable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -25,22 +24,23 @@ class MainActivity : AppCompatActivity() {
     private val compositeDisposable = CompositeDisposable()
     private var productList = mutableListOf<Product>()
 
-    private var isActivityActive = true
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
 
+    override fun onResume() {
+        super.onResume()
         loadProductsIfInternetAvailable()
     }
 
     private fun loadProductsIfInternetAvailable() {
-        if (isNetworkAvailable(this)) {
+        if (isNetworkAvailable()) {
             activityMainPrimaryLayout.visibility = View.VISIBLE
             activityMainErrorLayout.visibility = View.GONE
             productsRecyclerAdapter = ProductsRecyclerAdapter(productList)
             with(productsRecyclerView) {
-                layoutManager =  LinearLayoutManager(this@MainActivity)
+                layoutManager = LinearLayoutManager(this@MainActivity)
                 adapter = productsRecyclerAdapter
             }
             initSwipeRefresh()
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
                 override fun onSuccess(productList: List<Product>) {
-                    if(isActivityActive) {
+                    if (!isFinishing) {
                         productsRecyclerAdapter.productList = productList
                         productsRecyclerAdapter.notifyDataSetChanged()
                         productsSwipeRefreshLayout.isRefreshing = false
@@ -75,8 +75,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onError(e: Throwable) {
-                    if(isActivityActive) {
-                        Toast.makeText(this@MainActivity, resources.getString(R.string.loading_products_error), Toast.LENGTH_SHORT).show()
+                    if (!isFinishing) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            resources.getString(R.string.loading_products_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
                         productsSwipeRefreshLayout.isRefreshing = false
                     }
                 }
@@ -85,19 +89,9 @@ class MainActivity : AppCompatActivity() {
         compositeDisposable.add(disposable)
     }
 
-    override fun onPause() {
-        super.onPause()
-        isActivityActive = false
-    }
-
-    override fun onResume() {
-        super.onResume()
-        isActivityActive = true
-        loadProductsIfInternetAvailable()
-    }
-
     override fun onDestroy() {
         compositeDisposable.dispose()
         super.onDestroy()
     }
+
 }
