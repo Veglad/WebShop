@@ -10,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-object NetworkService : DataSource{
+object NetworkService : DataSource {
     private const val BASE_URL = """http://multiflexersshop.azurewebsites.net"""
 
     private var webShopApi: WebShopApi
@@ -27,7 +27,7 @@ object NetworkService : DataSource{
 
     override fun getAllDevices(): Single<List<Product>> = webShopApi.getAllDevices()
 
-    override fun getDevice(id: Long):  Single<Product>  = webShopApi.getDevice(id)
+    override fun getDevice(id: Long): Single<Product> = webShopApi.getDevice(id)
 
-    override fun getAllPromotionalDevices():  Single<List<Product>> = webShopApi.getAllPromotionalDevices()
+    override fun getAllPromotionalDevices(): Single<List<Product>> = webShopApi.getAllPromotionalDevices()
 }

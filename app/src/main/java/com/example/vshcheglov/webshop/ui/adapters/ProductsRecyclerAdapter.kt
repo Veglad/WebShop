@@ -27,10 +27,16 @@ class ProductsRecyclerAdapter(productList: List<Product>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(productList[position]) {
             Glide.with(holder.view.context).load(imageUrl).into(holder.view.productImage)
-            holder.view.productImage.contentDescription = String.format(holder.view.context.getString(com.example.vshcheglov.webshop.R.string.image_content_text_format), name)
+            holder.view.productImage.contentDescription = String.format(
+                holder.view.context.getString(com.example.vshcheglov.webshop.R.string.image_content_text_format),
+                name
+            )
             holder.view.productTitle.text = name
             holder.view.productDescription.text = description
-            holder.view.productPrice.text = String.format(holder.view.context.getString(com.example.vshcheglov.webshop.R.string.price_format), price)
+            holder.view.productPrice.text = String.format(
+                holder.view.context.getString(com.example.vshcheglov.webshop.R.string.price_format),
+                price
+            )
         }
     }
 
