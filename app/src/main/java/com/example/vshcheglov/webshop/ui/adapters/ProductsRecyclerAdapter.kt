@@ -37,6 +37,7 @@ class ProductsRecyclerAdapter(
     }
 
     private val viewPool = RecyclerView.RecycledViewPool()
+    private val linearSnapHelper = LinearSnapHelper()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
         TITLE_TYPE -> {
@@ -97,7 +98,7 @@ class ProductsRecyclerAdapter(
             layoutManager = horizontalManager
             adapter = promotionalRecyclerAdapter
             onFlingListener = null
-            LinearSnapHelper().attachToRecyclerView(this)
+            linearSnapHelper.attachToRecyclerView(this)
         }
     }
 
