@@ -14,7 +14,7 @@ class PromotionalRecyclerAdapter(var productList: List<Product>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.product_recycler_item, parent, false)
+            .inflate(R.layout.promotional_recycler_item, parent, false)
 
         return ViewHolder(view)
     }
@@ -33,7 +33,6 @@ class PromotionalRecyclerAdapter(var productList: List<Product>) :
                 name
             )
             holder.view.productTitle.text = name
-            holder.view.productDescription.text = description
             holder.view.productPrice.text = String.format(
                 holder.view.context.getString(com.example.vshcheglov.webshop.R.string.price_format),
                 price
