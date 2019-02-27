@@ -1,6 +1,8 @@
 package com.example.vshcheglov.webshop.ui.adapters
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
@@ -8,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.example.vshcheglov.webshop.ui.DetailActivity
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.product_recycler_item.view.*
@@ -33,7 +36,7 @@ class ProductsRecyclerAdapter(
     }
 
     private val promotionalRecyclerAdapter by lazy {
-        PromotionalRecyclerAdapter(promotionalProductList)
+        PromotionalRecyclerAdapter(context, promotionalProductList)
     }
 
     private val viewPool = RecyclerView.RecycledViewPool()
@@ -104,8 +107,8 @@ class ProductsRecyclerAdapter(
 
     private fun bindProductsList(holder: RecyclerView.ViewHolder, position: Int) {
         val view = (holder as ProductsViewHolder).view
-        val positionInProductList = position - NOT_PRODUCTS_IN_LIST_COUNT
-        with(productList[positionInProductList]) {
+        val product = getProductByPosition(position)
+        with(product) {
             Glide.with(view.context)
                 .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
@@ -121,7 +124,19 @@ class ProductsRecyclerAdapter(
                 price
             )
         }
+
+        holder.view.setOnClickListener {
+            val intent = Intent(context, DetailActivity::class.java).apply {
+                val bundle = Bundle().apply {
+                    putParcelable(DetailActivity.PRODUCT_KEY, product)
+                }
+                putExtras(bundle)
+            }
+            context.startActivity(intent)
+        }
     }
+
+    private fun getProductByPosition(position: Int): Product = productList[position - NOT_PRODUCTS_IN_LIST_COUNT]
 
     fun updatePromotionalList(promotionalProductList: List<Product>) {
         this.promotionalProductList = promotionalProductList

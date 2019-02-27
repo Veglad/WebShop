@@ -1,12 +1,12 @@
-package com.example.vshcheglov.webshop
+package com.example.vshcheglov.webshop.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.bumptech.glide.Glide
+import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.promotional_recycler_item.view.*
 
 class DetailActivity : AppCompatActivity() {
 
@@ -19,6 +19,10 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
 
         initWithExtras(intent.extras)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
+        }
     }
 
     private fun initWithExtras(bundle: Bundle?) {

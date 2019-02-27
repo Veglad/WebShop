@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
     private fun fetchProducts() {
         productsSwipeRefreshLayout.isRefreshing = true
         val diposable = Single.zip(NetworkService.getAllDevices(), NetworkService.getAllPromotionalDevices()
-            , BiFunction {products: List<Product>, promotionals: List<Product> ->
+            , BiFunction { products: List<Product>, promotionals: List<Product> ->
                 Pair(products, promotionals)
             })
             .subscribeOn(Schedulers.io())
@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
                         productsRecyclerAdapter.productList = pairProducts.first
                         productsRecyclerAdapter.notifyDataSetChanged()
 
-                        val promotionalList = pairProducts.second.filter { it.promotional > 0  }
+                        val promotionalList = pairProducts.second.filter { it.promotional > 0 }
                         productsRecyclerAdapter.updatePromotionalList(promotionalList)
                     }
                 }

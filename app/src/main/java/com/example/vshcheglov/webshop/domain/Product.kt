@@ -9,14 +9,13 @@ data class Product(
     var name: String = "Noname",
     var price: Double = 0.0,
     var imageThumbnailUrl: String = "",
-    var shortDescription: String = "no"
-) : Parcelable {
-    var longDescription = "no"
-    var imageUrl = ""
-    var inStok = 0
-    var isPopular = true
-    var bought = 0
-    var categoryId = 0
-    var promotional = 0
-    var addDate = ""
-}
+    var shortDescription: String = "no",
+    var longDescription : String = "no",
+    var imageUrl: String = "",
+    var inStok: Int = 0,
+    var isPopular: Boolean = true,
+    var bought: Int = 0,
+    var categoryId: Int = 0,
+    var promotional: Int = 0,
+    var addDate: String = ""
+) : Parcelable

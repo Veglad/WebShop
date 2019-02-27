@@ -2,7 +2,7 @@
     <string name="app_name">WebShop</string>
     <string name="buy">Buy</string>
     <string name="price_format">"%s $"</string>
-    <string name="sale_format">"%s %%"</string>
+    <string name="sale_format">"-%s %%"</string>
     <string name="image_content_text_format">"%s image"</string>
     <string name="loading_products_error">Products loading error</string>
     <string name="loading_promotional_products_error">Promotional products loading error</string>
@@ -12,5 +12,5 @@
     <string name="description_error_main_layout">Check the Internet connection and try again.</string>
     <string name="promotional_title">Promotional devices</string>
     <string name="devices_title">Devices</string>
-    <string name="number_of_purchases_format">Purchases:</string>
+    <string name="number_of_purchases_format">"Purchases: %s"</string>
 </resources>
