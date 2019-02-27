@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
-import kotlinx.android.synthetic.main.product_recycler_item.view.*
+import kotlinx.android.synthetic.main.promotional_recycler_item.view.*
 
 class PromotionalRecyclerAdapter(var productList: List<Product>) :
     RecyclerView.Adapter<PromotionalRecyclerAdapter.ViewHolder>() {
@@ -24,12 +24,16 @@ class PromotionalRecyclerAdapter(var productList: List<Product>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(productList[position]) {
             Glide.with(holder.view.context)
-                .load(imageUrl)
+                .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
                 .into(holder.view.productImage)
             holder.view.productImage.contentDescription = String.format(
                 holder.view.context.getString(com.example.vshcheglov.webshop.R.string.image_content_text_format),
                 name
+            )
+            holder.view.saleTextView.text = String.format(
+                holder.view.context.getString(com.example.vshcheglov.webshop.R.string.sale_format),
+                promotional
             )
             holder.view.productTitle.text = name
             holder.view.productPrice.text = String.format(

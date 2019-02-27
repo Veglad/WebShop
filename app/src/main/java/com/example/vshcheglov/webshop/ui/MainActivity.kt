@@ -13,6 +13,7 @@ import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main_primary.*
@@ -64,20 +65,68 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchProducts() {
         productsSwipeRefreshLayout.isRefreshing = true
-        val productsDisposable = requestProducts()
-        val promotionalDisposable = requestPromotionalProducts()
-        compositeDisposable.add(productsDisposable)
-        compositeDisposable.add(promotionalDisposable)
+        val diposable = Single.zip(NetworkService.getAllDevices(), NetworkService.getAllPromotionalDevices()
+            , BiFunction {products: List<Product>, promotionals: List<Product> ->
+                mutableListOf<Product>().apply {
+                    addAll(products)
+                    addAll(promotionals)
+                }
+            })
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
+                override fun onSuccess(allProducts: List<Product>) {
+                    if (!isFinishing) {
+                        productsSwipeRefreshLayout.isRefreshing = false
+
+                        val promotionalsListFirstIndex = getPromotionalListFirstIndex(allProducts)
+                        productsRecyclerAdapter.productList = allProducts.subList(0, promotionalsListFirstIndex)
+                        productsRecyclerAdapter.notifyDataSetChanged()
+
+                        val promotionalList = allProducts
+                            .subList(promotionalsListFirstIndex, allProducts.size)
+                            .filter { it.promotional > 0  }
+                        productsRecyclerAdapter.updatePromotionalList(promotionalList)
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    if (!isFinishing) {
+                        productsSwipeRefreshLayout.isRefreshing = false
+                        Toast.makeText(
+                            this@MainActivity,
+                            resources.getString(R.string.loading_products_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+            })
+
+
+        compositeDisposable.add(diposable)
     }
 
-    private fun requestPromotionalProducts(): DisposableSingleObserver<List<Product>> {
-        return NetworkService.getAllDevices()//TODO: Fix to promotional devices
+    private fun getPromotionalListFirstIndex(allProducts: List<Product>): Int {
+        var promotionalsListFirstIndex = 0
+        for (i in 1 until allProducts.size) {
+            if (allProducts[i].deviceId < allProducts[i - 1].deviceId) {
+                promotionalsListFirstIndex = i
+                break
+            }
+        }
+
+        return promotionalsListFirstIndex
+    }
+
+    private fun requestPromotionalProducts(promotionalSingle: Single<List<Product>>): DisposableSingleObserver<List<Product>> {
+        return promotionalSingle
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
                 override fun onSuccess(productList: List<Product>) {
                     if (!isFinishing) {
-                        productsRecyclerAdapter.updatePromotionalList(productList)
+                        productsRecyclerAdapter.updatePromotionalList(productList.filter { it.promotional > 0 })
                     }
                 }
 
@@ -88,15 +137,14 @@ class MainActivity : AppCompatActivity() {
                             resources.getString(R.string.loading_promotional_products_error),
                             Toast.LENGTH_SHORT
                         ).show()
-                        productsSwipeRefreshLayout.isRefreshing = false
                     }
                 }
 
             })
     }
 
-    private fun requestProducts(): DisposableSingleObserver<List<Product>> {
-        return NetworkService.getAllDevices()
+    private fun requestProducts(productSingle: Single<List<Product>>): DisposableSingleObserver<List<Product>> {
+        return productSingle
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
@@ -115,7 +163,6 @@ class MainActivity : AppCompatActivity() {
                             resources.getString(R.string.loading_products_error),
                             Toast.LENGTH_SHORT
                         ).show()
-                        productsSwipeRefreshLayout.isRefreshing = false
                     }
                 }
 
