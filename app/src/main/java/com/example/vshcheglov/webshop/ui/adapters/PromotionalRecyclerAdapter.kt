@@ -24,7 +24,7 @@ class PromotionalRecyclerAdapter(var productList: List<Product>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(productList[position]) {
             Glide.with(holder.view.context)
-                .load(imageUrl)
+                .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
                 .into(holder.view.productImage)
             holder.view.productImage.contentDescription = String.format(

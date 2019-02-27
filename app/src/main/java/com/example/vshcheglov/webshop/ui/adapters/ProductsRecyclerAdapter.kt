@@ -107,7 +107,7 @@ class ProductsRecyclerAdapter(
         val positionInProductList = position - NOT_PRODUCTS_IN_LIST_COUNT
         with(productList[positionInProductList]) {
             Glide.with(view.context)
-                .load(imageUrl)
+                .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
                 .into(view.productImage)
             view.productImage.contentDescription = String.format(
@@ -115,7 +115,7 @@ class ProductsRecyclerAdapter(
                 name
             )
             view.productTitle.text = name
-            view.productDescription.text = description
+            view.productDescription.text = shortDescription
             view.productPrice.text = String.format(
                 view.context.getString(R.string.price_format),
                 price
