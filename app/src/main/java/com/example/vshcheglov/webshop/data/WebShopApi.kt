@@ -11,8 +11,8 @@ interface WebShopApi {
     @GET("/api/DeviceData")
     fun getAllDevices(): Single<List<Product>>
 
-    @GET("/api/DeviceData/{id}")
-    fun getDevice(@Path("id") id: Long): Single<Product>
+    @GET("/api/DeviceData/{deviceId}")
+    fun getDevice(@Path("deviceId") id: Long): Single<Product>
 
     @GET("/api/DeviceData")
     fun getAllPromotionalDevices(): Single<List<Product>>

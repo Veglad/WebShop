@@ -65,18 +65,58 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchProducts() {
         productsSwipeRefreshLayout.isRefreshing = true
-        val productsSingle = NetworkService.getAllDevices()
-        val promotionalProductsSingle = NetworkService.getAllPromotionalDevices()
-        Single.zip(productsSingle, promotionalProductsSingle
-            , BiFunction { _: Any, _: Any ->
-                if (!isFinishing) {
-                    productsSwipeRefreshLayout.isRefreshing = false
+        val diposable = Single.zip(NetworkService.getAllDevices(), NetworkService.getAllPromotionalDevices()
+            , BiFunction {products: List<Product>, promotionals: List<Product> ->
+                mutableListOf<Product>().apply {
+                    addAll(products)
+                    addAll(promotionals)
                 }
             })
-        val productsDisposable = requestProducts(productsSingle)
-        val promotionalDisposable = requestPromotionalProducts(promotionalProductsSingle)
-        compositeDisposable.add(productsDisposable)
-        compositeDisposable.add(promotionalDisposable)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
+                override fun onSuccess(allProducts: List<Product>) {
+                    if (!isFinishing) {
+                        productsSwipeRefreshLayout.isRefreshing = false
+
+                        val promotionalsListFirstIndex = getPromotionalListFirstIndex(allProducts)
+                        productsRecyclerAdapter.productList = allProducts.subList(0, promotionalsListFirstIndex)
+                        productsRecyclerAdapter.notifyDataSetChanged()
+
+                        val promotionalList = allProducts
+                            .subList(promotionalsListFirstIndex, allProducts.size)
+                            .filter { it.promotional > 0  }
+                        productsRecyclerAdapter.updatePromotionalList(promotionalList)
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    if (!isFinishing) {
+                        productsSwipeRefreshLayout.isRefreshing = false
+                        Toast.makeText(
+                            this@MainActivity,
+                            resources.getString(R.string.loading_products_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+            })
+
+
+        compositeDisposable.add(diposable)
+    }
+
+    private fun getPromotionalListFirstIndex(allProducts: List<Product>): Int {
+        var promotionalsListFirstIndex = 0
+        for (i in 1 until allProducts.size) {
+            if (allProducts[i].deviceId < allProducts[i - 1].deviceId) {
+                promotionalsListFirstIndex = i
+                break
+            }
+        }
+
+        return promotionalsListFirstIndex
     }
 
     private fun requestPromotionalProducts(promotionalSingle: Single<List<Product>>): DisposableSingleObserver<List<Product>> {
