@@ -13,6 +13,7 @@ import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main_primary.*
@@ -64,14 +65,22 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchProducts() {
         productsSwipeRefreshLayout.isRefreshing = true
-        val productsDisposable = requestProducts()
-        val promotionalDisposable = requestPromotionalProducts()
+        val productsSingle = NetworkService.getAllDevices()
+        val promotionalsSingle = NetworkService.getAllDevices()//TODO: Fix to promotional devices
+        Single.zip(productsSingle, promotionalsSingle
+            , BiFunction { _: Any, _: Any ->
+                if (!isFinishing) {
+                    productsSwipeRefreshLayout.isRefreshing = false
+                }
+            })
+        val productsDisposable = requestProducts(productsSingle)
+        val promotionalDisposable = requestPromotionalProducts(promotionalsSingle)
         compositeDisposable.add(productsDisposable)
         compositeDisposable.add(promotionalDisposable)
     }
 
-    private fun requestPromotionalProducts(): DisposableSingleObserver<List<Product>> {
-        return NetworkService.getAllDevices()//TODO: Fix to promotional devices
+    private fun requestPromotionalProducts(promotionalSingle: Single<List<Product>>): DisposableSingleObserver<List<Product>> {
+        return promotionalSingle//TODO: Fix to promotional devices
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
@@ -88,15 +97,14 @@ class MainActivity : AppCompatActivity() {
                             resources.getString(R.string.loading_promotional_products_error),
                             Toast.LENGTH_SHORT
                         ).show()
-                        productsSwipeRefreshLayout.isRefreshing = false
                     }
                 }
 
             })
     }
 
-    private fun requestProducts(): DisposableSingleObserver<List<Product>> {
-        return NetworkService.getAllDevices()
+    private fun requestProducts(productSingle: Single<List<Product>>): DisposableSingleObserver<List<Product>> {
+        return productSingle
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
@@ -115,7 +123,6 @@ class MainActivity : AppCompatActivity() {
                             resources.getString(R.string.loading_products_error),
                             Toast.LENGTH_SHORT
                         ).show()
-                        productsSwipeRefreshLayout.isRefreshing = false
                     }
                 }
 
