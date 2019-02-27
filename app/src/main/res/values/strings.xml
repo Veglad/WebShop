@@ -12,4 +12,5 @@
     <string name="description_error_main_layout">Check the Internet connection and try again.</string>
     <string name="promotional_title">Promotional devices</string>
     <string name="devices_title">Devices</string>
+    <string name="number_of_purchases_format">Purchases:</string>
 </resources>
