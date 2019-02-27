@@ -67,25 +67,19 @@ class MainActivity : AppCompatActivity() {
         productsSwipeRefreshLayout.isRefreshing = true
         val diposable = Single.zip(NetworkService.getAllDevices(), NetworkService.getAllPromotionalDevices()
             , BiFunction {products: List<Product>, promotionals: List<Product> ->
-                mutableListOf<Product>().apply {
-                    addAll(products)
-                    addAll(promotionals)
-                }
+                Pair(products, promotionals)
             })
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
-                override fun onSuccess(allProducts: List<Product>) {
+            .subscribeWith(object : DisposableSingleObserver<Pair<List<Product>, List<Product>>>() {
+                override fun onSuccess(pairProducts: Pair<List<Product>, List<Product>>) {
                     if (!isFinishing) {
                         productsSwipeRefreshLayout.isRefreshing = false
 
-                        val promotionalsListFirstIndex = getPromotionalListFirstIndex(allProducts)
-                        productsRecyclerAdapter.productList = allProducts.subList(0, promotionalsListFirstIndex)
+                        productsRecyclerAdapter.productList = pairProducts.first
                         productsRecyclerAdapter.notifyDataSetChanged()
 
-                        val promotionalList = allProducts
-                            .subList(promotionalsListFirstIndex, allProducts.size)
-                            .filter { it.promotional > 0  }
+                        val promotionalList = pairProducts.second.filter { it.promotional > 0  }
                         productsRecyclerAdapter.updatePromotionalList(promotionalList)
                     }
                 }
@@ -105,18 +99,6 @@ class MainActivity : AppCompatActivity() {
 
 
         compositeDisposable.add(diposable)
-    }
-
-    private fun getPromotionalListFirstIndex(allProducts: List<Product>): Int {
-        var promotionalsListFirstIndex = 0
-        for (i in 1 until allProducts.size) {
-            if (allProducts[i].deviceId < allProducts[i - 1].deviceId) {
-                promotionalsListFirstIndex = i
-                break
-            }
-        }
-
-        return promotionalsListFirstIndex
     }
 
     private fun requestPromotionalProducts(promotionalSingle: Single<List<Product>>): DisposableSingleObserver<List<Product>> {
