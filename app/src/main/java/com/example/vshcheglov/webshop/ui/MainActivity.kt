@@ -10,6 +10,7 @@ import com.example.vshcheglov.webshop.data.NetworkService
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
     private val compositeDisposable = CompositeDisposable()
     private var productList = mutableListOf<Product>()
+    private var promotionalList = mutableListOf<Product>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         if (isNetworkAvailable()) {
             activityMainPrimaryLayout.visibility = View.VISIBLE
             activityMainErrorLayout.visibility = View.GONE
-            productsRecyclerAdapter = ProductsRecyclerAdapter(productList)
+            productsRecyclerAdapter = ProductsRecyclerAdapter(this, productList, promotionalList)
             with(productsRecyclerView) {
                 layoutManager = LinearLayoutManager(this@MainActivity)
                 adapter = productsRecyclerAdapter
@@ -62,7 +64,39 @@ class MainActivity : AppCompatActivity() {
 
     private fun fetchProducts() {
         productsSwipeRefreshLayout.isRefreshing = true
-        val disposable = NetworkService.getAllDevices()
+        val productsDisposable = requestProducts()
+        val promotionalDisposable = requestPromotionalProducts()
+        compositeDisposable.add(productsDisposable)
+        compositeDisposable.add(promotionalDisposable)
+    }
+
+    private fun requestPromotionalProducts(): DisposableSingleObserver<List<Product>> {
+        return NetworkService.getAllDevices()//TODO: Fix to promotional devices
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
+                override fun onSuccess(productList: List<Product>) {
+                    if (!isFinishing) {
+                        productsRecyclerAdapter.updatePromotionalList(productList)
+                    }
+                }
+
+                override fun onError(e: Throwable) {
+                    if (!isFinishing) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            resources.getString(R.string.loading_promotional_products_error),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        productsSwipeRefreshLayout.isRefreshing = false
+                    }
+                }
+
+            })
+    }
+
+    private fun requestProducts(): DisposableSingleObserver<List<Product>> {
+        return NetworkService.getAllDevices()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
@@ -86,7 +120,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
-        compositeDisposable.add(disposable)
     }
 
     override fun onDestroy() {
