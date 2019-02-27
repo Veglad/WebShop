@@ -15,9 +15,11 @@ class Product {
     var promotional = 0
     var addDate = ""
 
-    fun initProduct(id: Int, name: String, shortDescription: String, longDescription: String,
-                    price: Double, imageThumbnailUrl: String, imageUrl: String, inStok: Int,
-                    isPopular: Boolean, bought: Int, categoryId: Int, promotional: Int, addDate: String) {
+    fun initProduct(
+        id: Int, name: String, shortDescription: String, longDescription: String,
+        price: Double, imageThumbnailUrl: String, imageUrl: String, inStok: Int,
+        isPopular: Boolean, bought: Int, categoryId: Int, promotional: Int, addDate: String
+    ) {
         this.id = id
         this.name = name
         this.shortDescription = shortDescription

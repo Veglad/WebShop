@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
                 override fun onSuccess(productList: List<Product>) {
                     if (!isFinishing) {
-                        productsRecyclerAdapter.updatePromotionalList(productList)
+                        productsRecyclerAdapter.updatePromotionalList(productList.filter { it.promotional > 0 })
                     }
                 }
 
