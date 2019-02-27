@@ -66,21 +66,21 @@ class MainActivity : AppCompatActivity() {
     private fun fetchProducts() {
         productsSwipeRefreshLayout.isRefreshing = true
         val productsSingle = NetworkService.getAllDevices()
-        val promotionalsSingle = NetworkService.getAllDevices()//TODO: Fix to promotional devices
-        Single.zip(productsSingle, promotionalsSingle
+        val promotionalProductsSingle = NetworkService.getAllPromotionalDevices()
+        Single.zip(productsSingle, promotionalProductsSingle
             , BiFunction { _: Any, _: Any ->
                 if (!isFinishing) {
                     productsSwipeRefreshLayout.isRefreshing = false
                 }
             })
         val productsDisposable = requestProducts(productsSingle)
-        val promotionalDisposable = requestPromotionalProducts(promotionalsSingle)
+        val promotionalDisposable = requestPromotionalProducts(promotionalProductsSingle)
         compositeDisposable.add(productsDisposable)
         compositeDisposable.add(promotionalDisposable)
     }
 
     private fun requestPromotionalProducts(promotionalSingle: Single<List<Product>>): DisposableSingleObserver<List<Product>> {
-        return promotionalSingle//TODO: Fix to promotional devices
+        return promotionalSingle
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
