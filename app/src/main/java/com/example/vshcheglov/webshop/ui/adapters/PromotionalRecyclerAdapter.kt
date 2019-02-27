@@ -21,7 +21,6 @@ class PromotionalRecyclerAdapter(var productList: List<Product>) :
 
     override fun getItemCount() = productList.size
 
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(productList[position]) {
             Glide.with(holder.view.context)

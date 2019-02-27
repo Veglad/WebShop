@@ -10,6 +10,7 @@ import com.example.vshcheglov.webshop.data.NetworkService
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
@@ -39,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         if (isNetworkAvailable()) {
             activityMainPrimaryLayout.visibility = View.VISIBLE
             activityMainErrorLayout.visibility = View.GONE
-            productsRecyclerAdapter = ProductsRecyclerAdapter(productList, promotionalList, this)
+            productsRecyclerAdapter = ProductsRecyclerAdapter(this, productList, promotionalList)
             with(productsRecyclerView) {
                 layoutManager = LinearLayoutManager(this@MainActivity)
                 adapter = productsRecyclerAdapter
