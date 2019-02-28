@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun fetchProducts() {
-        productsSwipeRefreshLayout.isRefreshing = true
+        setLoadingDataUi()
+
         val diposable = Single.zip(NetworkService.getAllDevices(), NetworkService.getAllPromotionalDevices()
             , BiFunction { products: List<Product>, promotionals: List<Product> ->
                 Pair(products, promotionals)
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             .subscribeWith(object : DisposableSingleObserver<Pair<List<Product>, List<Product>>>() {
                 override fun onSuccess(pairProducts: Pair<List<Product>, List<Product>>) {
                     if (!isFinishing) {
-                        productsSwipeRefreshLayout.isRefreshing = false
+                        setLoadedDataUi()
 
                         productsRecyclerAdapter.productList = pairProducts.first
                         productsRecyclerAdapter.notifyDataSetChanged()
@@ -82,7 +83,8 @@ class MainActivity : AppCompatActivity() {
 
                 override fun onError(e: Throwable) {
                     if (!isFinishing) {
-                        productsSwipeRefreshLayout.isRefreshing = false
+                        setLoadedDataUi()
+
                         Toast.makeText(
                             this@MainActivity,
                             resources.getString(R.string.loading_products_error),
@@ -95,6 +97,16 @@ class MainActivity : AppCompatActivity() {
 
 
         compositeDisposable.add(diposable)
+    }
+
+    private fun setLoadedDataUi() {
+        productsSwipeRefreshLayout.isRefreshing = false
+        productsRecyclerView.visibility = View.VISIBLE
+    }
+
+    private fun setLoadingDataUi() {
+        productsSwipeRefreshLayout.isRefreshing = true
+        productsRecyclerView.visibility = View.INVISIBLE
     }
 
     private fun requestPromotionalProducts(promotionalSingle: Single<List<Product>>): DisposableSingleObserver<List<Product>> {
