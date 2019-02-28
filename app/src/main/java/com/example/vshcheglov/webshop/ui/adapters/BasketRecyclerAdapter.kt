@@ -28,6 +28,7 @@ class BasketRecyclerAdapter(private val context: Context, var productList: List<
     override fun getItemCount() = productList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val view = holder.view
         with(productList[position]) {
             Glide.with(view.context)
                 .load(imageThumbnailUrl)
