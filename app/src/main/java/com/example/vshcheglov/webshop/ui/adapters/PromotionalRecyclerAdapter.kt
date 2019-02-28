@@ -1,15 +1,22 @@
 package com.example.vshcheglov.webshop.ui.adapters
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.support.v4.util.Pair
 import com.bumptech.glide.Glide
+import com.example.vshcheglov.webshop.ui.DetailActivity
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.promotional_recycler_item.view.*
 
-class PromotionalRecyclerAdapter(var productList: List<Product>) :
+class PromotionalRecyclerAdapter(private val context: Context, var productList: List<Product>) :
     RecyclerView.Adapter<PromotionalRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,6 +47,39 @@ class PromotionalRecyclerAdapter(var productList: List<Product>) :
                 holder.view.context.getString(com.example.vshcheglov.webshop.R.string.price_format),
                 price
             )
+        }
+
+        holder.view.setOnClickListener {
+            val intent = Intent(context, DetailActivity::class.java).apply {
+                putExtras(Bundle().apply {
+                    putParcelable(DetailActivity.PRODUCT_KEY, productList[position])
+                })
+            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                val imagePair = Pair.create(
+                    holder.view.productImage as View,
+                    context.getString(R.string.shared_image_transition_name)
+                )
+                val titlePair = Pair.create(
+                    holder.view.productTitle as View,
+                    context.getString(R.string.shared_title_transition_name)
+                )
+                val salePair = Pair.create(
+                    holder.view.saleTextView as View,
+                    context.getString(R.string.shared_sale_transition_name)
+                )
+                val pricePair = Pair.create(
+                    holder.view.productPrice as View,
+                    context.getString(R.string.shared_price_transition_name)
+                )
+                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    context as Activity,
+                    imagePair, titlePair, salePair, pricePair
+                )
+                context.startActivity(intent, options.toBundle())
+            } else {
+                context.startActivity(intent)
+            }
         }
     }
 
