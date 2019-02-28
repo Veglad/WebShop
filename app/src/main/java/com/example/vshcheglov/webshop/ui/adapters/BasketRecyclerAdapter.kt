@@ -20,7 +20,7 @@ class BasketRecyclerAdapter(private val context: Context, var productList: List<
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.promotional_recycler_item, parent, false)
+            .inflate(R.layout.product_recycler_item, parent, false)
 
         return ViewHolder(view)
     }
