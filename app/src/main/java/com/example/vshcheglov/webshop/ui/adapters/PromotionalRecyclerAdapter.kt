@@ -51,10 +51,9 @@ class PromotionalRecyclerAdapter(private val context: Context, var productList: 
 
         holder.view.setOnClickListener {
             val intent = Intent(context, DetailActivity::class.java).apply {
-                Bundle().apply {
+                putExtras(Bundle().apply {
                     putParcelable(DetailActivity.PRODUCT_KEY, productList[position])
-                    putExtras(this)
-                }
+                })
             }
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 val imagePair = Pair.create(

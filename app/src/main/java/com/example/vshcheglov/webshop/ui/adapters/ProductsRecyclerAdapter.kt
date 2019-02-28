@@ -130,10 +130,10 @@ class ProductsRecyclerAdapter(
 
         holder.view.setOnClickListener {
             val intent = Intent(context, DetailActivity::class.java).apply {
-                Bundle().apply {
+                putExtras(Bundle().apply {
                     putParcelable(DetailActivity.PRODUCT_KEY, product)
-                    putExtras(this)
-                }
+
+                })
             }
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
