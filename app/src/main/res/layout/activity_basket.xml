@@ -27,7 +27,7 @@
                 tools:text="1500 $"
                 app:layout_constraintTop_toBottomOf="@+id/basketAmountTitleTextView"
                 app:layout_constraintStart_toStartOf="@+id/basketAmountTitleTextView"
-                style="@style/TextBasketStyle"
+                style="@style/TextHeaderStyle"
                 app:layout_constraintEnd_toEndOf="@+id/basketAmountTitleTextView"/>
         <TextView
                 android:text="@string/items_count"
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 tools:text="3"
                 app:layout_constraintTop_toBottomOf="@+id/basketItemsTitleTextView"
-                style="@style/TextBasketStyle" app:layout_constraintStart_toStartOf="@+id/basketItemsTitleTextView"
+                style="@style/TextHeaderStyle" app:layout_constraintStart_toStartOf="@+id/basketItemsTitleTextView"
                 app:layout_constraintEnd_toEndOf="@+id/basketItemsTitleTextView"/>
     </android.support.constraint.ConstraintLayout>
     <android.support.v7.widget.RecyclerView

@@ -13,14 +13,14 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
-import kotlinx.android.synthetic.main.product_recycler_item.view.*
+import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
 class BasketRecyclerAdapter(private val context: Context, var productList: List<Product>) :
     RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.product_recycler_item, parent, false)
+            .inflate(R.layout.basket_recycler_item, parent, false)
 
         return ViewHolder(view)
     }
@@ -28,19 +28,22 @@ class BasketRecyclerAdapter(private val context: Context, var productList: List<
     override fun getItemCount() = productList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val view = (holder as ViewHolder).view
         with(productList[position]) {
             Glide.with(view.context)
                 .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
-                .into(view.productImage)
-            view.productImage.contentDescription = String.format(
+                .into(view.basketImage)
+            view.basketImage.contentDescription = String.format(
                 view.context.getString(R.string.image_content_text_format),
                 name
             )
-            view.productTitle.text = name
-            view.productDescription.text = shortDescription
-            view.productPrice.text = String.format(
+            holder.view.basketSaleTextView.text = String.format(
+                holder.view.context.getString(com.example.vshcheglov.webshop.R.string.sale_format),
+                promotional
+            )
+            view.basketTitle.text = name
+            view.basketDescription.text = shortDescription
+            view.basketFinalPrice.text = String.format(
                 view.context.getString(R.string.price_format),
                 price
             )

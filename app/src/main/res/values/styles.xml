@@ -15,9 +15,17 @@
         <item name="android:layout_width">wrap_content</item>
     </style>
 
-    <style name="TextBasketStyle">
+    <style name="TextHeaderStyle">
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/primary_dark</item>
     </style>
 
+    <style name="TextBasketPrimaryStyle">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextBasketTitleStyle">
+        <item name="android:textSize">12sp</item>
+    </style>
 </resources>
