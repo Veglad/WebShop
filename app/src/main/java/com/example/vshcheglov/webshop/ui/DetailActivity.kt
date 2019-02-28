@@ -1,10 +1,12 @@
 package com.example.vshcheglov.webshop.ui
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
+import com.example.vshcheglov.webshop.BasketActivity
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
@@ -34,7 +36,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun getProduct(bundle: Bundle?) = bundle?.getParcelable<Product>(PRODUCT_KEY)
 
-    fun initUiViaProduct(product: Product) {
+    private fun initUiViaProduct(product: Product) {
         with(product) {
             Glide.with(this@DetailActivity)
                 .load(imageThumbnailUrl)
@@ -55,6 +57,8 @@ class DetailActivity : AppCompatActivity() {
     private fun initBuyButton(product: Product) {
         detailBuyFloatActionButton.setOnClickListener {
             Basket.productList.add(product)
+            val intent = Intent(this, BasketActivity::class.java)
+            startActivity(intent)
         }
     }
 
