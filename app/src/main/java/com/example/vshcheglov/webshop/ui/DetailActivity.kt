@@ -43,9 +43,10 @@ class DetailActivity : AppCompatActivity() {
                     .into(detailProductImageView)
                 detailProductTitle.text = it.name
                 detailPriceTextView.text = String.format(getString(R.string.price_format), it.price)
-                purchasesNumberTextView.text = String.format(getString(R.string.number_of_purchases_format), it.bought.toString())
+                purchasesNumberTextView.text =
+                    String.format(getString(R.string.number_of_purchases_format), it.bought.toString())
                 detailDescriptionTextView.text = it.longDescription
-                if(it.promotional > 0) {
+                if (it.promotional > 0) {
                     detailSaleTextView.visibility = View.VISIBLE
                     detailSaleTextView.text = String.format(getString(R.string.sale_format), it.promotional.toString())
                 }
