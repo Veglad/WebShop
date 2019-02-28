@@ -13,9 +13,19 @@ class BasketActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_basket)
 
+        initRecyclerView()
+        initOrderTextViews()
+    }
+
+    private fun initRecyclerView() {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
             adapter = BasketRecyclerAdapter(this@BasketActivity, Basket.productList)
         }
+    }
+
+    private fun initOrderTextViews() {
+        basketAmountTextView.text = String.format(getString(R.string.price_format), Basket.totalPrice)
+        basketItemsTextView.text = Basket.size.toString()
     }
 }
