@@ -13,4 +13,8 @@
     <string name="promotional_title">Promotional devices</string>
     <string name="devices_title">Devices</string>
     <string name="number_of_purchases_format">"Purchases: %s"</string>
+    <string name="shared_image_transition_name">shared_image_transition_name</string>
+    <string name="shared_price_transition_name">shared_price_transition_name</string>
+    <string name="shared_title_transition_name">shared_title_transition_name</string>
+    <string name="shared_sale_transition_name">shared_sale_transition_name</string>
 </resources>

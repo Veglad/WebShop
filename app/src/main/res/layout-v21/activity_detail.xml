@@ -21,7 +21,8 @@
             app:layout_constraintEnd_toStartOf="@+id/detailProductTitle"
             app:layout_constraintHorizontal_weight="3"
             app:layout_constraintDimensionRatio="1:1"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:transitionName="@string/shared_image_transition_name"/>
     <TextView
             android:id="@+id/detailSaleTextView"
             tools:text="-10%"
@@ -36,7 +37,9 @@
             android:paddingBottom="2dp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/detailProductImageView"
-            app:layout_constraintTop_toTopOf="@+id/detailProductImageView" android:layout_marginTop="16dp"/>
+            app:layout_constraintTop_toTopOf="@+id/detailProductImageView"
+            android:layout_marginTop="16dp"
+            android:transitionName="@string/shared_sale_transition_name"/>
     <TextView
             android:id="@+id/detailProductTitle"
             tools:text="IPhone X"
@@ -44,17 +47,22 @@
             android:textColor="@color/primary_dark"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/detailProductImageView"
-            app:layout_constraintHorizontal_weight="2"/>
+            app:layout_constraintHorizontal_weight="2"
+            android:transitionName="@string/shared_title_transition_name"/>
     <TextView
             android:id="@+id/detailPriceTextView"
             tools:text="1099 $"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/detailProductTitle"
-            app:layout_constraintStart_toStartOf="@+id/detailProductTitle" android:layout_marginTop="16dp"/>
+            app:layout_constraintStart_toStartOf="@+id/detailProductTitle"
+            android:layout_marginTop="16dp"
+            android:transitionName="@string/shared_price_transition_name"/>
     <TextView
             tools:text="Purchases: 41"
             android:layout_width="wrap_content"
@@ -66,26 +74,32 @@
     <View android:layout_width="match_parent"
           android:layout_height="1px"
           android:background="@color/primary_dark"
-          android:id="@+id/view" app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toBottomOf="@+id/detailProductImageView" android:layout_marginTop="8dp"/>
+          android:id="@+id/view"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toBottomOf="@+id/detailProductImageView"
+          android:layout_marginTop="8dp"/>
     <ScrollView android:layout_width="match_parent"
-                android:layout_height="0dp" android:layout_marginBottom="8dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:padding="8dp"
-                android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/view">
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/view">
         <TextView
                 tools:text="This is some really long text"
                 android:id="@+id/detailDescriptionTextView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
     </ScrollView>
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/detailBuyFloatActionButton"
             android:layout_width="56dp"
             android:layout_height="56dp"
             app:fabSize="normal"
-            android:src="@drawable/ic_shopping_basket_white_56dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="16dp" android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_shopping_basket_white_56dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
 </android.support.constraint.ConstraintLayout>

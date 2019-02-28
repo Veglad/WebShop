@@ -2,6 +2,7 @@ package com.example.vshcheglov.webshop.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.R
@@ -25,12 +26,19 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> onBackPressed()
+        }
+        return true
+    }
+
     private fun initWithExtras(bundle: Bundle?) {
         bundle?.let { extras ->
             val product = extras.getParcelable<Product>(PRODUCT_KEY)
             product?.let {
                 Glide.with(this@DetailActivity)
-                    .load(it.imageUrl)
+                    .load(it.imageThumbnailUrl)
                     .error(R.drawable.no_image)
                     .into(detailProductImageView)
                 detailProductTitle.text = it.name
