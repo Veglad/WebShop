@@ -19,9 +19,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.DetailActivity"
-                  android:parentActivityName=".ui.MainActivity"
-                  android:screenOrientation="portrait">
+        <activity
+                android:name=".ui.DetailActivity"
+                android:parentActivityName=".ui.MainActivity"
+                android:screenOrientation="portrait">
+        </activity>
+        <activity
+                android:name=".BasketActivity"
+                android:screenOrientation="portrait">
         </activity>
     </application>
 
