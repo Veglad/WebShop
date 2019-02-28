@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import com.example.vshcheglov.webshop.domain.Basket
-import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
+import com.example.vshcheglov.webshop.ui.adapters.BasketRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_basket.*
 
 class BasketActivity : AppCompatActivity() {
@@ -15,6 +15,7 @@ class BasketActivity : AppCompatActivity() {
 
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
+            adapter = BasketRecyclerAdapter(this@BasketActivity, Basket.productList)
         }
     }
 }
