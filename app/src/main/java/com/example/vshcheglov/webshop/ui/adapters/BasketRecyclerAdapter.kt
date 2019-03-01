@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.ui.adapters
 
 import android.content.Context
+import android.graphics.Paint
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -54,6 +55,13 @@ class BasketRecyclerAdapter(
                     )
                     it.visibility = View.VISIBLE
                 }
+                view.basketFinalPriceTitle.also {
+                    it.text = String.format(
+                        view.context.getString(R.string.price_format),
+                        price
+                    )
+                    it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                }
             }
             if (sameProductsNumber > 1) {
                 view.basketItemCountTitle.visibility = View.VISIBLE
@@ -67,7 +75,7 @@ class BasketRecyclerAdapter(
             view.basketDescription.text = shortDescription
             view.basketFinalPrice.text = String.format(
                 view.context.getString(R.string.price_format),
-                price
+                getPriceWithDiscount()
             )
         }
     }

@@ -18,4 +18,6 @@ data class Product(
     var categoryId: Int = 0,
     var promotional: Int = 0,
     var addDate: String = ""
-) : Parcelable
+) : Parcelable {
+    fun getPriceWithDiscount() = price * (1 - promotional.toDouble() / 100)
+}

@@ -22,7 +22,7 @@ object Basket {
             return if (productListMap.isEmpty()) {
                 0.0
             } else {
-                productListMap.flatMap { entry -> entry.value }.sumByDouble { it.price }
+                productListMap.flatMap { entry -> entry.value }.sumByDouble { it.getPriceWithDiscount() }
             }
         }
         private set
