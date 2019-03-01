@@ -1,9 +1,10 @@
-package com.example.vshcheglov.webshop
+package com.example.vshcheglov.webshop.ui
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
+import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.ui.adapters.BasketRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_basket.*
@@ -22,13 +23,13 @@ class BasketActivity : AppCompatActivity() {
     private fun initRecyclerView() {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
-            adapter = BasketRecyclerAdapter(this@BasketActivity, Basket.productList)
+            adapter = BasketRecyclerAdapter(this@BasketActivity, Basket.productListMap)
         }
     }
 
     private fun initOrderTextViews() {
         basketAmountTextView.text = String.format(getString(R.string.price_format), Basket.totalPrice)
-        basketItemsTextView.text = Basket.size.toString()
+        basketItemsTextView.text = Basket.productListSize.toString()
     }
 
     private fun initActionBar() {
@@ -40,7 +41,7 @@ class BasketActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            android.R.id.home -> onBackPressed()
+            android.R.id.home -> finish()
         }
         return true
     }

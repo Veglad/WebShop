@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
-import com.example.vshcheglov.webshop.BasketActivity
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
@@ -56,7 +55,7 @@ class DetailActivity : AppCompatActivity() {
 
     private fun initBuyButton(product: Product) {
         detailBuyFloatActionButton.setOnClickListener {
-            Basket.productList.add(product)
+            Basket.addProduct(product)
             val intent = Intent(this, BasketActivity::class.java)
             startActivity(intent)
         }

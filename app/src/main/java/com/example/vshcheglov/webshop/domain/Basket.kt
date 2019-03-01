@@ -1,20 +1,39 @@
 package com.example.vshcheglov.webshop.domain
 
 object Basket {
-    var productList = mutableListOf<Product>()
+
+    var productListMap = linkedMapOf<Int, MutableList<Product>>()
         private set
-    
-    var size = 0
-        get() = productList.size
+
+    val listOfProduct: List<Product>
+        get() {
+            return productListMap.flatMap { entry -> entry.value}
+        }
+    var mapSize = 0
+        get() = productListMap.size
+        private set
+
+    var productListSize = 0
+        get() = listOfProduct.size
         private set
 
     var totalPrice = 0.0
         get() {
-            return if (productList.isEmpty()) {
+            return if (productListMap.isEmpty()) {
                 0.0
             } else {
-                productList.sumByDouble { it.price }
+                productListMap.flatMap { entry -> entry.value }.sumByDouble { it.price }
             }
         }
         private set
+
+    fun addProduct(product: Product) {
+        if(productListMap.containsKey(product.deviceId)) {
+            productListMap[product.deviceId]?.add(product)
+        } else {
+            productListMap[product.deviceId] = mutableListOf(product)
+        }
+    }
+
+    fun deleteSameProducts(productId: Int) = productListMap.remove(productId)
 }

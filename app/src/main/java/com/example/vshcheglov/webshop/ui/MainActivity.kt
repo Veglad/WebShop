@@ -161,6 +161,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         compositeDisposable.dispose()
+        compositeDisposable.clear()
         super.onDestroy()
     }
 
