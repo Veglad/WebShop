@@ -45,6 +45,13 @@ object Basket {
         }
     }
 
+    fun addPair(pairProduct: Pair<Int, MutableList<Product>>, position: Int) {
+        val updatedListOfPairs = productListMap.toList()
+            .toMutableList()
+        updatedListOfPairs.add(position, pairProduct)
+        productListMap = LinkedHashMap(updatedListOfPairs.toMap())
+    }
+
     fun removeProductIfAble(product: Product) {
         val productList = productListMap[product.deviceId]
         if(productList != null && productList.size > 1) {
@@ -62,5 +69,10 @@ object Basket {
         return productList?.sumByDouble { it.priceWithDiscount } ?: 0.0
     }
 
-    fun removeSameProducts(productId: Int) = productListMap.remove(productId)
+    fun removeSameProducts(index: Int) {
+        val updatedListOfPairs = productListMap.toList()
+            .toMutableList()
+        updatedListOfPairs.removeAt(index)
+        productListMap = LinkedHashMap(updatedListOfPairs.toMap())
+    }
 }

@@ -23,4 +23,7 @@
     <string name="number">Number</string>
     <string name="saving">Saving</string>
     <string name="total_price">Total price</string>
+    <string name="delete_uppercase">DELETE</string>
+    <string name="removed_item_snackbar_format">%s removed from basket.</string>
+    <string name="undo_uppercase">UNDO</string>
 </resources>

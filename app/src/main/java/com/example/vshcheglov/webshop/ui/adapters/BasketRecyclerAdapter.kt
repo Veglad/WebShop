@@ -60,8 +60,10 @@ class BasketRecyclerAdapter(
 
             bindSaleTitle(view, product)
             initClickListeners(view, product, productList, Basket)
-            bindPrices(view, product, Basket.getTotalProductPrice(product.deviceId),
-                Basket.getTotalDiscountProductPrice(product.deviceId))
+            bindPrices(
+                view, product, Basket.getTotalProductPrice(product.deviceId),
+                Basket.getTotalDiscountProductPrice(product.deviceId)
+            )
         }
     }
 
@@ -70,16 +72,20 @@ class BasketRecyclerAdapter(
             basket.addProduct(product)
             onProductsNumberChangeListener?.invoke()
             view.basketItemCountTextView.text = productList.size.toString()
-            bindPrices(view, product, basket.getTotalProductPrice(product.deviceId),
-                basket.getTotalDiscountProductPrice(product.deviceId))
+            bindPrices(
+                view, product, basket.getTotalProductPrice(product.deviceId),
+                basket.getTotalDiscountProductPrice(product.deviceId)
+            )
 
         }
         view.removeImageButton.setOnClickListener {
             basket.removeProductIfAble(product)
             onProductsNumberChangeListener?.invoke()
             view.basketItemCountTextView.text = productList.size.toString()
-            bindPrices(view, product, basket.getTotalProductPrice(product.deviceId),
-                basket.getTotalDiscountProductPrice(product.deviceId))
+            bindPrices(
+                view, product, basket.getTotalProductPrice(product.deviceId),
+                basket.getTotalDiscountProductPrice(product.deviceId)
+            )
         }
     }
 
@@ -94,8 +100,10 @@ class BasketRecyclerAdapter(
         }
     }
 
-    private fun bindPrices(view: View, product: Product, totalPrice: Double,
-                           totalDiscountPrice: Double) {
+    private fun bindPrices(
+        view: View, product: Product, totalPrice: Double,
+        totalDiscountPrice: Double
+    ) {
         if (product.promotional > 0) {
             view.basketProductPriceTitle.also {
                 it.text = String.format(view.context.getString(R.string.price_format), product.price)
@@ -111,6 +119,16 @@ class BasketRecyclerAdapter(
             String.format(view.context.getString(R.string.price_format), product.priceWithDiscount)
         view.basketTotalPrice.text =
             String.format(view.context.getString(R.string.price_format), totalDiscountPrice)
+    }
+
+    fun removeItem(position: Int) {
+        Basket.removeSameProducts(position)
+        notifyItemRemoved(position)
+    }
+
+    fun restoreItem(pairProduct: Pair<Int, MutableList<Product>>, position: Int) {
+        Basket.addPair(pairProduct, position)
+        notifyItemInserted(position)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
