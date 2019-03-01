@@ -16,20 +16,24 @@ class BasketActivity : AppCompatActivity() {
         setContentView(R.layout.activity_basket)
 
         initRecyclerView()
-        initOrderTextViews()
+        initOrderTextViews(Basket.totalPrice, Basket.productListSize.toString())
         initActionBar()
     }
 
     private fun initRecyclerView() {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
-            adapter = BasketRecyclerAdapter(this@BasketActivity, Basket.productListMap)
+            adapter = BasketRecyclerAdapter(this@BasketActivity).also {
+                it.onProductsNumberChangeListener = {
+                    initOrderTextViews(Basket.totalPrice, Basket.productListSize.toString())
+                }
+            }
         }
     }
 
-    private fun initOrderTextViews() {
-        basketAmountTextView.text = String.format(getString(R.string.price_format), Basket.totalPrice)
-        basketItemsTextView.text = Basket.productListSize.toString()
+    private fun initOrderTextViews(totalPrice: Double, productListSize: String) {
+        basketAmountTextView.text = String.format(getString(R.string.price_format), totalPrice)
+        basketItemsTextView.text = productListSize
     }
 
     private fun initActionBar() {

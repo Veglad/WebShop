@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/constraintLayout">
         <TextView
-                android:text="@string/total_price"
+                android:text="@string/order_price"
                 android:id="@+id/basketAmountTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

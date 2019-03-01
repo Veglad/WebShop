@@ -35,5 +35,12 @@ object Basket {
         }
     }
 
-    fun deleteSameProducts(productId: Int) = productListMap.remove(productId)
+    fun removeProductIfAble(product: Product) {
+        val productList = productListMap[product.deviceId]
+        if(productList != null && productList.size > 1) {
+            productList.remove(product)
+        }
+    }
+
+    fun removeSameProducts(productId: Int) = productListMap.remove(productId)
 }
