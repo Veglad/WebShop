@@ -53,44 +53,64 @@ class BasketRecyclerAdapter(
                 view.context.getString(R.string.image_content_text_format),
                 name
             )
-            if (promotional > 0) {
-                view.basketSaleTextView.also {
-                    it.text = String.format(
-                        view.context.getString(R.string.sale_format),
-                        promotional
-                    )
-                    it.visibility = View.VISIBLE
-                }
-            }
+
             view.basketItemCountTextView.text = sameProductsNumber.toString()
-            view.addImageButton.setOnClickListener {
-                Basket.addProduct(product)
-                onProductsNumberChangeListener?.invoke()
-                view.basketItemCountTextView.text = productList.size.toString()
-
-            }
-            view.removeImageButton.setOnClickListener {
-                Basket.removeProductIfAble(product)
-                onProductsNumberChangeListener?.invoke()
-                view.basketItemCountTextView.text = productList.size.toString()
-            }
-
             view.basketTitle.text = name
             view.basketDescription.text = shortDescription
 
-            updatePricesWithProduct(view, product)
+            bindSaleTitle(view, product)
+            initClickListeners(view, product, productList, Basket)
+            bindPrices(view, product, Basket.getTotalProductPrice(product.deviceId),
+                Basket.getTotalDiscountProductPrice(product.deviceId))
         }
     }
 
-    private fun updatePricesWithProduct(view: View, product: Product) {
+    private fun initClickListeners(view: View, product: Product, productList: MutableList<Product>, basket: Basket) {
+        view.addImageButton.setOnClickListener {
+            basket.addProduct(product)
+            onProductsNumberChangeListener?.invoke()
+            view.basketItemCountTextView.text = productList.size.toString()
+            bindPrices(view, product, basket.getTotalProductPrice(product.deviceId),
+                basket.getTotalDiscountProductPrice(product.deviceId))
+
+        }
+        view.removeImageButton.setOnClickListener {
+            basket.removeProductIfAble(product)
+            onProductsNumberChangeListener?.invoke()
+            view.basketItemCountTextView.text = productList.size.toString()
+            bindPrices(view, product, basket.getTotalProductPrice(product.deviceId),
+                basket.getTotalDiscountProductPrice(product.deviceId))
+        }
+    }
+
+    private fun bindSaleTitle(view: View, product: Product) {
         if (product.promotional > 0) {
-            view.basketFinalPriceTitle.also {
+            view.basketSaleTextView.text = String.format(
+                view.context.getString(R.string.sale_format),
+                product.promotional
+            )
+        } else {
+            view.basketSaleTextView.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun bindPrices(view: View, product: Product, totalPrice: Double,
+                           totalDiscountPrice: Double) {
+        if (product.promotional > 0) {
+            view.basketProductPriceTitle.also {
                 it.text = String.format(view.context.getString(R.string.price_format), product.price)
                 it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
+            view.basketTotalPriceTitle.also {
+                it.text = String.format(view.context.getString(R.string.price_format), totalPrice)
+                it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            }
         }
-        view.basketFinalPrice.text =
-            String.format(view.context.getString(R.string.price_format), product.getPriceWithDiscount())
+
+        view.basketPriceTextView.text =
+            String.format(view.context.getString(R.string.price_format), product.priceWithDiscount)
+        view.basketTotalPrice.text =
+            String.format(view.context.getString(R.string.price_format), totalDiscountPrice)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)

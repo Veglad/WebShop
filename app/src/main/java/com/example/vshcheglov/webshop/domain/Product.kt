@@ -19,5 +19,6 @@ data class Product(
     var promotional: Int = 0,
     var addDate: String = ""
 ) : Parcelable {
-    fun getPriceWithDiscount() = price * (1 - promotional.toDouble() / 100)
+    val priceWithDiscount
+        get() = price * (1 - promotional.toDouble() / 100)
 }

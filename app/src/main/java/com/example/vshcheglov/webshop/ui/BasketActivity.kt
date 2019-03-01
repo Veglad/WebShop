@@ -16,7 +16,7 @@ class BasketActivity : AppCompatActivity() {
         setContentView(R.layout.activity_basket)
 
         initRecyclerView()
-        initOrderTextViews(Basket.totalPrice, Basket.productListSize.toString())
+        initOrderTextViews(Basket.totalPriceWithDiscount, Basket.productListSize.toString())
         initActionBar()
     }
 
@@ -25,7 +25,7 @@ class BasketActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@BasketActivity)
             adapter = BasketRecyclerAdapter(this@BasketActivity).also {
                 it.onProductsNumberChangeListener = {
-                    initOrderTextViews(Basket.totalPrice, Basket.productListSize.toString())
+                    initOrderTextViews(Basket.totalPriceWithDiscount, Basket.productListSize.toString())
                 }
             }
         }

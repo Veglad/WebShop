@@ -14,6 +14,26 @@
             android:layout_height="wrap_content"
             android:padding="8dp">
 
+        <TextView
+                android:text="@string/total_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/basketTotalPriceTitle"
+                style="@style/TextBasketTitleStyle"
+                app:layout_constraintBottom_toTopOf="@+id/basketTotalPrice"
+                app:layout_constraintEnd_toEndOf="@+id/basketTotalPrice"
+                app:layout_constraintStart_toStartOf="@+id/basketTotalPrice"/>
+        <TextView
+                android:id="@+id/basketTotalPrice"
+                tools:text="1099 $"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/TextBasketPrimaryStyle"
+                app:layout_constraintStart_toEndOf="@+id/basketPriceTextView"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
         <ImageView
                 android:id="@+id/basketImage"
                 android:layout_width="100dp"
@@ -21,8 +41,8 @@
                 android:scaleType="centerInside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toTopOf="@+id/removeImageButton"
+                android:layout_marginBottom="8dp"/>
 
         <TextView
                 android:id="@+id/basketTitle"
@@ -42,7 +62,7 @@
 
                 app:layout_constraintTop_toBottomOf="@+id/basketTitle"
                 app:layout_constraintStart_toStartOf="@+id/basketTitle" android:layout_marginTop="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/basketFinalPriceTitle"
+                app:layout_constraintBottom_toTopOf="@+id/basketProductPriceTitle"
                 android:layout_marginBottom="8dp" app:layout_constraintEnd_toEndOf="parent"
         />
 
@@ -59,44 +79,48 @@
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp"
                 android:layout_marginTop="8dp"
-                android:visibility="invisible"
                 app:layout_constraintTop_toTopOf="@+id/basketImage"
                 app:layout_constraintEnd_toEndOf="@+id/basketImage"/>
         <TextView
-                android:text="@string/basket_final_price"
+                android:text="@string/basket_product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/basketFinalPriceTitle"
-                app:layout_constraintBottom_toTopOf="@+id/basketFinalPrice"
-                app:layout_constraintEnd_toEndOf="parent"
-                style="@style/TextBasketTitleStyle"/>
+                android:id="@+id/basketProductPriceTitle"
+                app:layout_constraintBottom_toTopOf="@+id/basketPriceTextView"
+                style="@style/TextBasketTitleStyle" app:layout_constraintStart_toStartOf="@+id/basketPriceTextView"
+                app:layout_constraintEnd_toEndOf="@+id/basketPriceTextView"/>
 
         <TextView
-                android:id="@+id/basketFinalPrice"
+                android:id="@+id/basketPriceTextView"
                 tools:text="1099 $"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
                 style="@style/TextBasketPrimaryStyle"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintStart_toEndOf="@+id/addImageButton"
+                android:layout_marginStart="16dp"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/basketTotalPrice"/>
         <ImageButton
                 android:id="@+id/removeImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_remove_white_24dp"
                 android:background="@drawable/button_primary_drawable"
-                app:layout_constraintStart_toEndOf="@+id/basketImage" android:layout_marginStart="8dp"
                 app:layout_constraintTop_toTopOf="@+id/basketItemCountTextView"
-                app:layout_constraintBottom_toBottomOf="@+id/basketItemCountTextView"/>
+                app:layout_constraintBottom_toBottomOf="@+id/basketItemCountTextView"
+                app:layout_constraintStart_toStartOf="@+id/basketImage" android:layout_marginStart="8dp"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintEnd_toStartOf="@+id/basketItemCountTextView"/>
         <TextView
                 android:id="@+id/basketItemCountTextView"
                 tools:text="3"
                 android:gravity="center"
-                android:layout_width="30dp"
+                android:layout_width="24dp"
                 android:layout_height="wrap_content"
                 style="@style/TextBasketPrimaryStyle"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/removeImageButton" android:layout_marginStart="8dp"/>
+                app:layout_constraintStart_toEndOf="@+id/removeImageButton" android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/addImageButton" app:layout_constraintHorizontal_bias="0.5"/>
 
         <ImageButton
                 android:id="@+id/addImageButton"
@@ -105,6 +129,7 @@
                 android:src="@drawable/ic_add_white_24dp"
                 android:background="@drawable/button_primary_drawable"
                 app:layout_constraintStart_toEndOf="@+id/basketItemCountTextView" android:layout_marginStart="8dp"
-                app:layout_constraintTop_toTopOf="@+id/removeImageButton"/>
+                app:layout_constraintTop_toTopOf="@+id/removeImageButton"
+                app:layout_constraintEnd_toEndOf="@+id/basketImage" android:layout_marginEnd="8dp"/>
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

@@ -19,6 +19,8 @@
     <string name="shared_sale_transition_name">shared_sale_transition_name</string>
     <string name="order_price">Order price</string>
     <string name="items_count">Items</string>
-    <string name="basket_final_price">Final price</string>
+    <string name="basket_product_price">Price</string>
     <string name="number">Number</string>
+    <string name="saving">Saving</string>
+    <string name="total_price">Total price</string>
 </resources>

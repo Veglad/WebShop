@@ -22,7 +22,17 @@ object Basket {
             return if (productListMap.isEmpty()) {
                 0.0
             } else {
-                productListMap.flatMap { entry -> entry.value }.sumByDouble { it.getPriceWithDiscount() }
+                productListMap.flatMap { entry -> entry.value }.sumByDouble { it.price }
+            }
+        }
+        private set
+
+    var totalPriceWithDiscount = 0.0
+        get() {
+            return if (productListMap.isEmpty()) {
+                0.0
+            } else {
+                productListMap.flatMap { entry -> entry.value }.sumByDouble { it.priceWithDiscount }
             }
         }
         private set
@@ -40,6 +50,16 @@ object Basket {
         if(productList != null && productList.size > 1) {
             productList.remove(product)
         }
+    }
+
+    fun getTotalProductPrice(productId: Int): Double {
+        val productList = productListMap[productId]
+        return productList?.sumByDouble { it.price } ?: 0.0
+    }
+
+    fun getTotalDiscountProductPrice(productId: Int): Double {
+        val productList = productListMap[productId]
+        return productList?.sumByDouble { it.priceWithDiscount } ?: 0.0
     }
 
     fun removeSameProducts(productId: Int) = productListMap.remove(productId)
