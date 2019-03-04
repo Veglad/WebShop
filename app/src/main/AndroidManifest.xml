@@ -28,6 +28,8 @@
                 android:name=".ui.BasketActivity"
                 android:screenOrientation="portrait">
         </activity>
+        <activity android:name=".ui.OrderActivity">
+        </activity>
     </application>
 
 </manifest>

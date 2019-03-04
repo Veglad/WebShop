@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.ui
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -29,6 +30,14 @@ class BasketActivity : AppCompatActivity(), BasketRecyclerItemTouchHelper.Basket
         initRecyclerView()
         initOrderTextViews(totalPriceWithDiscount, productListSize.toString())
         initActionBar()
+        initOrderButton()
+    }
+
+    private fun initOrderButton() {
+        basketMakeOrderButton.setOnClickListener {
+            val intent = Intent(this, OrderActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initRecyclerView() {

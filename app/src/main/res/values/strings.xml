@@ -17,13 +17,23 @@
     <string name="shared_price_transition_name">shared_price_transition_name</string>
     <string name="shared_title_transition_name">shared_title_transition_name</string>
     <string name="shared_sale_transition_name">shared_sale_transition_name</string>
-    <string name="order_price">Order price</string>
     <string name="items_count">Items</string>
     <string name="basket_product_price">Price</string>
-    <string name="number">Number</string>
     <string name="saving">Saving</string>
     <string name="total_price">Total price</string>
     <string name="delete_uppercase">DELETE</string>
     <string name="removed_item_snackbar_format">%s removed from basket.</string>
     <string name="undo_uppercase">UNDO</string>
+    <string name="order">order</string>
+    <string name="cv">CV</string>
+    <string name="year">YY</string>
+    <string name="month_year_separator">/</string>
+    <string name="month">MM</string>
+    <string name="number">Number</string>
+    <string name="last_name">Last name</string>
+    <string name="name">Name</string>
+    <string name="order_price">Order price: </string>
+    <string name="ordering">Ordering</string>
+    <string name="card_number">Card number</string>
+    <string name="order_completed">Order completed!</string>
 </resources>
