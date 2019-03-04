@@ -12,10 +12,7 @@ import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
-class BasketRecyclerAdapter(
-    private val context: Context
-) :
-    RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
+class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
 
     var onProductsNumberChangeListener: (() -> Unit)? = null
 
@@ -38,12 +35,8 @@ class BasketRecyclerAdapter(
         }
     }
 
-    private fun bindWithProduct(
-        product: Product,
-        view: View,
-        sameProductsNumber: Int,
-        productList: MutableList<Product>
-    ) {
+    private fun bindWithProduct(product: Product, view: View,
+                                sameProductsNumber: Int, productList: MutableList<Product>) {
         with(product) {
             Glide.with(view.context)
                 .load(imageThumbnailUrl)

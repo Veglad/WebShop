@@ -11,10 +11,8 @@ class BasketRecyclerItemTouchHelper(
     swipeDirs: Int,
     private val listener: BasketRecyclerItemTouchHelperListener
 ) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
-    override fun onMove(
-        recyclerView: RecyclerView, holder: RecyclerView.ViewHolder,
-        targetHolder: RecyclerView.ViewHolder
-    ) = true
+    override fun onMove(recyclerView: RecyclerView, holder: RecyclerView.ViewHolder,
+                        targetHolder: RecyclerView.ViewHolder) = true
 
     override fun onSwiped(holder: RecyclerView.ViewHolder, direction: Int) {
         listener.onSwiped(holder, direction, holder.adapterPosition)
@@ -37,10 +35,8 @@ class BasketRecyclerItemTouchHelper(
         isCurrentlyActive: Boolean
     ) {
         val foregroundView = (viewHolder as BasketRecyclerAdapter.ViewHolder).view.basketItemViewForeground
-        ItemTouchHelper.Callback.getDefaultUIUtil().onDrawOver(
-            c, recyclerView, foregroundView, dX, dY,
-            actionState, isCurrentlyActive
-        )
+        ItemTouchHelper.Callback.getDefaultUIUtil().onDrawOver(c, recyclerView, foregroundView, dX, dY,
+            actionState, isCurrentlyActive)
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
@@ -58,10 +54,8 @@ class BasketRecyclerItemTouchHelper(
         isCurrentlyActive: Boolean
     ) {
         val foregroundView = (viewHolder as BasketRecyclerAdapter.ViewHolder).view.basketItemViewForeground
-        ItemTouchHelper.Callback.getDefaultUIUtil().onDraw(
-            c, recyclerView, foregroundView, dX, dY,
-            actionState, isCurrentlyActive
-        )
+        ItemTouchHelper.Callback.getDefaultUIUtil().onDraw(c, recyclerView, foregroundView, dX, dY,
+            actionState, isCurrentlyActive)
     }
 
     override fun convertToAbsoluteDirection(flags: Int, layoutDirection: Int): Int {

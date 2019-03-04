@@ -18,10 +18,7 @@ class OrderActivity : AppCompatActivity() {
 
         orderTotalPrice.text = String.format(getString(R.string.price_format), Basket.totalPriceWithDiscount)
         buttonOrder.setOnClickListener {
-            Snackbar.make(
-                orderConstraintLayout, getString(R.string.order_completed),
-                Snackbar.LENGTH_SHORT
-            ).show()
+            Snackbar.make(orderConstraintLayout, getString(R.string.order_completed), Snackbar.LENGTH_SHORT).show()
         }
 
         initActionBar()
@@ -37,11 +34,10 @@ class OrderActivity : AppCompatActivity() {
         orderActionBar.navigationIcon?.setColorFilter(
             ContextCompat.getColor(this, R.color.white),
             PorterDuff.Mode.SRC_ATOP
-        );
+        )
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-
         when (item?.itemId) {
             android.R.id.home -> finish()
         }

@@ -7,7 +7,7 @@ object Basket {
 
     val listOfProduct: List<Product>
         get() {
-            return productListMap.flatMap { entry -> entry.value}
+            return productListMap.flatMap { entry -> entry.value }
         }
     var mapSize = 0
         get() = productListMap.size
@@ -22,7 +22,8 @@ object Basket {
             return if (productListMap.isEmpty()) {
                 0.0
             } else {
-                productListMap.flatMap { entry -> entry.value }.sumByDouble { it.price }
+                productListMap.flatMap { entry -> entry.value }
+                    .sumByDouble { it.price }
             }
         }
         private set
@@ -32,13 +33,14 @@ object Basket {
             return if (productListMap.isEmpty()) {
                 0.0
             } else {
-                productListMap.flatMap { entry -> entry.value }.sumByDouble { it.priceWithDiscount }
+                productListMap.flatMap { entry -> entry.value }
+                    .sumByDouble { it.priceWithDiscount }
             }
         }
         private set
 
     fun addProduct(product: Product) {
-        if(productListMap.containsKey(product.deviceId)) {
+        if (productListMap.containsKey(product.deviceId)) {
             productListMap[product.deviceId]?.add(product)
         } else {
             productListMap[product.deviceId] = mutableListOf(product)
@@ -54,7 +56,7 @@ object Basket {
 
     fun removeProductIfAble(product: Product) {
         val productList = productListMap[product.deviceId]
-        if(productList != null && productList.size > 1) {
+        if (productList != null && productList.size > 1) {
             productList.remove(product)
         }
     }

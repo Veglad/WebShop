@@ -63,7 +63,7 @@ class BasketActivity : AppCompatActivity(), BasketRecyclerItemTouchHelper.Basket
     }
 
     private fun initActionBar() {
-        supportActionBar?.also {
+        supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
         }

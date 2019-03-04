@@ -29,7 +29,8 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity android:name=".ui.OrderActivity"
-                  android:theme="@style/TransparentNoTitleActionBar">
+                  android:theme="@style/TransparentNoTitleActionBar"
+                  android:screenOrientation="portrait">
         </activity>
     </application>
 
