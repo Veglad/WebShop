@@ -80,9 +80,11 @@ class BasketActivity : AppCompatActivity(), BasketRecyclerItemTouchHelper.Basket
             updateTotalSizeAndTotalPrice(mapPairToRemove, true)
             basketMakeOrderButton.isEnabled = productListSize > 0
 
-            val snackbar = Snackbar.make(basketMainConstraint, String.format(getString(R.string.removed_item_snackbar_format), removedItemName),
-                Snackbar.LENGTH_SHORT)
-            snackbar.setAction(getString(R.string.undo_uppercase)){
+            val snackbar = Snackbar.make(
+                basketMainConstraint, String.format(getString(R.string.removed_item_snackbar_format), removedItemName),
+                Snackbar.LENGTH_SHORT
+            )
+            snackbar.setAction(getString(R.string.undo_uppercase)) {
                 basketAdapter.restoreItem(mapPairToRemove, deletedIndex)
                 updateTotalSizeAndTotalPrice(mapPairToRemove, false)
                 basketMakeOrderButton.isEnabled = productListSize > 0
@@ -92,7 +94,7 @@ class BasketActivity : AppCompatActivity(), BasketRecyclerItemTouchHelper.Basket
     }
 
     private fun updateTotalSizeAndTotalPrice(mapPairToRemove: Pair<Int, MutableList<Product>>, isRemoved: Boolean) {
-        if(isRemoved) {
+        if (isRemoved) {
             totalPriceWithDiscount -= mapPairToRemove.second[0].priceWithDiscount * mapPairToRemove.second.size
             productListSize -= mapPairToRemove.second.size
         } else {
