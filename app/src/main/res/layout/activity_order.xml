@@ -39,7 +39,7 @@
             android:layout_marginStart="8dp" android:layout_marginTop="16dp"/>
     <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:textColorHint="@color/color_accent"
+            android:textColorHint="@color/white"
             android:layout_height="wrap_content"
             android:id="@+id/textInputLayout"
             android:layout_marginTop="8dp"
@@ -52,13 +52,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="17dp"
                 android:hint="@string/name"
-                android:textColorHint="@color/color_accent"
+                android:textColorHint="@color/white"
                 android:inputType="textPersonName"
                 android:textColor="@android:color/white"/>
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:textColorHint="@color/color_accent"
+            android:textColorHint="@color/white"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
             android:id="@+id/textInputLayout2"
@@ -69,13 +69,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="17dp"
                 android:hint="@string/last_name"
-                android:textColorHint="@color/color_accent"
+                android:textColorHint="@color/white"
                 android:inputType="textPersonName"
                 android:textColor="@android:color/white"/>
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:textColorHint="@color/color_accent"
+            android:textColorHint="@color/white"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,13 +87,13 @@
                 android:layout_marginBottom="17dp"
                 android:hint="@string/card_number"
                 android:inputType="numberSigned"
-                android:textColorHint="@color/color_accent"
+                android:textColorHint="@color/white"
                 android:textColor="@android:color/white"
                 android:maxLength="16"/>
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
             android:layout_width="45dp"
-            android:textColorHint="@color/color_accent"
+            android:textColorHint="@color/white"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="17dp"
                 android:hint="@string/month"
-                android:textColorHint="@color/color_accent"
+                android:textColorHint="@color/white"
                 android:inputType="numberSigned"
                 android:textColor="@android:color/white"
                 android:maxLength="2"/>
@@ -122,7 +122,7 @@
             android:id="@+id/textView2"/>
     <android.support.design.widget.TextInputLayout
             android:layout_width="45dp"
-            android:textColorHint="@color/color_accent"
+            android:textColorHint="@color/white"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout4" app:layout_constraintStart_toEndOf="@+id/textView2"
             android:id="@+id/textInputLayout5">
@@ -132,14 +132,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="17dp"
                 android:hint="@string/year"
-                android:textColorHint="@color/color_accent"
+                android:textColorHint="@color/white"
                 android:inputType="numberSigned"
                 android:textColor="@android:color/white"
                 android:maxLength="2"/>
     </android.support.design.widget.TextInputLayout>
     <android.support.design.widget.TextInputLayout
             android:layout_width="45dp"
-            android:textColorHint="@color/color_accent"
+            android:textColorHint="@color/white"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@+id/textInputLayout4"
             app:layout_constraintStart_toEndOf="@+id/textInputLayout5" android:layout_marginStart="24dp">
@@ -150,7 +150,7 @@
                 android:layout_marginBottom="17dp"
                 android:hint="@string/cv"
                 android:inputType="numberPassword"
-                android:textColorHint="@color/color_accent"
+                android:textColorHint="@color/white"
                 android:textColor="@android:color/white"
                 android:maxLength="3"/>
     </android.support.design.widget.TextInputLayout>
