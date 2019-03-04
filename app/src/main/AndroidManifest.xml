@@ -28,7 +28,8 @@
                 android:name=".ui.BasketActivity"
                 android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.OrderActivity">
+        <activity android:name=".ui.OrderActivity"
+                  android:theme="@style/TransparentNoTitleActionBar">
         </activity>
     </application>
 
