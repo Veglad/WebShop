@@ -7,7 +7,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object NetworkService : ShopProductService {
-    private const val BASE_URL = "http://multiflexersshop.azurewebsites.net"
+    private const val BASE_URL = "http://multiflexers-shop.zzz.com.ua"
 
     private val webShopApi: WebShopApi by lazy {
         val retrofit: Retrofit = Retrofit.Builder()

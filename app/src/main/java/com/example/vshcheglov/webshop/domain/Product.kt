@@ -16,6 +16,8 @@ data class Product(
     var isPopular: Boolean = true,
     var bought: Int = 0,
     var categoryId: Int = 0,
-    var promotional: Int = 0,
-    var addDate: String = ""
-) : Parcelable
+    var promotional: Int = 0
+) : Parcelable {
+    val priceWithDiscount
+        get() = price * (1 - promotional.toDouble() / 100)
+}
