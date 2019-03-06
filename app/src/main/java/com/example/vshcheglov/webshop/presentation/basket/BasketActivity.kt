@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.presentation.basket
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -15,55 +16,38 @@ import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
 
-class BasketActivity : AppCompatActivity(), BasketRecyclerItemTouchHelper.BasketRecyclerItemTouchHelperListener {
+class BasketActivity : AppCompatActivity(), IBasketView,
+    BasketRecyclerItemTouchHelper.BasketRecyclerItemTouchHelperListener {
 
     lateinit var basketAdapter: BasketRecyclerAdapter
-    private var totalPriceWithDiscount = Basket.totalPriceWithDiscount
-    private var productListSize = Basket.productListSize
+    private var basketPresenter = BasketPresenter(this)
+
+    override val context: Context
+        get() = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_basket)
 
-        initRecyclerView()
-        initOrderTextViews(totalPriceWithDiscount, productListSize.toString())
-        initActionBar()
-        initOrderButton()
-    }
+        basketPresenter.onClick()
 
-    private fun initOrderButton() {
-        basketMakeOrderButton.setOnClickListener {
-            val intent = Intent(this, OrderActivity::class.java)
-            startActivity(intent)
-        }
+        initRecyclerView()
+        initActionBar()
+        basketMakeOrderButton.setOnClickListener { basketPresenter.orderButtonClick() }
     }
 
     private fun initRecyclerView() {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
-            basketAdapter = BasketRecyclerAdapter(this@BasketActivity)
-                .also {
-                it.onProductsNumberChangeListener = {
-                    totalPriceWithDiscount = Basket.totalPriceWithDiscount
-                    productListSize = Basket.productListSize
-                    initOrderTextViews(totalPriceWithDiscount, productListSize.toString())
-                }
+            basketAdapter = BasketRecyclerAdapter(this@BasketActivity).also {
+                it.onProductsNumberChangeListener = { basketPresenter.productsNumberChanged() }
             }
             adapter = basketAdapter
             itemAnimator = DefaultItemAnimator()
             val itemTouchSimpleCallback =
-                BasketRecyclerItemTouchHelper(
-                    0,
-                    ItemTouchHelper.LEFT,
-                    this@BasketActivity
-                )
+                BasketRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this@BasketActivity)
             ItemTouchHelper(itemTouchSimpleCallback).attachToRecyclerView(this)
         }
-    }
-
-    private fun initOrderTextViews(totalPrice: Double, productListSize: String) {
-        basketAmountTextView.text = String.format(getString(R.string.price_format), totalPrice)
-        basketItemsTextView.text = productListSize
     }
 
     private fun initActionBar() {
@@ -75,37 +59,7 @@ class BasketActivity : AppCompatActivity(), BasketRecyclerItemTouchHelper.Basket
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
         val holder = viewHolder as? BasketRecyclerAdapter.ViewHolder
-        holder?.let {
-            val mapPairToRemove = Basket.productListMap.toList()[holder.adapterPosition]
-            val removedItemName = mapPairToRemove.second[0].name
-            val deletedIndex = viewHolder.adapterPosition
-
-            basketAdapter.removeItem(position)
-            updateTotalSizeAndTotalPrice(mapPairToRemove, true)
-            basketMakeOrderButton.isEnabled = productListSize > 0
-
-            val snackbar = Snackbar.make(
-                basketMainConstraint, String.format(getString(R.string.removed_item_snackbar_format), removedItemName),
-                Snackbar.LENGTH_SHORT
-            )
-            snackbar.setAction(getString(R.string.undo_uppercase)) {
-                basketAdapter.restoreItem(mapPairToRemove, deletedIndex)
-                updateTotalSizeAndTotalPrice(mapPairToRemove, false)
-                basketMakeOrderButton.isEnabled = productListSize > 0
-            }
-            snackbar.show()
-        }
-    }
-
-    private fun updateTotalSizeAndTotalPrice(mapPairToRemove: Pair<Int, MutableList<Product>>, isRemoved: Boolean) {
-        if (isRemoved) {
-            totalPriceWithDiscount -= mapPairToRemove.second[0].priceWithDiscount * mapPairToRemove.second.size
-            productListSize -= mapPairToRemove.second.size
-        } else {
-            totalPriceWithDiscount += mapPairToRemove.second[0].priceWithDiscount * mapPairToRemove.second.size
-            productListSize += mapPairToRemove.second.size
-        }
-        initOrderTextViews(totalPriceWithDiscount, productListSize.toString())
+        holder?.let { basketPresenter.onProductItemSwiped(position) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -113,5 +67,36 @@ class BasketActivity : AppCompatActivity(), BasketRecyclerItemTouchHelper.Basket
             android.R.id.home -> finish()
         }
         return true
+    }
+
+    override fun startOrderActivity() {
+        val intent = Intent(this, OrderActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun setBasketAmount(amount: String) {
+        basketAmountTextView.text = amount
+    }
+
+    override fun setBasketItemsNumber(itemsNumber: String) {
+        basketItemsTextView.text = itemsNumber
+    }
+
+    override fun showUndo(undoTitle: String) {
+        val snackBar = Snackbar.make(basketMainConstraint, undoTitle, Snackbar.LENGTH_SHORT)
+        snackBar.setAction(getString(R.string.undo_uppercase)) {basketPresenter.undoPressed()}
+        snackBar.show()
+    }
+
+    override fun setOrderButtonIsEnabled(isEnabled: Boolean) {
+        basketMakeOrderButton.isEnabled = isEnabled
+    }
+
+    override fun removeProductFromList(position: Int) {
+        basketAdapter.removeItem(position)
+    }
+
+    override fun restoreProduct(mapPair: Pair<Int, MutableList<Product>>, deletedIndex: Int) {
+        basketAdapter.restoreItem(mapPair, deletedIndex)
     }
 }
