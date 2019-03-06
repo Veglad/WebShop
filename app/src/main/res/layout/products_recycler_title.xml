@@ -6,4 +6,5 @@
           android:textSize="18sp"
           android:textColor="@color/white"
           android:background="@color/primary"
-          android:gravity="center"/>
+          android:gravity="center"
+          android:layout_marginTop="8dp"/>

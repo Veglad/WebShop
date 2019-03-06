@@ -4,8 +4,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.MainActivity"
-        android:paddingTop="8dp">
+        tools:context=".ui.MainActivity">
     <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/productsSwipeRefreshLayout"
             android:layout_width="match_parent"

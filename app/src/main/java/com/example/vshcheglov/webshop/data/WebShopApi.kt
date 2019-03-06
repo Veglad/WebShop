@@ -7,14 +7,14 @@ import retrofit2.http.Path
 
 interface WebShopApi {
 
-    @GET("/products.json")
+    @GET("/products")
     fun getAllDevices(): Single<List<Product>>
 
     @Deprecated("Does not work")
     @GET("/api/DeviceData/{deviceId}")
     fun getDevice(@Path("deviceId") id: Long): Single<Product>
 
-    @GET("/products.json")
+    @GET("/products")
     fun getAllPromotionalDevices(): Single<List<Product>>
 
 }
