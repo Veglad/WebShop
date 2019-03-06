@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-object NetworkService : ShopProductService {
+object NetworkService : IProductDataSource {
     private const val BASE_URL = "https://us-central1-webshop-58013.cloudfunctions.net"
 
     private val webShopApi: WebShopApi by lazy {
