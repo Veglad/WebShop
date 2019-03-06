@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.data.NetworkDataSource
+import com.example.vshcheglov.webshop.data.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     private fun fetchProducts() {
         setLoadingDataUi()
 
-        val diposable = Single.zip(NetworkDataSource.getAllDevices(), NetworkDataSource.getAllPromotionalDevices()
+        val diposable = Single.zip(ProductRepository.getAllDevices(), ProductRepository.getAllPromotionalDevices()
             , BiFunction { products: List<Product>, promotionals: List<Product> ->
                 Pair(products, promotionals)
             })
