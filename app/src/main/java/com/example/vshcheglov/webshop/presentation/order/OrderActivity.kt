@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.presentation.order
 
+import android.content.Context
 import android.graphics.PorterDuff
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -10,17 +11,19 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import kotlinx.android.synthetic.main.activity_order.*
 
-class OrderActivity : AppCompatActivity() {
+class OrderActivity : AppCompatActivity(), IOrderView {
+
+    override val context: Context
+        get() = this
+
+    private val orderPresenter: OrderPresenter = OrderPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
+        orderPresenter.onCreate()
 
-        orderTotalPrice.text = String.format(getString(R.string.price_format), Basket.totalPriceWithDiscount)
-        buttonOrder.setOnClickListener {
-            Snackbar.make(orderConstraintLayout, getString(R.string.order_completed), Snackbar.LENGTH_SHORT).show()
-        }
-
+        buttonOrder.setOnClickListener { orderPresenter.buttonOrderClick() }
         initActionBar()
     }
 
@@ -43,5 +46,13 @@ class OrderActivity : AppCompatActivity() {
         }
 
         return false
+    }
+
+    override fun showOrderCompleted(orderMessage: String) {
+        Snackbar.make(orderConstraintLayout, orderMessage, Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun setOrderPrice(orderPrice: String) {
+        orderTotalPrice.text = orderPrice
     }
 }
