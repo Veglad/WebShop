@@ -12,7 +12,7 @@ import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
-import com.example.vshcheglov.webshop.presentation.OrderActivity
+import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
 
 class BasketActivity : AppCompatActivity(), BasketRecyclerItemTouchHelper.BasketRecyclerItemTouchHelperListener {

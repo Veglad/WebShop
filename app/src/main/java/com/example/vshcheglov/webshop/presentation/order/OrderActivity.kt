@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation
+package com.example.vshcheglov.webshop.presentation.order
 
 import android.graphics.PorterDuff
 import android.support.v7.app.AppCompatActivity

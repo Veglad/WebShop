@@ -28,7 +28,7 @@
                 android:name=".presentation.basket.BasketActivity"
                 android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".presentation.OrderActivity"
+        <activity android:name=".presentation.order.OrderActivity"
                   android:theme="@style/TransparentNoTitleActionBar"
                   android:screenOrientation="portrait">
         </activity>
