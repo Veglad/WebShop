@@ -10,7 +10,8 @@ class OrderPresenter(private val orderView: IOrderView) {
     }
 
     fun onCreate() {
-        val orderPrice = String.format(orderView.context.getString(R.string.price_format), Basket.totalPriceWithDiscount)
+        val orderPrice =
+            String.format(orderView.context.getString(R.string.price_format), Basket.totalPriceWithDiscount)
         orderView.setOrderPrice(orderPrice)
     }
 

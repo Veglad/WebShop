@@ -12,31 +12,31 @@ import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 
-class DetailActivity : AppCompatActivity() {
+class DetailActivity : AppCompatActivity(), IDetailView {
 
     companion object {
         const val PRODUCT_KEY = "product_key"
     }
 
+    private val detailPresenter = DetailPresenter(this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        val product = getProduct(intent.extras)
-        product?.let {
-            initUiViaProduct(it)
-            initBuyButton(it)
-        }
+        detailPresenter.onCreate(intent.extras)
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
         }
+
+        detailBuyFloatActionButton.setOnClickListener {
+            detailPresenter.buyProductClick()
+        }
     }
 
-    private fun getProduct(bundle: Bundle?) = bundle?.getParcelable<Product>(PRODUCT_KEY)
-
-    private fun initUiViaProduct(product: Product) {
+    override fun showProductInfo(product: Product) {
         with(product) {
             Glide.with(this@DetailActivity)
                 .load(imageThumbnailUrl)
@@ -54,18 +54,15 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initBuyButton(product: Product) {
-        detailBuyFloatActionButton.setOnClickListener {
-            Basket.addProduct(product)
-            val intent = Intent(this, BasketActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> onBackPressed()
         }
         return true
+    }
+
+    override fun startBasketActivity() {
+        val intent = Intent(this, BasketActivity::class.java)
+        startActivity(intent)
     }
 }

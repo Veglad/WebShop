@@ -16,7 +16,7 @@ class OrderActivity : AppCompatActivity(), IOrderView {
     override val context: Context
         get() = this
 
-    private val orderPresenter: OrderPresenter = OrderPresenter(this)
+    private val orderPresenter = OrderPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
