@@ -1,9 +1,9 @@
-package com.example.vshcheglov.webshop.ui.helpers
+package com.example.vshcheglov.webshop.presentation.helpers
 
 import android.graphics.Canvas
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import com.example.vshcheglov.webshop.ui.adapters.BasketRecyclerAdapter
+import com.example.vshcheglov.webshop.presentation.adapters.BasketRecyclerAdapter
 import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
 class BasketRecyclerItemTouchHelper(

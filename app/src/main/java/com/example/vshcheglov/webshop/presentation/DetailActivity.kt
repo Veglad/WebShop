@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.ui
+package com.example.vshcheglov.webshop.presentation
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity

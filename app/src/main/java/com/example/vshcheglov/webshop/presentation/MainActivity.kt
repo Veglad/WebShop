@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.ui
+package com.example.vshcheglov.webshop.presentation
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +9,7 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.data.NetworkService
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
-import com.example.vshcheglov.webshop.ui.adapters.ProductsRecyclerAdapter
+import com.example.vshcheglov.webshop.presentation.adapters.ProductsRecyclerAdapter
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

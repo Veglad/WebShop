@@ -12,7 +12,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".presentation.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -20,15 +20,15 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".ui.DetailActivity"
-                android:parentActivityName=".ui.MainActivity"
+                android:name=".presentation.DetailActivity"
+                android:parentActivityName=".presentation.MainActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".ui.BasketActivity"
+                android:name=".presentation.BasketActivity"
                 android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".ui.OrderActivity"
+        <activity android:name=".presentation.OrderActivity"
                   android:theme="@style/TransparentNoTitleActionBar"
                   android:screenOrientation="portrait">
         </activity>
