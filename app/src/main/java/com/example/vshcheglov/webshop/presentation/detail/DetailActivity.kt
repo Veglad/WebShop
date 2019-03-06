@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation
+package com.example.vshcheglov.webshop.presentation.detail
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.presentation.BasketActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {

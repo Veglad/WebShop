@@ -13,7 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.support.v4.util.Pair
 import com.bumptech.glide.Glide
-import com.example.vshcheglov.webshop.presentation.DetailActivity
+import com.example.vshcheglov.webshop.presentation.detail.DetailActivity
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.product_recycler_item.view.*
