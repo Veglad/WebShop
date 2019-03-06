@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.data.network
 
 import com.example.vshcheglov.webshop.data.IProductDataSource
+import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
 import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single
 import retrofit2.Retrofit
@@ -20,9 +21,16 @@ object NetworkDataSource : IProductDataSource {
         retrofit.create(WebShopApi::class.java)
     }
 
-    override fun getAllDevices(): Single<List<Product>> = webShopApi.getAllDevices()
+    override fun getAllDevices(): Single<List<Product>> = webShopApi.getDevices().map {
+        ProductEntityDataMapper.transform(it)
+    }
 
-    override fun getDevice(id: Long): Single<Product> = webShopApi.getDevice(id)
+    @Deprecated("Does not work")
+    override fun getDevice(id: Long): Single<Product> = webShopApi.getDevice(id).map {
+        ProductEntityDataMapper.transform(it)
+    }
 
-    override fun getAllPromotionalDevices(): Single<List<Product>> = webShopApi.getAllPromotionalDevices()
+    override fun getAllPromotionalDevices(): Single<List<Product>> = webShopApi.getPromotionalDevices().map {
+        ProductEntityDataMapper.transform(it)
+    }
 }

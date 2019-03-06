@@ -10,6 +10,7 @@ object ProductRepository : IProductDataSource {
         return NetworkDataSource.getAllDevices()
     }
 
+    @Deprecated("Does not work")
     override fun getDevice(id: Long): Single<Product> {
         return NetworkDataSource.getDevice(id)
     }

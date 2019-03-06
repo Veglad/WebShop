@@ -40,7 +40,7 @@ class PromotionalRecyclerAdapter(private val context: Context, var productList: 
             )
             holder.view.saleTextView.text = String.format(
                 holder.view.context.getString(com.example.vshcheglov.webshop.R.string.sale_format),
-                promotional
+                percentageDiscount
             )
             holder.view.productTitle.text = name
             holder.view.productPrice.text = String.format(

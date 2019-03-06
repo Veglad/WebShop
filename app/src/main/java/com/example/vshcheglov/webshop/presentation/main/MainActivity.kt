@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                         productsRecyclerAdapter.productList = pairProducts.first
                         productsRecyclerAdapter.notifyDataSetChanged()
 
-                        val promotionalList = pairProducts.second.filter { it.promotional > 0 }
+                        val promotionalList = pairProducts.second.filter { it.percentageDiscount > 0 }
                         productsRecyclerAdapter.updatePromotionalList(promotionalList)
                     }
                 }
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
             .subscribeWith(object : DisposableSingleObserver<List<Product>>() {
                 override fun onSuccess(productList: List<Product>) {
                     if (!isFinishing) {
-                        productsRecyclerAdapter.updatePromotionalList(productList.filter { it.promotional > 0 })
+                        productsRecyclerAdapter.updatePromotionalList(productList.filter { it.percentageDiscount > 0 })
                     }
                 }
 

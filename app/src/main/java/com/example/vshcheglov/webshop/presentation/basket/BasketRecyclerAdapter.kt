@@ -54,8 +54,8 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
             bindSaleTitle(view, product)
             initClickListeners(view, product, productList, Basket)
             bindPrices(
-                view, product, Basket.getTotalProductPrice(product.deviceId),
-                Basket.getTotalDiscountProductPrice(product.deviceId)
+                view, product, Basket.getTotalProductPrice(product.id),
+                Basket.getTotalDiscountProductPrice(product.id)
             )
         }
     }
@@ -66,8 +66,8 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
             onProductsNumberChangeListener?.invoke()
             view.basketItemCountTextView.text = productList.size.toString()
             bindPrices(
-                view, product, basket.getTotalProductPrice(product.deviceId),
-                basket.getTotalDiscountProductPrice(product.deviceId)
+                view, product, basket.getTotalProductPrice(product.id),
+                basket.getTotalDiscountProductPrice(product.id)
             )
 
         }
@@ -76,17 +76,17 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
             onProductsNumberChangeListener?.invoke()
             view.basketItemCountTextView.text = productList.size.toString()
             bindPrices(
-                view, product, basket.getTotalProductPrice(product.deviceId),
-                basket.getTotalDiscountProductPrice(product.deviceId)
+                view, product, basket.getTotalProductPrice(product.id),
+                basket.getTotalDiscountProductPrice(product.id)
             )
         }
     }
 
     private fun bindSaleTitle(view: View, product: Product) {
-        if (product.promotional > 0) {
+        if (product.percentageDiscount > 0) {
             view.basketSaleTextView.text = String.format(
                 view.context.getString(R.string.sale_format),
-                product.promotional
+                product.percentageDiscount
             )
         } else {
             view.basketSaleTextView.visibility = View.INVISIBLE
@@ -97,7 +97,7 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
         view: View, product: Product, totalPrice: Double,
         totalDiscountPrice: Double
     ) {
-        if (product.promotional > 0) {
+        if (product.percentageDiscount > 0) {
             view.basketProductPriceTitle.also {
                 it.text = String.format(view.context.getString(R.string.price_format), product.price)
                 it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG

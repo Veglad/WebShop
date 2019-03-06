@@ -45,11 +45,11 @@ class DetailActivity : AppCompatActivity() {
             detailProductTitle.text = name
             detailPriceTextView.text = String.format(getString(R.string.price_format), price)
             purchasesNumberTextView.text =
-                String.format(getString(R.string.number_of_purchases_format), bought.toString())
+                String.format(getString(R.string.number_of_purchases_format), purchasesNumber.toString())
             detailDescriptionTextView.text = longDescription
-            if (promotional > 0) {
+            if (percentageDiscount > 0) {
                 detailSaleTextView.visibility = View.VISIBLE
-                detailSaleTextView.text = String.format(getString(R.string.sale_format), promotional.toString())
+                detailSaleTextView.text = String.format(getString(R.string.sale_format), percentageDiscount.toString())
             }
         }
     }

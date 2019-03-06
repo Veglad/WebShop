@@ -40,10 +40,10 @@ object Basket {
         private set
 
     fun addProduct(product: Product) {
-        if (productListMap.containsKey(product.deviceId)) {
-            productListMap[product.deviceId]?.add(product)
+        if (productListMap.containsKey(product.id)) {
+            productListMap[product.id]?.add(product)
         } else {
-            productListMap[product.deviceId] = mutableListOf(product)
+            productListMap[product.id] = mutableListOf(product)
         }
     }
 
@@ -55,7 +55,7 @@ object Basket {
     }
 
     fun removeProductIfAble(product: Product) {
-        val productList = productListMap[product.deviceId]
+        val productList = productListMap[product.id]
         if (productList != null && productList.size > 1) {
             productList.remove(product)
         }
