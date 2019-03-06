@@ -25,7 +25,7 @@
                 android:screenOrientation="portrait">
         </activity>
         <activity
-                android:name=".presentation.BasketActivity"
+                android:name=".presentation.basket.BasketActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity android:name=".presentation.OrderActivity"

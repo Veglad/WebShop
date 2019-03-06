@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation.adapters
+package com.example.vshcheglov.webshop.presentation.basket
 
 import android.content.Context
 import android.graphics.Paint

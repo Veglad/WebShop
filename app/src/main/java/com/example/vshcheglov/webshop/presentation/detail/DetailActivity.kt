@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
-import com.example.vshcheglov.webshop.presentation.BasketActivity
+import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : AppCompatActivity() {
