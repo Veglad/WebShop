@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.data
+package com.example.vshcheglov.webshop.data.network
 
 import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single

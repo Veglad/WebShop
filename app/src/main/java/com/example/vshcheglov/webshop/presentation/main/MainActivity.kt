@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.data.NetworkDataSource
 import com.example.vshcheglov.webshop.data.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable

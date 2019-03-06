@@ -1,5 +1,6 @@
-package com.example.vshcheglov.webshop.data
+package com.example.vshcheglov.webshop.data.network
 
+import com.example.vshcheglov.webshop.data.IProductDataSource
 import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single
 import retrofit2.Retrofit
