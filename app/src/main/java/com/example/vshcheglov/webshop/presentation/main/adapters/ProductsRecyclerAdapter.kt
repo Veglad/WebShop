@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation.adapters
+package com.example.vshcheglov.webshop.presentation.main.adapters
 
 import android.app.Activity
 import android.content.Context

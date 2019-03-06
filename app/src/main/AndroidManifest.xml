@@ -12,7 +12,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".presentation.MainActivity">
+        <activity android:name=".presentation.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -21,7 +21,7 @@
         </activity>
         <activity
                 android:name=".presentation.detail.DetailActivity"
-                android:parentActivityName=".presentation.MainActivity"
+                android:parentActivityName=".presentation.main.MainActivity"
                 android:screenOrientation="portrait">
         </activity>
         <activity
