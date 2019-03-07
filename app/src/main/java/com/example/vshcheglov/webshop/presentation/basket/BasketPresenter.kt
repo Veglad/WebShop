@@ -29,7 +29,7 @@ class BasketPresenter(private val basketView: IBasketView) {
         updateBasketInfo()
     }
 
-    fun productNumberIncreased(position: Int) {
+    fun productNumberIncreased(position: Int) {//TODO: Optimize
         val sameProductList = Basket.getSameProductListByPosition(position)
         val product = sameProductList[0]
 
@@ -42,7 +42,7 @@ class BasketPresenter(private val basketView: IBasketView) {
         }
     }
 
-    fun productNumberDecreased(position: Int) {
+    fun productNumberDecreased(position: Int) {//TODO: Optimize
         val sameProductList = Basket.getSameProductListByPosition(position)
         val product = sameProductList[0]
 
@@ -88,6 +88,7 @@ class BasketPresenter(private val basketView: IBasketView) {
     }
 
     fun undoPressed() {
+        //Basket.addPair(mapPairToRemove, deletedIndex)
         basketView.restoreProduct(mapPairToRemove, deletedIndex)
         updateTotalSizeAndTotalPrice(mapPairToRemove, false)
         basketView.setOrderButtonIsEnabled(productListSize > 0)
