@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation.basket
+package com.example.vshcheglov.webshop.presentation.basket.adapter
 
 import android.content.Context
 import android.graphics.Paint
@@ -53,32 +53,25 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
 
             bindSaleTitle(view, product)
             initClickListeners(view, product, productList, Basket)
-            bindPrices(
-                view, product, Basket.getTotalProductPrice(product.id),
-                Basket.getTotalDiscountProductPrice(product.id)
-            )
+            bindPrices(view, product, Basket.getTotalProductPrice(product.id),
+                Basket.getTotalDiscountProductPrice(product.id))
         }
     }
 
-    private fun initClickListeners(view: View, product: Product, productList: MutableList<Product>, basket: Basket) {
+    private fun initClickListeners(view: View, product: Product, productList: MutableList<Product>, basket: Basket) {//TODO: Move to presenter
         view.addImageButton.setOnClickListener {
             basket.addProduct(product)
             onProductsNumberChangeListener?.invoke()
             view.basketItemCountTextView.text = productList.size.toString()
-            bindPrices(
-                view, product, basket.getTotalProductPrice(product.id),
-                basket.getTotalDiscountProductPrice(product.id)
-            )
-
+            bindPrices(view, product, basket.getTotalProductPrice(product.id),
+                basket.getTotalDiscountProductPrice(product.id))
         }
         view.removeImageButton.setOnClickListener {
             basket.removeProductIfAble(product)
             onProductsNumberChangeListener?.invoke()
             view.basketItemCountTextView.text = productList.size.toString()
-            bindPrices(
-                view, product, basket.getTotalProductPrice(product.id),
-                basket.getTotalDiscountProductPrice(product.id)
-            )
+            bindPrices(view, product, basket.getTotalProductPrice(product.id),
+                basket.getTotalDiscountProductPrice(product.id))
         }
     }
 
@@ -93,10 +86,7 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
         }
     }
 
-    private fun bindPrices(
-        view: View, product: Product, totalPrice: Double,
-        totalDiscountPrice: Double
-    ) {
+    private fun bindPrices(view: View, product: Product, totalPrice: Double, totalDiscountPrice: Double) {
         if (product.percentageDiscount > 0) {
             view.basketProductPriceTitle.also {
                 it.text = String.format(view.context.getString(R.string.price_format), product.price)
@@ -114,12 +104,12 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
             String.format(view.context.getString(R.string.price_format), totalDiscountPrice)
     }
 
-    fun removeItem(position: Int) {
+    fun removeItem(position: Int) {//TODO: Move to presenter
         Basket.removeSameProducts(position)
         notifyItemRemoved(position)
     }
 
-    fun restoreItem(pairProduct: Pair<Int, MutableList<Product>>, position: Int) {
+    fun restoreItem(pairProduct: Pair<Int, MutableList<Product>>, position: Int) {//TODO: Move to presenter
         Basket.addPair(pairProduct, position)
         notifyItemInserted(position)
     }

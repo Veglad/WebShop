@@ -50,7 +50,7 @@ class BasketPresenter(private val basketView: IBasketView) {
 
     }
 
-    private fun updateTotalSizeAndTotalPrice(mapPairToRemove: Pair<Int, MutableList<Product>>, isRemoved: Boolean) {
+    private fun updateTotalSizeAndTotalPrice(mapPairToRemove: Pair<Int, MutableList<Product>>, isRemoved: Boolean) {//TODO: Move to basket
         if (isRemoved) {
             totalPriceWithDiscount -= mapPairToRemove.second[0].priceWithDiscount * mapPairToRemove.second.size
             productListSize -= mapPairToRemove.second.size

@@ -11,8 +11,9 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
+import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerItemTouchHelper
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
 
@@ -39,13 +40,18 @@ class BasketActivity : AppCompatActivity(), IBasketView,
     private fun initRecyclerView() {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
-            basketAdapter = BasketRecyclerAdapter(this@BasketActivity).also {
+            basketAdapter = BasketRecyclerAdapter(this@BasketActivity)
+                .also {
                 it.onProductsNumberChangeListener = { basketPresenter.productsNumberChanged() }
             }
             adapter = basketAdapter
             itemAnimator = DefaultItemAnimator()
             val itemTouchSimpleCallback =
-                BasketRecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this@BasketActivity)
+                BasketRecyclerItemTouchHelper(
+                    0,
+                    ItemTouchHelper.LEFT,
+                    this@BasketActivity
+                )
             ItemTouchHelper(itemTouchSimpleCallback).attachToRecyclerView(this)
         }
     }
