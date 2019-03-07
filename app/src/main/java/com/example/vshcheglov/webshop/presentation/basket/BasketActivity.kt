@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
+import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerItemTouchHelper
@@ -30,19 +31,18 @@ class BasketActivity : AppCompatActivity(), IBasketView,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_basket)
 
-        basketPresenter.onClick()
+        basketPresenter.onCreate()
 
-        initRecyclerView()
         initActionBar()
         basketMakeOrderButton.setOnClickListener { basketPresenter.orderButtonClick() }
     }
 
-    private fun initRecyclerView() {
+    override fun showBasket(basket: Basket) {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
-            basketAdapter = BasketRecyclerAdapter(this@BasketActivity)
-                .also {
-                it.onProductsNumberChangeListener = { basketPresenter.productsNumberChanged() }
+            basketAdapter = BasketRecyclerAdapter(this@BasketActivity, basket).also {
+                it.onProductNumberIncreasedListener = { position -> basketPresenter.productNumberIncreased(position) }
+                it.onProductNumberDecreasedListener = { position -> basketPresenter.productNumberDecreased(position) }
             }
             adapter = basketAdapter
             itemAnimator = DefaultItemAnimator()
@@ -104,5 +104,20 @@ class BasketActivity : AppCompatActivity(), IBasketView,
 
     override fun restoreProduct(mapPair: Pair<Int, MutableList<Product>>, deletedIndex: Int) {
         basketAdapter.restoreItem(mapPair, deletedIndex)
+    }
+
+    override fun setSameProductsNumber(position: Int, number: Int) {
+        val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
+        view?.let { basketAdapter.setProductsNumberByPosition(it, number) }
+    }
+
+    override fun setTotalProductPrice(position: Int, totalDiscountPrice: Double) {
+        val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
+        view?.let { basketAdapter.initTotalProductsPrice(it, totalDiscountPrice) }
+    }
+
+    override fun setTotalProductPriceTitle(position: Int, totalPrice: Double) {
+        val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
+        view?.let { basketAdapter.initTotalProductsPriceTitle(it, totalPrice) }
     }
 }

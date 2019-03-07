@@ -77,4 +77,6 @@ object Basket {
         updatedListOfPairs.removeAt(index)
         productListMap = LinkedHashMap(updatedListOfPairs.toMap())
     }
+
+    fun getSameProductListByPosition(position: Int) = productListMap.toList()[position].second
 }

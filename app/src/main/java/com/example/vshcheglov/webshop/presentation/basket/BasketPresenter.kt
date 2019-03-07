@@ -17,15 +17,42 @@ class BasketPresenter(private val basketView: IBasketView) {
         basketView.startOrderActivity()
     }
 
-    fun onClick() {
+    fun onCreate() {
         updateBasketInfo()
+        basketView.showBasket(Basket)
     }
 
-    fun productsNumberChanged() {
+    private fun productsNumberChanged() {
         totalPriceWithDiscount = Basket.totalPriceWithDiscount
         productListSize = Basket.productListSize
 
         updateBasketInfo()
+    }
+
+    fun productNumberIncreased(position: Int) {
+        val sameProductList = Basket.getSameProductListByPosition(position)
+        val product = sameProductList[0]
+
+        Basket.addProduct(product)
+        productsNumberChanged()
+        basketView.setSameProductsNumber(position, sameProductList.size)
+        basketView.setTotalProductPrice(position, Basket.getTotalDiscountProductPrice(product.id))
+        if (product.percentageDiscount > 0) {
+            basketView.setTotalProductPriceTitle(position, Basket.getTotalProductPrice(product.id))
+        }
+    }
+
+    fun productNumberDecreased(position: Int) {
+        val sameProductList = Basket.getSameProductListByPosition(position)
+        val product = sameProductList[0]
+
+        Basket.removeProductIfAble(product)
+        productsNumberChanged()
+        basketView.setSameProductsNumber(position, sameProductList.size)
+        basketView.setTotalProductPrice(position, Basket.getTotalDiscountProductPrice(product.id))
+        if (product.percentageDiscount > 0) {
+            basketView.setTotalProductPriceTitle(position, Basket.getTotalProductPrice(product.id))
+        }
     }
 
     private fun updateBasketInfo() {

@@ -12,9 +12,10 @@ import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
-class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
+class BasketRecyclerAdapter(private val context: Context, val basket: Basket) : RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
 
-    var onProductsNumberChangeListener: (() -> Unit)? = null
+    var onProductNumberIncreasedListener: ((Int) -> Unit)? = null
+    var onProductNumberDecreasedListener: ((Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -23,21 +24,22 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = Basket.mapSize
+    override fun getItemCount() = basket.mapSize
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view = holder.view
-        val productList = Basket.productListMap.values.toList()[position]
+        val productList = basket.productListMap.values.toList()[position]
         val sameProductsNumber = productList.size
         if (productList.isNotEmpty()) {
-            val product = productList[0]
-            bindWithProduct(product, view, sameProductsNumber, productList)
+            bindWithProduct(position, view, sameProductsNumber, productList)
         }
     }
 
-    private fun bindWithProduct(product: Product, view: View,
-                                sameProductsNumber: Int, productList: MutableList<Product>) {
-        with(product) {
+    private fun bindWithProduct(
+        position: Int, view: View,
+        sameProductsNumber: Int, productList: MutableList<Product>
+    ) {
+        with(productList[0]) {
             Glide.with(view.context)
                 .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
@@ -51,67 +53,60 @@ class BasketRecyclerAdapter(private val context: Context) : RecyclerView.Adapter
             view.basketTitle.text = name
             view.basketDescription.text = shortDescription
 
-            bindSaleTitle(view, product)
-            initClickListeners(view, product, productList, Basket)
-            bindPrices(view, product, Basket.getTotalProductPrice(product.id),
-                Basket.getTotalDiscountProductPrice(product.id))
+            view.addImageButton.setOnClickListener { onProductNumberIncreasedListener?.invoke(position) }
+            view.removeImageButton.setOnClickListener { onProductNumberDecreasedListener?.invoke(position) }
+
+            initSaleTitle(view, this)
+            initProductPrice(view, this)
+            initTotalProductsPrice(view, basket.getTotalProductPrice(id))//TODO: Refactor this
+            initTotalProductsPriceTitle(view, basket.getTotalProductPrice(id))//TODO: Refactor this
         }
     }
 
-    private fun initClickListeners(view: View, product: Product, productList: MutableList<Product>, basket: Basket) {//TODO: Move to presenter
-        view.addImageButton.setOnClickListener {
-            basket.addProduct(product)
-            onProductsNumberChangeListener?.invoke()
-            view.basketItemCountTextView.text = productList.size.toString()
-            bindPrices(view, product, basket.getTotalProductPrice(product.id),
-                basket.getTotalDiscountProductPrice(product.id))
-        }
-        view.removeImageButton.setOnClickListener {
-            basket.removeProductIfAble(product)
-            onProductsNumberChangeListener?.invoke()
-            view.basketItemCountTextView.text = productList.size.toString()
-            bindPrices(view, product, basket.getTotalProductPrice(product.id),
-                basket.getTotalDiscountProductPrice(product.id))
-        }
-    }
-
-    private fun bindSaleTitle(view: View, product: Product) {
-        if (product.percentageDiscount > 0) {
-            view.basketSaleTextView.text = String.format(
-                view.context.getString(R.string.sale_format),
-                product.percentageDiscount
-            )
-        } else {
-            view.basketSaleTextView.visibility = View.INVISIBLE
-        }
-    }
-
-    private fun bindPrices(view: View, product: Product, totalPrice: Double, totalDiscountPrice: Double) {
+    private fun initProductPrice(view: View, product: Product) {
+        view.basketPriceTextView.text =
+            String.format(view.context.getString(R.string.price_format), product.priceWithDiscount)
+        //Product price title
         if (product.percentageDiscount > 0) {
             view.basketProductPriceTitle.also {
                 it.text = String.format(view.context.getString(R.string.price_format), product.price)
                 it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
-            view.basketTotalPriceTitle.also {
-                it.text = String.format(view.context.getString(R.string.price_format), totalPrice)
-                it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            }
         }
+    }
 
-        view.basketPriceTextView.text =
-            String.format(view.context.getString(R.string.price_format), product.priceWithDiscount)
+    private fun initSaleTitle(view: View, product: Product) {
+        view.basketSaleTextView.text =
+            String.format(view.context.getString(R.string.sale_format), product.percentageDiscount)
+        if (product.percentageDiscount == 0) {
+            view.basketSaleTextView.visibility = View.INVISIBLE
+        }
+    }
+
+    fun initTotalProductsPriceTitle(view: View, totalPrice: Double) {
+        view.basketTotalPriceTitle.also {
+            it.text = String.format(view.context.getString(R.string.price_format), totalPrice)
+            it.paintFlags = it.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        }
+    }
+
+    fun initTotalProductsPrice(view: View, totalDiscountPrice: Double) {
         view.basketTotalPrice.text =
             String.format(view.context.getString(R.string.price_format), totalDiscountPrice)
     }
 
     fun removeItem(position: Int) {//TODO: Move to presenter
-        Basket.removeSameProducts(position)
+        basket.removeSameProducts(position)
         notifyItemRemoved(position)
     }
 
     fun restoreItem(pairProduct: Pair<Int, MutableList<Product>>, position: Int) {//TODO: Move to presenter
-        Basket.addPair(pairProduct, position)
+        basket.addPair(pairProduct, position)
         notifyItemInserted(position)
+    }
+
+    fun setProductsNumberByPosition(view: View, number: Int) {
+        view.basketItemCountTextView.text = number.toString()
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
