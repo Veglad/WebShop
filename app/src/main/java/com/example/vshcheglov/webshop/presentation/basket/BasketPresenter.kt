@@ -3,12 +3,11 @@ package com.example.vshcheglov.webshop.presentation.basket
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.presentation.entites.mappers.BasketPresentationMapper
+import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductPresentationMapper
 import kotlin.properties.Delegates
 
 class BasketPresenter(private val basketView: IBasketView) {
-
-    private var totalPriceWithDiscount = Basket.totalPriceWithDiscount
-    private var productListSize = Basket.productListSize
 
     private lateinit var mapPairToRemove: Pair<Int, MutableList<Product>>
     private var deletedIndex by Delegates.notNull<Int>()
@@ -19,35 +18,29 @@ class BasketPresenter(private val basketView: IBasketView) {
 
     fun onCreate() {
         updateBasketInfo()
-        basketView.showBasket(Basket)
+        basketView.showBasket(BasketPresentationMapper.transform(Basket))
     }
 
-    private fun productsNumberChanged() {
-        totalPriceWithDiscount = Basket.totalPriceWithDiscount
-        productListSize = Basket.productListSize
-
-        updateBasketInfo()
-    }
-
-    fun productNumberIncreased(position: Int) {//TODO: Optimize
+    fun productNumberIncreased(position: Int) {
         val sameProductList = Basket.getSameProductListByPosition(position)
         val product = sameProductList[0]
 
         Basket.addProduct(product)
-        productsNumberChanged()
-        basketView.setSameProductsNumber(position, sameProductList.size)
-        basketView.setTotalProductPrice(position, Basket.getTotalDiscountProductPrice(product.id))
-        if (product.percentageDiscount > 0) {
-            basketView.setTotalProductPriceTitle(position, Basket.getTotalProductPrice(product.id))
-        }
+        updateBasketInfo()
+        updateProductCard(position, sameProductList, product)
     }
 
-    fun productNumberDecreased(position: Int) {//TODO: Optimize
+    fun productNumberDecreased(position: Int) {
         val sameProductList = Basket.getSameProductListByPosition(position)
         val product = sameProductList[0]
 
-        Basket.removeProductIfAble(product)
-        productsNumberChanged()
+        if(Basket.removeProductIfAble(product)) {
+            updateBasketInfo()
+            updateProductCard(position, sameProductList, product)
+        }
+    }
+
+    private fun updateProductCard(position: Int, sameProductList: MutableList<Product>, product: Product) {
         basketView.setSameProductsNumber(position, sameProductList.size)
         basketView.setTotalProductPrice(position, Basket.getTotalDiscountProductPrice(product.id))
         if (product.percentageDiscount > 0) {
@@ -56,19 +49,19 @@ class BasketPresenter(private val basketView: IBasketView) {
     }
 
     private fun updateBasketInfo() {
-        val basketAmount = String.format(basketView.context.getString(R.string.price_format), totalPriceWithDiscount)
+        val basketAmount = String.format(basketView.context.getString(R.string.price_format), Basket.totalPriceWithDiscount)
         basketView.setBasketAmount(basketAmount)
-        basketView.setBasketItemsNumber(productListSize.toString())
+        basketView.setBasketItemsNumber(Basket.productListSize.toString())
     }
 
     fun onProductItemSwiped(position: Int) {
         mapPairToRemove = Basket.productListMap.toList()[position]
         deletedIndex = position
 
-        basketView.removeProductFromList(position)
-        updateTotalSizeAndTotalPrice(mapPairToRemove, true)
+        Basket.removeSameProducts(position)
+        basketView.removeSameProductsCard(position)
         updateBasketInfo()
-        basketView.setOrderButtonIsEnabled(productListSize > 0)
+        basketView.setOrderButtonIsEnabled(Basket.productListSize > 0)
 
         val removedItemName = mapPairToRemove.second[0].name
         val undoTitle =
@@ -77,21 +70,12 @@ class BasketPresenter(private val basketView: IBasketView) {
 
     }
 
-    private fun updateTotalSizeAndTotalPrice(mapPairToRemove: Pair<Int, MutableList<Product>>, isRemoved: Boolean) {//TODO: Move to basket
-        if (isRemoved) {
-            totalPriceWithDiscount -= mapPairToRemove.second[0].priceWithDiscount * mapPairToRemove.second.size
-            productListSize -= mapPairToRemove.second.size
-        } else {
-            totalPriceWithDiscount += mapPairToRemove.second[0].priceWithDiscount * mapPairToRemove.second.size
-            productListSize += mapPairToRemove.second.size
-        }
-    }
-
     fun undoPressed() {
-        //Basket.addPair(mapPairToRemove, deletedIndex)
-        basketView.restoreProduct(mapPairToRemove, deletedIndex)
-        updateTotalSizeAndTotalPrice(mapPairToRemove, false)
-        basketView.setOrderButtonIsEnabled(productListSize > 0)
+        Basket.addPair(mapPairToRemove, deletedIndex)
+        val productToNumberPair =
+            Pair(ProductPresentationMapper.transform(mapPairToRemove.second[0]), mapPairToRemove.second.size)
+        basketView.restoreSameProductsCard(productToNumberPair, deletedIndex)
+        basketView.setOrderButtonIsEnabled(Basket.productListSize > 0)
         updateBasketInfo()
     }
 }

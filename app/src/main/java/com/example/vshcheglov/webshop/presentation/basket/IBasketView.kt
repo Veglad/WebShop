@@ -1,8 +1,8 @@
 package com.example.vshcheglov.webshop.presentation.basket
 
 import android.content.Context
-import com.example.vshcheglov.webshop.domain.Basket
-import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.presentation.entites.BasketPresentation
+import com.example.vshcheglov.webshop.presentation.entites.ProductPresentation
 
 interface IBasketView {
     fun startOrderActivity()
@@ -13,13 +13,13 @@ interface IBasketView {
 
     fun showUndo(undoTitle: String)
 
-    fun showBasket(basket: Basket)
+    fun showBasket(basket: BasketPresentation)
 
     fun setOrderButtonIsEnabled(isEnabled: Boolean)
 
-    fun removeProductFromList(position: Int)
+    fun removeSameProductsCard(position: Int)
 
-    fun restoreProduct(mapPair: Pair<Int, MutableList<Product>>, deletedIndex: Int)
+    fun restoreSameProductsCard(productToNumberPair: Pair<ProductPresentation, Int>, deletedIndex: Int)
 
     fun setSameProductsNumber(position: Int, number: Int)
 

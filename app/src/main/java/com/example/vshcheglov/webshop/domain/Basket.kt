@@ -54,11 +54,13 @@ object Basket {
         productListMap = LinkedHashMap(updatedListOfPairs.toMap())
     }
 
-    fun removeProductIfAble(product: Product) {
+    fun removeProductIfAble(product: Product) : Boolean {
         val productList = productListMap[product.id]
         if (productList != null && productList.size > 1) {
             productList.remove(product)
+            return true
         }
+        return false
     }
 
     fun getTotalProductPrice(productId: Int): Double {

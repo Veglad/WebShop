@@ -15,6 +15,8 @@ import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerItemTouchHelper
+import com.example.vshcheglov.webshop.presentation.entites.BasketPresentation
+import com.example.vshcheglov.webshop.presentation.entites.ProductPresentation
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
 
@@ -37,7 +39,7 @@ class BasketActivity : AppCompatActivity(), IBasketView,
         basketMakeOrderButton.setOnClickListener { basketPresenter.orderButtonClick() }
     }
 
-    override fun showBasket(basket: Basket) {
+    override fun showBasket(basket: BasketPresentation) {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
             basketAdapter = BasketRecyclerAdapter(this@BasketActivity, basket).also {
@@ -98,17 +100,17 @@ class BasketActivity : AppCompatActivity(), IBasketView,
         basketMakeOrderButton.isEnabled = isEnabled
     }
 
-    override fun removeProductFromList(position: Int) {
+    override fun removeSameProductsCard(position: Int) {
         basketAdapter.removeItem(position)
     }
 
-    override fun restoreProduct(mapPair: Pair<Int, MutableList<Product>>, deletedIndex: Int) {
-        basketAdapter.restoreItem(mapPair, deletedIndex)
+    override fun restoreSameProductsCard(productToNumberPair: Pair<ProductPresentation, Int>, deletedIndex: Int) {
+        basketAdapter.restoreItem(productToNumberPair, deletedIndex)
     }
 
     override fun setSameProductsNumber(position: Int, number: Int) {
         val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
-        view?.let { basketAdapter.setProductsNumberByPosition(it, number) }
+        view?.let { basketAdapter.setProductsNumberByPosition(it, number, position) }
     }
 
     override fun setTotalProductPrice(position: Int, totalDiscountPrice: Double) {

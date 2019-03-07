@@ -8,11 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.domain.Basket
-import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.presentation.entites.BasketPresentation
+import com.example.vshcheglov.webshop.presentation.entites.ProductPresentation
 import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
-class BasketRecyclerAdapter(private val context: Context, val basket: Basket) : RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
+class BasketRecyclerAdapter(private val context: Context, val basket: BasketPresentation) :
+    RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
 
     var onProductNumberIncreasedListener: ((Int) -> Unit)? = null
     var onProductNumberDecreasedListener: ((Int) -> Unit)? = null
@@ -24,22 +25,18 @@ class BasketRecyclerAdapter(private val context: Context, val basket: Basket) : 
         return ViewHolder(view)
     }
 
-    override fun getItemCount() = basket.mapSize
+    override fun getItemCount() = basket.cardsNumber
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view = holder.view
-        val productList = basket.productListMap.values.toList()[position]
-        val sameProductsNumber = productList.size
-        if (productList.isNotEmpty()) {
-            bindWithProduct(position, view, sameProductsNumber, productList)
+        if(basket.listOfProductLists.isNotEmpty()) {
+            val productToNumberPair = basket.listOfProductLists[position]
+            bindWithProduct(position, view, productToNumberPair)
         }
     }
 
-    private fun bindWithProduct(
-        position: Int, view: View,
-        sameProductsNumber: Int, productList: MutableList<Product>
-    ) {
-        with(productList[0]) {
+    private fun bindWithProduct(position: Int, view: View, productToNumberPair: Pair<ProductPresentation, Int>) {
+        with(productToNumberPair.first) {
             Glide.with(view.context)
                 .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
@@ -49,7 +46,7 @@ class BasketRecyclerAdapter(private val context: Context, val basket: Basket) : 
                 name
             )
 
-            view.basketItemCountTextView.text = sameProductsNumber.toString()
+            view.basketItemCountTextView.text = productToNumberPair.second.toString()
             view.basketTitle.text = name
             view.basketDescription.text = shortDescription
 
@@ -58,12 +55,14 @@ class BasketRecyclerAdapter(private val context: Context, val basket: Basket) : 
 
             initSaleTitle(view, this)
             initProductPrice(view, this)
-            initTotalProductsPrice(view, basket.getTotalProductPrice(id))//TODO: Refactor this
-            initTotalProductsPriceTitle(view, basket.getTotalProductPrice(id))//TODO: Refactor this
+            initTotalProductsPrice(view, basket.totalPriceDiscount)
+            if(productToNumberPair.first.percentageDiscount > 0) {
+                initTotalProductsPriceTitle(view, basket.totalPriceDiscount)
+            }
         }
     }
 
-    private fun initProductPrice(view: View, product: Product) {
+    private fun initProductPrice(view: View, product: ProductPresentation) {
         view.basketPriceTextView.text =
             String.format(view.context.getString(R.string.price_format), product.priceWithDiscount)
         //Product price title
@@ -75,7 +74,7 @@ class BasketRecyclerAdapter(private val context: Context, val basket: Basket) : 
         }
     }
 
-    private fun initSaleTitle(view: View, product: Product) {
+    private fun initSaleTitle(view: View, product: ProductPresentation) {
         view.basketSaleTextView.text =
             String.format(view.context.getString(R.string.sale_format), product.percentageDiscount)
         if (product.percentageDiscount == 0) {
@@ -95,17 +94,23 @@ class BasketRecyclerAdapter(private val context: Context, val basket: Basket) : 
             String.format(view.context.getString(R.string.price_format), totalDiscountPrice)
     }
 
-    fun removeItem(position: Int) {//TODO: Move to presenter
-        basket.removeSameProducts(position)
+    fun removeItem(position: Int) {
+        basket.cardsNumber--//TODO: Move to helper
+        basket.productsNumber -= basket.listOfProductLists[position].second
+        basket.listOfProductLists.removeAt(position)
         notifyItemRemoved(position)
     }
 
-    fun restoreItem(pairProduct: Pair<Int, MutableList<Product>>, position: Int) {//TODO: Move to presenter
-        basket.addPair(pairProduct, position)
+    fun restoreItem(productToNumberPair: Pair<ProductPresentation, Int>, position: Int) {
+        basket.cardsNumber++//TODO: Move to helper
+        basket.productsNumber += productToNumberPair.second
+        basket.listOfProductLists.add(position, productToNumberPair)
         notifyItemInserted(position)
     }
 
-    fun setProductsNumberByPosition(view: View, number: Int) {
+    fun setProductsNumberByPosition(view: View, number: Int, position: Int) {
+        basket.productsNumber +=  number - basket.listOfProductLists[position].second//TODO: Move to helper
+        basket.listOfProductLists[position] = Pair(basket.listOfProductLists[position].first, number)
         view.basketItemCountTextView.text = number.toString()
     }
 

@@ -10,5 +10,6 @@ data class ProductPresentation(
     var imageUrl: String = "",
     var inStockNumber: Int = 0,
     var purchasesNumber: Int = 0,
-    var percentageDiscount: Int = 0
+    var percentageDiscount: Int = 0,
+    var priceWithDiscount:Double = 0.0
 )
