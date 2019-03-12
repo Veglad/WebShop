@@ -1,6 +1,5 @@
 package com.example.vshcheglov.webshop.presentation.detail
 
-import android.os.Bundle
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 

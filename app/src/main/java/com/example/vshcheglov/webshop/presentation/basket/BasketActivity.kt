@@ -20,7 +20,7 @@ import com.example.vshcheglov.webshop.presentation.entites.ProductPresentation
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
 
-class BasketActivity : AppCompatActivity(), IBasketView,
+class BasketActivity : AppCompatActivity(), BasketPresenter.IBasketView,
     BasketRecyclerItemTouchHelper.BasketRecyclerItemTouchHelperListener {
 
     lateinit var basketAdapter: BasketRecyclerAdapter
