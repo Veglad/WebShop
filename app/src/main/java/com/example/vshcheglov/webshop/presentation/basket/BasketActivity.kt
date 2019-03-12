@@ -35,7 +35,7 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     override fun showBasket(productBaseketCardList: MutableList<ProductBasketCard>) {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
-            basketAdapter = BasketRecyclerAdapter(this@BasketActivity, productBaseketCardList).also {
+            basketAdapter = BasketRecyclerAdapter(productBaseketCardList).also {
                 it.onProductNumberIncreasedListener = { position -> basketPresenter.productNumberIncreased(position) }
                 it.onProductNumberDecreasedListener = { position -> basketPresenter.productNumberDecreased(position) }
             }
@@ -110,11 +110,11 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
 
     override fun setTotalProductPrice(position: Int, totalDiscountPrice: Double) {
         val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
-        view?.let { basketAdapter.initTotalProductsPrice(it, totalDiscountPrice) }
+        view?.let { basketAdapter.updateCardTotalPrice(position, totalDiscountPrice, view) }
     }
 
     override fun setTotalProductPriceTitle(position: Int, totalPrice: Double, percentageDiscount: Double) {
         val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
-        view?.let { basketAdapter.initTotalProductsPriceTitle(it, totalPrice, percentageDiscount) }
+        view?.let { basketAdapter.updateCardTotalPriceTitle(position, totalPrice, view, percentageDiscount) }
     }
 }

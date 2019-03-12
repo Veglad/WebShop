@@ -11,7 +11,7 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
-class BasketRecyclerAdapter(private val context: Context, private val cardProductList: MutableList<ProductBasketCard>) :
+class BasketRecyclerAdapter( private val cardProductList: MutableList<ProductBasketCard>) :
     RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
 
     var onProductNumberIncreasedListener: ((Int) -> Unit)? = null
@@ -50,7 +50,7 @@ class BasketRecyclerAdapter(private val context: Context, private val cardProduc
             initSaleTitle(view, this)
             initProductPrice(view, this)
             initTotalProductsPrice(view, totalPriceDiscount)
-            initTotalProductsPriceTitle(view, totalPriceDiscount, percentageDiscount)
+            initTotalProductsPriceTitle(view, totalPrice, percentageDiscount)
         }
     }
 
@@ -103,6 +103,16 @@ class BasketRecyclerAdapter(private val context: Context, private val cardProduc
     fun setProductsNumberByPosition(view: View, productsNumber: Int, position: Int) {
         cardProductList[position].productsNumber = productsNumber
         view.productBasketCountTextView.text = productsNumber.toString()
+    }
+
+    fun updateCardTotalPrice(position: Int, totalPriceDiscount: Double, view: View) {
+        cardProductList[position].totalPriceDiscount = totalPriceDiscount
+        initTotalProductsPrice(view, totalPriceDiscount)
+    }
+
+    fun updateCardTotalPriceTitle(position: Int, totalPrice: Double, view: View, percentageDiscount: Double) {
+        cardProductList[position].totalPrice = totalPrice
+        initTotalProductsPriceTitle(view, totalPrice, percentageDiscount)
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)

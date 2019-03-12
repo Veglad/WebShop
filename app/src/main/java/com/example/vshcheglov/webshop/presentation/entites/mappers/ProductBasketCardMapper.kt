@@ -6,13 +6,12 @@ import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 
 object ProductBasketCardMapper {
 
-    fun transform(productList: List<Product>, totalProductPrice: Double,
+    fun transform(product: Product, productCount: Int, totalProductPrice: Double,
                   totalProductPriceDiscount: Double) = ProductBasketCard().also {
-        val product = productList[0]
         it.name = product.name
         it.description = product.shortDescription
         it.imageUrl = product.imageThumbnailUrl
-        it.productsNumber = productList.size
+        it.productsNumber = productCount
         it.totalPriceDiscount = totalProductPriceDiscount
         it.totalPrice = totalProductPrice
         it.productPriceDiscount = product.priceWithDiscount
@@ -21,11 +20,12 @@ object ProductBasketCardMapper {
     }
 
     fun transform(basket: Basket) = mutableListOf<ProductBasketCard>().apply {
-        for (idToProductList in basket.productListMap) {
-            val id = idToProductList.key
-            val totalProductPrice = basket.getTotalProductPrice(id)
-            val totalProductPriceDiscount = basket.getTotalDiscountProductPrice(id)
-            this.add(transform(idToProductList.value, totalProductPrice, totalProductPriceDiscount))
+        for (productToCount in basket.productToCountList) {
+            val product = productToCount.first
+            val productCount = productToCount.second
+            val totalProductPrice = basket.getSameProductPrice(product.id)
+            val totalProductPriceDiscount = basket.getSameProductDiscountPrice(product.id)
+            this.add(transform(product, productCount, totalProductPrice, totalProductPriceDiscount))
         }
     }
 }

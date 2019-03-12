@@ -2,83 +2,101 @@ package com.example.vshcheglov.webshop.domain
 
 object Basket {
 
-    var productListMap = linkedMapOf<Int, MutableList<Product>>()
+    var productToCountList = mutableListOf<Pair<Product, Int>>()
         private set
 
-    val listOfProduct: List<Product>
-        get() {
-            return productListMap.flatMap { entry -> entry.value }
-        }
-    var mapSize = 0
-        get() = productListMap.size
+    var size = 0
+        get() = productToCountList.size
         private set
 
-    var productListSize = 0
-        get() = listOfProduct.size
-        private set
+    var productsNumber = 0
 
     var totalPrice = 0.0
-        get() {
-            return if (productListMap.isEmpty()) {
-                0.0
-            } else {
-                productListMap.flatMap { entry -> entry.value }
-                    .sumByDouble { it.price }
-            }
-        }
-        private set
 
     var totalPriceWithDiscount = 0.0
-        get() {
-            return if (productListMap.isEmpty()) {
-                0.0
-            } else {
-                productListMap.flatMap { entry -> entry.value }
-                    .sumByDouble { it.priceWithDiscount }
-            }
-        }
-        private set
 
-    fun addProduct(product: Product) {
-        if (productListMap.containsKey(product.id)) {
-            productListMap[product.id]?.add(product)
+    fun addProduct(product: Product, position: Int = size) {
+        val productIndex = productToCountList.indexOfFirst { it.first.id == product.id }
+        if (productIndex == -1) {
+            productToCountList.add(position, Pair(product, 1))
+
+            updateBasketWithNewProduct(product)
         } else {
-            productListMap[product.id] = mutableListOf(product)
+            incrementProductCount(productIndex)
         }
     }
 
-    fun addPair(pairProduct: Pair<Int, MutableList<Product>>, position: Int) {
-        val updatedListOfPairs = productListMap.toList()
-            .toMutableList()
-        updatedListOfPairs.add(position, pairProduct)
-        productListMap = LinkedHashMap(updatedListOfPairs.toMap())
+    fun incrementProductCount(position: Int) {
+        val productToCount = productToCountList[position]
+        val updatedProductToCount = Pair(productToCount.first, productToCount.second + 1)
+        productToCountList[position] = updatedProductToCount
+
+        updateBasketWithNewProduct(productToCount.first)
     }
 
-    fun removeProductIfAble(product: Product) : Boolean {
-        val productList = productListMap[product.id]
-        if (productList != null && productList.size > 1) {
-            productList.remove(product)
+    private fun updateBasketWithNewProduct(product: Product) {
+        productsNumber++
+        totalPrice += product.price
+        totalPriceWithDiscount += product.priceWithDiscount
+    }
+
+    fun removeProductIfAble(product: Product): Boolean {
+        val productIndex = productToCountList.indexOfFirst { it.first.id == product.id }
+        return decrementProductCountIfAble(productIndex)
+    }
+
+    fun decrementProductCountIfAble(position: Int): Boolean {
+        val productToCount = productToCountList[position]
+        if (productToCount.second > 1) {
+            val updatedProductToCount = Pair(productToCount.first, productToCount.second - 1)
+            productToCountList[position] = updatedProductToCount
+
+            updateBasketWithRemovedProduct(productToCount)
             return true
         }
+
         return false
     }
 
-    fun getTotalProductPrice(productId: Int): Double {
-        val productList = productListMap[productId]
-        return productList?.sumByDouble { it.price } ?: 0.0
+    private fun updateBasketWithRemovedProduct(productToCount: Pair<Product, Int>) {
+        productsNumber--
+        totalPrice -= productToCount.first.price
+        totalPriceWithDiscount -= productToCount.first.priceWithDiscount
     }
 
-    fun getTotalDiscountProductPrice(productId: Int): Double {
-        val productList = productListMap[productId]
-        return productList?.sumByDouble { it.priceWithDiscount } ?: 0.0
+    fun getSameProductPrice(productId: Int): Double {
+        val productIndex = productToCountList.indexOfFirst { it.first.id == productId}
+        return productToCountList[productIndex].first.price * productToCountList[productIndex].second
     }
+
+
+    fun getSameProductDiscountPrice(productId: Int): Double{
+        val productIndex = productToCountList.indexOfFirst { it.first.id == productId}
+        return productToCountList[productIndex].first.priceWithDiscount * productToCountList[productIndex].second
+    }
+
 
     fun removeSameProducts(index: Int) {
-        val updatedListOfPairs = productListMap.toList()
-            .toMutableList()
-        updatedListOfPairs.removeAt(index)
-        productListMap = LinkedHashMap(updatedListOfPairs.toMap())
+        val productToCount = productToCountList.removeAt(index)
+
+        updateBasketWithRemovedEntry(productToCount)
     }
 
-    fun getSameProductListByPosition(position: Int) = productListMap.toList()[position].second
+    private fun updateBasketWithRemovedEntry(productToCount: Pair<Product, Int>) {
+        productsNumber -= productToCount.second
+        totalPrice -= productToCount.first.price * productToCount.second
+        totalPriceWithDiscount -= productToCount.first.priceWithDiscount * productToCount.second
+    }
+
+    fun addProductToCountEntry(productToCount: Pair<Product, Int>, position: Int) {
+        productToCountList.add(position, productToCount)
+
+        updateBasketWithNewEntry(productToCount)
+    }
+
+    private fun updateBasketWithNewEntry(productToCount: Pair<Product, Int>) {
+        productsNumber += productToCount.second
+        totalPrice += productToCount.first.price * productToCount.second
+        totalPriceWithDiscount += productToCount.first.priceWithDiscount * productToCount.second
+    }
 }
