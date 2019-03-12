@@ -3,7 +3,7 @@ package com.example.vshcheglov.webshop.data.enteties.mappers
 import com.example.vshcheglov.webshop.data.enteties.ProductEntity
 import com.example.vshcheglov.webshop.domain.Product
 
-object ProductEntityDataMapper {
+class ProductEntityDataMapper {
 
     fun transform(productEntity: ProductEntity) = Product().apply {
         id = productEntity.deviceId

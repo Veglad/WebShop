@@ -4,7 +4,7 @@ import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 
-object ProductBasketCardMapper {
+class ProductBasketCardMapper {
 
     fun transform(product: Product, productCount: Int, totalProductPrice: Double,
                   totalProductPriceDiscount: Double) = ProductBasketCard().also {

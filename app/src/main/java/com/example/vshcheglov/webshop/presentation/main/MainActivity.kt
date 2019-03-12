@@ -6,17 +6,37 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
+import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
+import com.example.vshcheglov.webshop.data.products.NetworkDataSource
+import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main_primary.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
-    private var mainPresenter = MainPresenter(this)
+    private var mainPresenter = MainPresenter(
+        this,
+        ProductRepository(
+            NetworkDataSource(
+                ProductEntityDataMapper(),
+                Retrofit.Builder()
+                    .baseUrl("https://us-central1-webshop-58013.cloudfunctions.net")
+                    .addConverterFactory(MoshiConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .build()
+            )
+        ),
+        CompositeDisposable()
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +76,8 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     }
 
     override fun setShowRetry(isVisible: Boolean) {
-        activityMainErrorLayout.visibility = if(isVisible) View.VISIBLE else View.GONE
-        activityMainPrimaryLayout.visibility = if(isVisible) View.GONE else View.VISIBLE
+        activityMainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
+        activityMainPrimaryLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
     }
 
     override fun showError(throwable: Throwable) {

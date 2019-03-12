@@ -8,29 +8,22 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-object NetworkDataSource {
-    private const val BASE_URL = "https://us-central1-webshop-58013.cloudfunctions.net"
-
+class NetworkDataSource(private val productEntityDataMapper: ProductEntityDataMapper,
+                        private val retrofit: Retrofit) {
     private val webShopApi: WebShopApi by lazy {
-        val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-
         retrofit.create(WebShopApi::class.java)
     }
 
     fun getAllDevices(): Single<List<Product>> = webShopApi.getDevices().map {
-        ProductEntityDataMapper.transform(it)
+        productEntityDataMapper.transform(it)
     }
 
     @Deprecated("Does not work")
     fun getDevice(id: Long): Single<Product> = webShopApi.getDevice(id).map {
-        ProductEntityDataMapper.transform(it)
+        productEntityDataMapper.transform(it)
     }
 
     fun getAllPromotionalDevices(): Single<List<Product>> = webShopApi.getPromotionalDevices().map {
-        ProductEntityDataMapper.transform(it)
+        productEntityDataMapper.transform(it)
     }
 }

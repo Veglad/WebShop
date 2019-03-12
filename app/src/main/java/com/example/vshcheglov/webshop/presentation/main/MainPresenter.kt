@@ -9,9 +9,8 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class MainPresenter(val mainView: MainView) {
-
-    private val compositeDisposable = CompositeDisposable()
+class MainPresenter(val mainView: MainView, private val productRepository: ProductRepository,
+                    private var compositeDisposable: CompositeDisposable) {
 
     fun clearRescources() {
         compositeDisposable.dispose()
@@ -31,7 +30,7 @@ class MainPresenter(val mainView: MainView) {
         mainView.showLoading()
 
         val disposable = Single.zip(
-            ProductRepository.getAllDevices(), ProductRepository.getAllPromotionalDevices()
+            productRepository.getAllDevices(), productRepository.getAllPromotionalDevices()
             , BiFunction { products: List<Product>, promotionals: List<Product> ->
                 Pair(products, promotionals)
             })

@@ -6,7 +6,7 @@ import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import kotlin.properties.Delegates
 
-class BasketPresenter(private val basketView: BasketView) {
+class BasketPresenter(private val basketView: BasketView, private val productBasketCardMapper: ProductBasketCardMapper) {
 
     private lateinit var productToCount: Pair<Product, Int>
     private var deletedIndex by Delegates.notNull<Int>()
@@ -17,7 +17,7 @@ class BasketPresenter(private val basketView: BasketView) {
 
     fun initProductListWithBasketInfo() {
         updateBasketInfo()
-        basketView.showBasket(ProductBasketCardMapper.transform(Basket))
+        basketView.showBasket(productBasketCardMapper.transform(Basket))
     }
 
     fun productNumberIncreased(position: Int) {
