@@ -2,15 +2,13 @@ package com.example.vshcheglov.webshop.presentation.basket
 
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
-import com.example.vshcheglov.webshop.presentation.entites.BasketPresentation
-import com.example.vshcheglov.webshop.presentation.entites.ProductPresentation
-import com.example.vshcheglov.webshop.presentation.entites.mappers.BasketPresentationMapper
-import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductPresentationMapper
+import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
+import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import kotlin.properties.Delegates
 
 class BasketPresenter(private val basketView: BasketView) {
 
-    private lateinit var mapPairToRemove: Pair<Int, MutableList<Product>>
+    private lateinit var removedIdToProductListPair: Pair<Int, MutableList<Product>>
     private var deletedIndex by Delegates.notNull<Int>()
 
     fun makeOrder() {
@@ -19,7 +17,7 @@ class BasketPresenter(private val basketView: BasketView) {
 
     fun initProductListWithBasketInfo() {
         updateBasketInfo()
-        basketView.showBasket(BasketPresentationMapper.transform(Basket))
+        basketView.showBasket(ProductBasketCardMapper.transform(Basket))
     }
 
     fun productNumberIncreased(position: Int) {
@@ -45,7 +43,7 @@ class BasketPresenter(private val basketView: BasketView) {
         basketView.setSameProductsNumber(position, sameProductList.size)
         basketView.setTotalProductPrice(position, Basket.getTotalDiscountProductPrice(product.id))
         if (product.percentageDiscount > 0) {
-            basketView.setTotalProductPriceTitle(position, Basket.getTotalProductPrice(product.id))
+            basketView.setTotalProductPriceTitle(position, Basket.getTotalProductPrice(product.id), product.percentageDiscount.toDouble())
         }
     }
 
@@ -55,24 +53,22 @@ class BasketPresenter(private val basketView: BasketView) {
     }
 
     fun removeProductFromBasket(position: Int) {
-        mapPairToRemove = Basket.productListMap.toList()[position]
+        removedIdToProductListPair = Basket.productListMap.toList()[position]
         deletedIndex = position
 
         Basket.removeSameProducts(position)
-        basketView.removeSameProductsCard(position)
+        basketView.removeProductCard(position)
         updateBasketInfo()
         basketView.setOrderButtonIsEnabled(Basket.productListSize > 0)
 
-        val removedItemName = mapPairToRemove.second[0].name
+        val removedItemName = removedIdToProductListPair.second[0].name
         basketView.showUndo(removedItemName)
 
     }
 
     fun undoPressed() {
-        Basket.addPair(mapPairToRemove, deletedIndex)
-        val productToNumberPair =
-            Pair(ProductPresentationMapper.transform(mapPairToRemove.second[0]), mapPairToRemove.second.size)
-        basketView.restoreSameProductsCard(productToNumberPair, deletedIndex)
+        Basket.addPair(removedIdToProductListPair, deletedIndex)
+        basketView.restoreSameProductsCard(deletedIndex)
         basketView.setOrderButtonIsEnabled(Basket.productListSize > 0)
         updateBasketInfo()
     }
@@ -86,18 +82,18 @@ class BasketPresenter(private val basketView: BasketView) {
 
         fun showUndo(productName: String)
 
-        fun showBasket(basket: BasketPresentation)
+        fun showBasket(productBaseketCardList: MutableList<ProductBasketCard>)
 
         fun setOrderButtonIsEnabled(isEnabled: Boolean)
 
-        fun removeSameProductsCard(position: Int)
+        fun removeProductCard(position: Int)
 
-        fun restoreSameProductsCard(productToNumberPair: Pair<ProductPresentation, Int>, deletedIndex: Int)
+        fun restoreSameProductsCard(deletedIndex: Int)
 
         fun setSameProductsNumber(position: Int, number: Int)
 
         fun setTotalProductPrice(position: Int, totalDiscountPrice: Double)
 
-        fun setTotalProductPriceTitle(position: Int, totalPrice: Double)
+        fun setTotalProductPriceTitle(position: Int, totalPrice: Double, percentageDiscount: Double)
     }
 }

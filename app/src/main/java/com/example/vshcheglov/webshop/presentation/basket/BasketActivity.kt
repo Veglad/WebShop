@@ -1,6 +1,5 @@
 package com.example.vshcheglov.webshop.presentation.basket
 
-import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -13,15 +12,14 @@ import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerItemTouchHelper
-import com.example.vshcheglov.webshop.presentation.entites.BasketPresentation
-import com.example.vshcheglov.webshop.presentation.entites.ProductPresentation
+import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
 
 class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     BasketRecyclerItemTouchHelper.BasketRecyclerItemTouchHelperListener {
 
-    lateinit var basketAdapter: BasketRecyclerAdapter
+    private lateinit var basketAdapter: BasketRecyclerAdapter
     private var basketPresenter = BasketPresenter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,10 +32,10 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
         basketMakeOrderButton.setOnClickListener { basketPresenter.makeOrder() }
     }
 
-    override fun showBasket(basket: BasketPresentation) {
+    override fun showBasket(productBaseketCardList: MutableList<ProductBasketCard>) {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
-            basketAdapter = BasketRecyclerAdapter(this@BasketActivity, basket).also {
+            basketAdapter = BasketRecyclerAdapter(this@BasketActivity, productBaseketCardList).also {
                 it.onProductNumberIncreasedListener = { position -> basketPresenter.productNumberIncreased(position) }
                 it.onProductNumberDecreasedListener = { position -> basketPresenter.productNumberDecreased(position) }
             }
@@ -97,12 +95,12 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
         basketMakeOrderButton.isEnabled = isEnabled
     }
 
-    override fun removeSameProductsCard(position: Int) {
+    override fun removeProductCard(position: Int) {
         basketAdapter.removeItem(position)
     }
 
-    override fun restoreSameProductsCard(productToNumberPair: Pair<ProductPresentation, Int>, deletedIndex: Int) {
-        basketAdapter.restoreItem(productToNumberPair, deletedIndex)
+    override fun restoreSameProductsCard(deletedIndex: Int) {
+        basketAdapter.restoreItem(deletedIndex)
     }
 
     override fun setSameProductsNumber(position: Int, number: Int) {
@@ -115,8 +113,8 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
         view?.let { basketAdapter.initTotalProductsPrice(it, totalDiscountPrice) }
     }
 
-    override fun setTotalProductPriceTitle(position: Int, totalPrice: Double) {
+    override fun setTotalProductPriceTitle(position: Int, totalPrice: Double, percentageDiscount: Double) {
         val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
-        view?.let { basketAdapter.initTotalProductsPriceTitle(it, totalPrice) }
+        view?.let { basketAdapter.initTotalProductsPriceTitle(it, totalPrice, percentageDiscount) }
     }
 }
