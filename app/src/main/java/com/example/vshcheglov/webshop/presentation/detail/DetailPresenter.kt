@@ -8,13 +8,19 @@ class DetailPresenter(private val detailView: IDetailView) {
 
     private lateinit var product: Product
 
-    fun onCreate(extras: Bundle?) {
-        product = extras?.getParcelable(DetailActivity.PRODUCT_KEY) ?: Product()
-        detailView.showProductInfo(product)
+    fun showProductInfo(product: Product?) {
+        this.product = product?: Product()
+        detailView.showProductInfo(this.product)
     }
 
-    fun buyProductClick() {
+    fun buyProduct() {
         Basket.addProduct(product)
         detailView.startBasketActivity()
+    }
+
+    interface IDetailView {
+        fun startBasketActivity()
+
+        fun showProductInfo(product: Product)
     }
 }

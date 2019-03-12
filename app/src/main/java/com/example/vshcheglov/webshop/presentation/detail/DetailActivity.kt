@@ -7,12 +7,11 @@ import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 
-class DetailActivity : AppCompatActivity(), IDetailView {
+class DetailActivity : AppCompatActivity(), DetailPresenter.IDetailView {
 
     companion object {
         const val PRODUCT_KEY = "product_key"
@@ -24,7 +23,7 @@ class DetailActivity : AppCompatActivity(), IDetailView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        detailPresenter.onCreate(intent.extras)
+        detailPresenter.showProductInfo(intent.extras?.getParcelable(DetailActivity.PRODUCT_KEY))
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
@@ -32,7 +31,7 @@ class DetailActivity : AppCompatActivity(), IDetailView {
         }
 
         detailBuyFloatActionButton.setOnClickListener {
-            detailPresenter.buyProductClick()
+            detailPresenter.buyProduct()
         }
     }
 
