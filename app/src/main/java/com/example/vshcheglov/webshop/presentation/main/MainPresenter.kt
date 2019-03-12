@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.presentation.main
 
+import android.content.Context
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
@@ -11,7 +12,7 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class MainPresenter(val mainView: IMainView) {
+class MainPresenter(val mainView: MainView) {
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -67,5 +68,21 @@ class MainPresenter(val mainView: IMainView) {
             })
 
         compositeDisposable.add(disposable)
+    }
+
+    interface MainView {
+        fun showLoading()
+
+        fun hideLoading()
+
+        fun setShowRetry(isVisible: Boolean)
+
+        fun showError(errorMessage: String)
+
+        fun showProductList(productList: List<Product>)
+
+        fun showPromotionalProductList(promotionalList: List<Product>)
+
+        val context: Context
     }
 }
