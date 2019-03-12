@@ -1,7 +1,5 @@
 package com.example.vshcheglov.webshop.presentation.basket
 
-import android.content.Context
-import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.entites.BasketPresentation
@@ -15,11 +13,11 @@ class BasketPresenter(private val basketView: BasketView) {
     private lateinit var mapPairToRemove: Pair<Int, MutableList<Product>>
     private var deletedIndex by Delegates.notNull<Int>()
 
-    fun orderButtonClick() {
+    fun makeOrder() {
         basketView.startOrderActivity()
     }
 
-    fun onCreate() {
+    fun initProductListWithBasketInfo() {
         updateBasketInfo()
         basketView.showBasket(BasketPresentationMapper.transform(Basket))
     }
@@ -52,13 +50,11 @@ class BasketPresenter(private val basketView: BasketView) {
     }
 
     private fun updateBasketInfo() {
-        val basketAmount =
-            String.format(basketView.context.getString(R.string.price_format), Basket.totalPriceWithDiscount)
-        basketView.setBasketAmount(basketAmount)
+        basketView.setBasketAmount(Basket.totalPriceWithDiscount)
         basketView.setBasketItemsNumber(Basket.productListSize.toString())
     }
 
-    fun onProductItemSwiped(position: Int) {
+    fun removeProductFromBasket(position: Int) {
         mapPairToRemove = Basket.productListMap.toList()[position]
         deletedIndex = position
 
@@ -68,9 +64,7 @@ class BasketPresenter(private val basketView: BasketView) {
         basketView.setOrderButtonIsEnabled(Basket.productListSize > 0)
 
         val removedItemName = mapPairToRemove.second[0].name
-        val undoTitle =
-            String.format(basketView.context.getString(R.string.removed_item_snackbar_format), removedItemName)
-        basketView.showUndo(undoTitle)
+        basketView.showUndo(removedItemName)
 
     }
 
@@ -86,11 +80,11 @@ class BasketPresenter(private val basketView: BasketView) {
     interface BasketView {
         fun startOrderActivity()
 
-        fun setBasketAmount(amount: String)
+        fun setBasketAmount(amount: Double)
 
         fun setBasketItemsNumber(itemsNumber: String)
 
-        fun showUndo(undoTitle: String)
+        fun showUndo(productName: String)
 
         fun showBasket(basket: BasketPresentation)
 
@@ -105,7 +99,5 @@ class BasketPresenter(private val basketView: BasketView) {
         fun setTotalProductPrice(position: Int, totalDiscountPrice: Double)
 
         fun setTotalProductPriceTitle(position: Int, totalPrice: Double)
-
-        val context: Context
     }
 }

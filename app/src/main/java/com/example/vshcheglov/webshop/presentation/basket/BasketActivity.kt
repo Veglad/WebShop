@@ -24,17 +24,14 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     lateinit var basketAdapter: BasketRecyclerAdapter
     private var basketPresenter = BasketPresenter(this)
 
-    override val context: Context
-        get() = this
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_basket)
 
-        basketPresenter.onCreate()
+        basketPresenter.initProductListWithBasketInfo()
 
         initActionBar()
-        basketMakeOrderButton.setOnClickListener { basketPresenter.orderButtonClick() }
+        basketMakeOrderButton.setOnClickListener { basketPresenter.makeOrder() }
     }
 
     override fun showBasket(basket: BasketPresentation) {
@@ -65,7 +62,7 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
         val holder = viewHolder as? BasketRecyclerAdapter.ViewHolder
-        holder?.let { basketPresenter.onProductItemSwiped(position) }
+        holder?.let { basketPresenter.removeProductFromBasket(position) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -80,15 +77,17 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
         startActivity(intent)
     }
 
-    override fun setBasketAmount(amount: String) {
-        basketAmountTextView.text = amount
+    override fun setBasketAmount(amount: Double) {
+        val amountTitle = String.format(getString(R.string.price_format), amount)
+        basketAmountTextView.text = amountTitle
     }
 
     override fun setBasketItemsNumber(itemsNumber: String) {
         basketItemsTextView.text = itemsNumber
     }
 
-    override fun showUndo(undoTitle: String) {
+    override fun showUndo(productName: String) {
+        val undoTitle = String.format(getString(R.string.removed_item_snackbar_format), productName)
         val snackBar = Snackbar.make(basketMainConstraint, undoTitle, Snackbar.LENGTH_SHORT)
         snackBar.setAction(getString(R.string.undo_uppercase)) { basketPresenter.undoPressed() }
         snackBar.show()
