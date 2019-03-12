@@ -9,7 +9,7 @@ import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
 import kotlinx.android.synthetic.main.activity_order.*
 
-class OrderActivity : AppCompatActivity(), OrderPresenter.IOrderView {
+class OrderActivity : AppCompatActivity(), OrderPresenter.OrderView {
 
     private val orderPresenter = OrderPresenter(this)
 

@@ -3,7 +3,7 @@ package com.example.vshcheglov.webshop.presentation.detail
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 
-class DetailPresenter(private val detailView: IDetailView) {
+class DetailPresenter(private val detailView: DetailView) {
 
     private lateinit var product: Product
 
@@ -17,7 +17,7 @@ class DetailPresenter(private val detailView: IDetailView) {
         detailView.startBasketActivity()
     }
 
-    interface IDetailView {
+    interface DetailView {
         fun startBasketActivity()
 
         fun showProductInfo(product: Product)

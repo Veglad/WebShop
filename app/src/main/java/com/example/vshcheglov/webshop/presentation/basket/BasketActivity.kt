@@ -11,8 +11,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.domain.Basket
-import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerItemTouchHelper
 import com.example.vshcheglov.webshop.presentation.entites.BasketPresentation
@@ -20,7 +18,7 @@ import com.example.vshcheglov.webshop.presentation.entites.ProductPresentation
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
 
-class BasketActivity : AppCompatActivity(), BasketPresenter.IBasketView,
+class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     BasketRecyclerItemTouchHelper.BasketRecyclerItemTouchHelperListener {
 
     lateinit var basketAdapter: BasketRecyclerAdapter

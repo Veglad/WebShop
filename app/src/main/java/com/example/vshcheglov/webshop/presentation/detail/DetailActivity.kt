@@ -11,7 +11,7 @@ import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import kotlinx.android.synthetic.main.activity_detail.*
 
-class DetailActivity : AppCompatActivity(), DetailPresenter.IDetailView {
+class DetailActivity : AppCompatActivity(), DetailPresenter.DetailView {
 
     companion object {
         const val PRODUCT_KEY = "product_key"

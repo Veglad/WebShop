@@ -10,7 +10,7 @@ import com.example.vshcheglov.webshop.presentation.entites.mappers.BasketPresent
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductPresentationMapper
 import kotlin.properties.Delegates
 
-class BasketPresenter(private val basketView: IBasketView) {
+class BasketPresenter(private val basketView: BasketView) {
 
     private lateinit var mapPairToRemove: Pair<Int, MutableList<Product>>
     private var deletedIndex by Delegates.notNull<Int>()
@@ -83,7 +83,7 @@ class BasketPresenter(private val basketView: IBasketView) {
         updateBasketInfo()
     }
 
-    interface IBasketView {
+    interface BasketView {
         fun startOrderActivity()
 
         fun setBasketAmount(amount: String)
