@@ -1,6 +1,5 @@
 package com.example.vshcheglov.webshop.presentation.main
 
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -8,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main_primary.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
@@ -18,19 +18,17 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
     private var mainPresenter = MainPresenter(this)
 
-    override val context: Context
-        get() = this
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mainPresenter.onCreate()
+
+        mainPresenter.loadProductsIfInternetAvailable(isNetworkAvailable())
 
         tryAgainButton.setOnClickListener {
-            mainPresenter.tryAgainButtonClick()
+            mainPresenter.loadProductsIfInternetAvailable(isNetworkAvailable())
         }
         productsSwipeRefreshLayout.setOnRefreshListener {
-            mainPresenter.onRefresh()
+            mainPresenter.loadProductsIfInternetAvailable(isNetworkAvailable())
         }
 
         productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
@@ -41,7 +39,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     }
 
     override fun onDestroy() {
-        mainPresenter.onDestroy()
+        mainPresenter.clearRescources()
         super.onDestroy()
     }
 
@@ -62,9 +60,10 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         activityMainPrimaryLayout.visibility = if(isVisible) View.GONE else View.VISIBLE
     }
 
-    override fun showError(errorMessage: String) {
+    override fun showError(throwable: Throwable) {
         if (!isFinishing) {
-            Toast.makeText(this@MainActivity, errorMessage, Toast.LENGTH_SHORT).show()
+            val message = getString(R.string.loading_products_error)
+            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
         }
     }
 

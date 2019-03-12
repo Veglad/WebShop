@@ -1,10 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.main
 
-import android.content.Context
-import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
-import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -16,25 +13,13 @@ class MainPresenter(val mainView: MainView) {
 
     private val compositeDisposable = CompositeDisposable()
 
-    fun onCreate() {
-        loadProductsIfInternetAvailable()
-    }
-
-    fun tryAgainButtonClick() {
-        loadProductsIfInternetAvailable()
-    }
-
-    fun onRefresh() {
-        fetchProducts()
-    }
-
-    fun onDestroy() {
+    fun clearRescources() {
         compositeDisposable.dispose()
         compositeDisposable.clear()
     }
 
-    private fun loadProductsIfInternetAvailable() {
-        if (mainView.context.isNetworkAvailable()) {
+    fun loadProductsIfInternetAvailable(isNetworkAvailable: Boolean) {
+        if (isNetworkAvailable) {
             mainView.setShowRetry(false)
             fetchProducts()
         } else {
@@ -54,16 +39,15 @@ class MainPresenter(val mainView: MainView) {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<Pair<List<Product>, List<Product>>>() {
                 override fun onSuccess(pairProducts: Pair<List<Product>, List<Product>>) {
-                    mainView.hideLoading()
                     val promotionalList = pairProducts.second.filter { it.percentageDiscount > 0 }
-
+                    mainView.hideLoading()
                     mainView.showProductList(pairProducts.first)
                     mainView.showPromotionalProductList(promotionalList)
                 }
 
                 override fun onError(e: Throwable) {
                     mainView.hideLoading()
-                    mainView.showError(mainView.context.resources.getString(R.string.loading_products_error))
+                    mainView.showError(e)
                 }
             })
 
@@ -77,12 +61,10 @@ class MainPresenter(val mainView: MainView) {
 
         fun setShowRetry(isVisible: Boolean)
 
-        fun showError(errorMessage: String)
+        fun showError(throwable: Throwable)
 
         fun showProductList(productList: List<Product>)
 
         fun showPromotionalProductList(promotionalList: List<Product>)
-
-        val context: Context
     }
 }
