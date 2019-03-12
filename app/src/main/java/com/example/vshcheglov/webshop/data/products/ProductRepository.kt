@@ -1,10 +1,10 @@
-package com.example.vshcheglov.webshop.data
+package com.example.vshcheglov.webshop.data.products
 
-import com.example.vshcheglov.webshop.data.network.NetworkDataSource
+import com.example.vshcheglov.webshop.data.ProductDataSource
 import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single
 
-object ProductRepository : IProductDataSource {
+object ProductRepository : ProductDataSource {
 
     override fun getAllDevices(): Single<List<Product>> {
         return NetworkDataSource.getAllDevices()

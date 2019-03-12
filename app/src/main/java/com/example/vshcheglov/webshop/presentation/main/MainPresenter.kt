@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.main
 
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.data.ProductRepository
+import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import io.reactivex.Single
@@ -34,10 +34,10 @@ class MainPresenter(val mainView: IMainView) {
 
     private fun loadProductsIfInternetAvailable() {
         if (mainView.context.isNetworkAvailable()) {
-            mainView.hideRetry()
+            mainView.setShowRetry(false)
             fetchProducts()
         } else {
-            mainView.showRetry()
+            mainView.setShowRetry(true)
         }
     }
 

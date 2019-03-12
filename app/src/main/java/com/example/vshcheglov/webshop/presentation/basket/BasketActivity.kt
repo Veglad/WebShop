@@ -92,7 +92,7 @@ class BasketActivity : AppCompatActivity(), IBasketView,
 
     override fun showUndo(undoTitle: String) {
         val snackBar = Snackbar.make(basketMainConstraint, undoTitle, Snackbar.LENGTH_SHORT)
-        snackBar.setAction(getString(R.string.undo_uppercase)) {basketPresenter.undoPressed()}
+        snackBar.setAction(getString(R.string.undo_uppercase)) { basketPresenter.undoPressed() }
         snackBar.show()
     }
 

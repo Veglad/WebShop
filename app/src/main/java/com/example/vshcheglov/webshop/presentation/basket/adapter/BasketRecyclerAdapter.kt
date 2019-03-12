@@ -29,7 +29,7 @@ class BasketRecyclerAdapter(private val context: Context, val basket: BasketPres
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val view = holder.view
-        if(basket.listOfProductLists.isNotEmpty()) {
+        if (basket.listOfProductLists.isNotEmpty()) {
             val productToNumberPair = basket.listOfProductLists[position]
             bindWithProduct(position, view, productToNumberPair)
         }
@@ -56,7 +56,7 @@ class BasketRecyclerAdapter(private val context: Context, val basket: BasketPres
             initSaleTitle(view, this)
             initProductPrice(view, this)
             initTotalProductsPrice(view, basket.totalPriceDiscount)
-            if(productToNumberPair.first.percentageDiscount > 0) {
+            if (productToNumberPair.first.percentageDiscount > 0) {
                 initTotalProductsPriceTitle(view, basket.totalPriceDiscount)
             }
         }
@@ -109,7 +109,7 @@ class BasketRecyclerAdapter(private val context: Context, val basket: BasketPres
     }
 
     fun setProductsNumberByPosition(view: View, number: Int, position: Int) {
-        basket.productsNumber +=  number - basket.listOfProductLists[position].second//TODO: Move to helper
+        basket.productsNumber += number - basket.listOfProductLists[position].second//TODO: Move to helper
         basket.listOfProductLists[position] = Pair(basket.listOfProductLists[position].first, number)
         view.basketItemCountTextView.text = number.toString()
     }

@@ -57,14 +57,9 @@ class MainActivity : AppCompatActivity(), IMainView {
         }
     }
 
-    override fun showRetry() {
-        activityMainErrorLayout.visibility = View.VISIBLE
-        activityMainPrimaryLayout.visibility = View.GONE
-    }
-
-    override fun hideRetry() {
-        activityMainErrorLayout.visibility = View.GONE
-        activityMainPrimaryLayout.visibility = View.VISIBLE
+    override fun setShowRetry(isVisible: Boolean) {
+        activityMainErrorLayout.visibility = if(isVisible) View.VISIBLE else View.GONE
+        activityMainPrimaryLayout.visibility = if(isVisible) View.GONE else View.VISIBLE
     }
 
     override fun showError(errorMessage: String) {

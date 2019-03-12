@@ -34,7 +34,7 @@ class BasketPresenter(private val basketView: IBasketView) {
         val sameProductList = Basket.getSameProductListByPosition(position)
         val product = sameProductList[0]
 
-        if(Basket.removeProductIfAble(product)) {
+        if (Basket.removeProductIfAble(product)) {
             updateBasketInfo()
             updateProductCard(position, sameProductList, product)
         }
@@ -49,7 +49,8 @@ class BasketPresenter(private val basketView: IBasketView) {
     }
 
     private fun updateBasketInfo() {
-        val basketAmount = String.format(basketView.context.getString(R.string.price_format), Basket.totalPriceWithDiscount)
+        val basketAmount =
+            String.format(basketView.context.getString(R.string.price_format), Basket.totalPriceWithDiscount)
         basketView.setBasketAmount(basketAmount)
         basketView.setBasketItemsNumber(Basket.productListSize.toString())
     }

@@ -8,9 +8,7 @@ interface IMainView {
 
     fun hideLoading()
 
-    fun showRetry()
-
-    fun hideRetry()
+    fun setShowRetry(isVisible: Boolean)
 
     fun showError(errorMessage: String)
 
