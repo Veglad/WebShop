@@ -9,25 +9,27 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
-class MainPresenter(val mainView: MainView, private val productRepository: ProductRepository,
-                    private var compositeDisposable: CompositeDisposable) {
+class MainPresenter(private var mainView: MainView?, private val productRepository: ProductRepository) {
 
-    fun clearRescources() {
+    private var compositeDisposable = CompositeDisposable()
+
+    fun clearResources() {
         compositeDisposable.dispose()
         compositeDisposable.clear()
     }
 
-    fun loadProductsIfInternetAvailable(isNetworkAvailable: Boolean) {
+    fun loadProducts(isNetworkAvailable: Boolean) {
         if (isNetworkAvailable) {
-            mainView.setShowRetry(false)
+            mainView?.setShowRetry(false)
             fetchProducts()
         } else {
-            mainView.setShowRetry(true)
+            mainView?.setShowRetry(true)
         }
     }
 
     private fun fetchProducts() {
-        mainView.showLoading()
+
+        mainView?.showLoading()
 
         val disposable = Single.zip(
             productRepository.getAllDevices(), productRepository.getAllPromotionalDevices()
@@ -39,18 +41,30 @@ class MainPresenter(val mainView: MainView, private val productRepository: Produ
             .subscribeWith(object : DisposableSingleObserver<Pair<List<Product>, List<Product>>>() {
                 override fun onSuccess(pairProducts: Pair<List<Product>, List<Product>>) {
                     val promotionalList = pairProducts.second.filter { it.percentageDiscount > 0 }
-                    mainView.hideLoading()
-                    mainView.showProductList(pairProducts.first)
-                    mainView.showPromotionalProductList(promotionalList)
+                    mainView?.let {
+                        it.hideLoading()
+                        it.showProductList(pairProducts.first)
+                        it.showPromotionalProductList(promotionalList)
+                    }
                 }
 
                 override fun onError(e: Throwable) {
-                    mainView.hideLoading()
-                    mainView.showError(e)
+                    mainView?.let {
+                        it.hideLoading()
+                        it.showError(e)
+                    }
                 }
             })
 
         compositeDisposable.add(disposable)
+    }
+
+    fun onAttached(mainView: MainView) {
+        this.mainView = mainView
+    }
+
+    fun onDetached() {
+        mainView = null
     }
 
     interface MainView {

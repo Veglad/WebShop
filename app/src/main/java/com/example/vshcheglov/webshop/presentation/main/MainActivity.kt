@@ -7,12 +7,12 @@ import android.view.View
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
+import com.example.vshcheglov.webshop.data.network.WebShopApi
 import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main_primary.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,32 +23,43 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
-    private var mainPresenter = MainPresenter(
+    private val retrofit = Retrofit.Builder()
+        .baseUrl("https://us-central1-webshop-58013.cloudfunctions.net")
+        .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .build()
+
+    private val mainPresenter = MainPresenter(
         this,
         ProductRepository(
             NetworkDataSource(
                 ProductEntityDataMapper(),
-                Retrofit.Builder()
-                    .baseUrl("https://us-central1-webshop-58013.cloudfunctions.net")
-                    .addConverterFactory(MoshiConverterFactory.create())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .build()
+                retrofit.create(WebShopApi::class.java)
             )
-        ),
-        CompositeDisposable()
+        )
     )
+
+    override fun onAttachedToWindow() {
+        mainPresenter.onAttached(this)
+        super.onAttachedToWindow()
+    }
+
+    override fun onDetachedFromWindow() {
+        mainPresenter.onDetached()
+        super.onDetachedFromWindow()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainPresenter.loadProductsIfInternetAvailable(isNetworkAvailable())
+        mainPresenter.loadProducts(isNetworkAvailable())
 
         tryAgainButton.setOnClickListener {
-            mainPresenter.loadProductsIfInternetAvailable(isNetworkAvailable())
+            mainPresenter.loadProducts(isNetworkAvailable())
         }
         productsSwipeRefreshLayout.setOnRefreshListener {
-            mainPresenter.loadProductsIfInternetAvailable(isNetworkAvailable())
+            mainPresenter.loadProducts(isNetworkAvailable())
         }
 
         productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
@@ -59,7 +70,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     }
 
     override fun onDestroy() {
-        mainPresenter.clearRescources()
+        mainPresenter.clearResources()
         super.onDestroy()
     }
 
@@ -69,10 +80,8 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     }
 
     override fun hideLoading() {
-        if (!isFinishing) {
-            productsSwipeRefreshLayout.isRefreshing = false
-            productsRecyclerView.visibility = View.VISIBLE
-        }
+        productsSwipeRefreshLayout.isRefreshing = false
+        productsRecyclerView.visibility = View.VISIBLE
     }
 
     override fun setShowRetry(isVisible: Boolean) {
@@ -81,10 +90,8 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
     }
 
     override fun showError(throwable: Throwable) {
-        if (!isFinishing) {
-            val message = getString(R.string.loading_products_error)
-            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-        }
+        val message = getString(R.string.loading_products_error)
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun showProductList(productList: List<Product>) {

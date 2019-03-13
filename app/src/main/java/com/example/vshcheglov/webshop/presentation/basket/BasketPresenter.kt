@@ -6,18 +6,20 @@ import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import kotlin.properties.Delegates
 
-class BasketPresenter(private val basketView: BasketView, private val productBasketCardMapper: ProductBasketCardMapper) {
+class BasketPresenter(
+    private var basketView: BasketView?,
+    private val productBasketCardMapper: ProductBasketCardMapper) {
 
     private lateinit var productToCount: Pair<Product, Int>
     private var deletedIndex by Delegates.notNull<Int>()
 
     fun makeOrder() {
-        basketView.startOrderActivity()
+        basketView?.startOrderActivity()
     }
 
     fun initProductListWithBasketInfo() {
         updateBasketInfo()
-        basketView.showBasket(productBasketCardMapper.transform(Basket))
+        basketView?.showBasket(productBasketCardMapper.mapFrom(Basket))
     }
 
     fun productNumberIncreased(position: Int) {
@@ -38,17 +40,25 @@ class BasketPresenter(private val basketView: BasketView, private val productBas
 
         updateBasketInfo()
 
-        basketView.setSameProductsNumber(position, productCount)
-        basketView.setTotalProductPrice(position, Basket.getSameProductDiscountPrice(product.id))
-        if (product.percentageDiscount > 0) {
-            basketView.setTotalProductPriceTitle(position, Basket.getSameProductPrice(product.id), product.percentageDiscount.toDouble())
+        basketView?.let {
+            it.setSameProductsNumber(position, productCount)
+            it.setTotalProductPrice(position, Basket.getSameProductDiscountPrice(product.id))
+            if (product.percentageDiscount > 0) {
+                it.setTotalProductPriceTitle(
+                    position,
+                    Basket.getSameProductPrice(product.id),
+                    product.percentageDiscount.toDouble()
+                )
+            }
         }
     }
 
 
     private fun updateBasketInfo() {
-        basketView.setBasketAmount(Basket.totalPriceWithDiscount)
-        basketView.setBasketItemsNumber(Basket.productsNumber.toString())
+        basketView?.let {
+            it.setBasketAmount(Basket.totalPriceWithDiscount)
+            it.setBasketItemsNumber(Basket.productsNumber.toString())
+        }
     }
 
     fun removeProductFromBasket(position: Int) {
@@ -58,18 +68,30 @@ class BasketPresenter(private val basketView: BasketView, private val productBas
         Basket.removeSameProducts(position)
 
         val removedItemName = productToCount.first.name
-        basketView.removeProductCard(position)
-        basketView.setOrderButtonIsEnabled(Basket.productsNumber > 0)
-        basketView.showUndo(removedItemName)
+        basketView?.let {
+            it.removeProductCard(position)
+            it.setOrderButtonIsEnabled(Basket.productsNumber > 0)
+            it.showUndo(removedItemName)
+        }
 
         updateBasketInfo()
     }
 
     fun undoPressed() {
         Basket.addProductToCountEntry(productToCount, deletedIndex)
-        basketView.restoreSameProductsCard(deletedIndex)
-        basketView.setOrderButtonIsEnabled(Basket.productsNumber > 0)
+        basketView?.let {
+            it.restoreSameProductsCard(deletedIndex)
+            it.setOrderButtonIsEnabled(Basket.productsNumber > 0)
+        }
         updateBasketInfo()
+    }
+
+    fun onDetached() {
+        basketView = null
+    }
+
+    fun onAttached(basketView: BasketView) {
+        this.basketView = basketView
     }
 
     interface BasketView {

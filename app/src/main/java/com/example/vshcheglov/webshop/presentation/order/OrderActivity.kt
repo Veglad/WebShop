@@ -50,4 +50,14 @@ class OrderActivity : AppCompatActivity(), OrderPresenter.OrderView {
     override fun setOrderPrice(orderPrice: Double) {
         orderTotalPrice.text = String.format(getString(R.string.price_format), orderPrice)
     }
+
+    override fun onAttachedToWindow() {
+        orderPresenter.onAttached(this)
+        super.onAttachedToWindow()
+    }
+
+    override fun onDetachedFromWindow() {
+        orderPresenter.onDetached()
+        super.onDetachedFromWindow()
+    }
 }

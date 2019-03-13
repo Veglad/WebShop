@@ -64,4 +64,14 @@ class DetailActivity : AppCompatActivity(), DetailPresenter.DetailView {
         val intent = Intent(this, BasketActivity::class.java)
         startActivity(intent)
     }
+
+    override fun onAttachedToWindow() {
+        detailPresenter.onAttached(this)
+        super.onAttachedToWindow()
+    }
+
+    override fun onDetachedFromWindow() {
+        detailPresenter.onDetached()
+        super.onDetachedFromWindow()
+    }
 }

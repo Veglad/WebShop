@@ -21,7 +21,7 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     BasketRecyclerItemTouchHelper.BasketRecyclerItemTouchHelperListener {
 
     private lateinit var basketAdapter: BasketRecyclerAdapter
-    private var basketPresenter = BasketPresenter(this, ProductBasketCardMapper())
+    private val basketPresenter = BasketPresenter(this, ProductBasketCardMapper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,5 +117,15 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     override fun setTotalProductPriceTitle(position: Int, totalPrice: Double, percentageDiscount: Double) {
         val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
         view?.let { basketAdapter.updateCardTotalPriceTitle(position, totalPrice, view, percentageDiscount) }
+    }
+
+    override fun onDetachedFromWindow() {
+        basketPresenter.onDetached()
+        super.onDetachedFromWindow()
+    }
+
+    override fun onAttachedToWindow() {
+        basketPresenter.onAttached(this)
+        super.onAttachedToWindow()
     }
 }

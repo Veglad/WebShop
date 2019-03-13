@@ -2,10 +2,11 @@ package com.example.vshcheglov.webshop.data.enteties.mappers
 
 import com.example.vshcheglov.webshop.data.enteties.ProductEntity
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.domain.common.Mapper
 
-class ProductEntityDataMapper {
+class ProductEntityDataMapper : Mapper<ProductEntity, Product>() {
 
-    fun transform(productEntity: ProductEntity) = Product().apply {
+    override fun mapFrom(productEntity: ProductEntity) = Product().apply {
         id = productEntity.deviceId
         name = productEntity.name
         price = productEntity.price
@@ -18,9 +19,9 @@ class ProductEntityDataMapper {
         percentageDiscount = productEntity.promotional
     }
 
-    fun transform(productEntityCollection: Collection<ProductEntity>) = mutableListOf<Product>().apply {
+    fun mapFrom(productEntityCollection: Collection<ProductEntity>) = mutableListOf<Product>().apply {
         for (productEntity in productEntityCollection) {
-            this.add(transform(productEntity))
+            this.add(mapFrom(productEntity))
         }
     }
 }
