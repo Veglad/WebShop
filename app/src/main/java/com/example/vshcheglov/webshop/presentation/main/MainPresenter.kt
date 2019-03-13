@@ -8,27 +8,31 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 
 class MainPresenter(private var mainView: MainView?, private val productRepository: ProductRepository) {
-    
+
     private var compositeDisposable = CompositeDisposable()
 
     fun clearResources() {
         compositeDisposable.dispose()
         compositeDisposable.clear()
+        Timber.d("Resources cleared")
     }
 
     fun loadProducts(isNetworkAvailable: Boolean) {
+        Timber.d("Products load")
         if (isNetworkAvailable) {
             mainView?.setShowRetry(false)
             fetchProducts()
         } else {
+            Timber.d("Internet is not available")
             mainView?.setShowRetry(true)
         }
     }
 
     private fun fetchProducts() {
-
+        Timber.d("Fetching products...")
         mainView?.showLoading()
 
         val disposable = Single.zip(
@@ -40,6 +44,7 @@ class MainPresenter(private var mainView: MainView?, private val productReposito
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<Pair<List<Product>, List<Product>>>() {
                 override fun onSuccess(pairProducts: Pair<List<Product>, List<Product>>) {
+                    Timber.d("Products fetched successfully")
                     val promotionalList = pairProducts.second.filter { it.percentageDiscount > 0 }
                     mainView?.let {
                         it.hideLoading()
@@ -49,6 +54,7 @@ class MainPresenter(private var mainView: MainView?, private val productReposito
                 }
 
                 override fun onError(e: Throwable) {
+                    Timber.d("Products fetching error")
                     mainView?.let {
                         it.hideLoading()
                         it.showError(e)

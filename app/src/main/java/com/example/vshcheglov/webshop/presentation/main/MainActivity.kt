@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
+import com.example.vshcheglov.webshop.BuildConfig
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
 import com.example.vshcheglov.webshop.data.network.WebShopApi
@@ -21,6 +22,9 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
+
+
 
 class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
@@ -65,19 +69,28 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initTimberLogging()
         mainPresenter.loadProducts(isNetworkAvailable())
 
         tryAgainButton.setOnClickListener {
             mainPresenter.loadProducts(isNetworkAvailable())
+            Timber.d("Try again button clicked")
         }
         productsSwipeRefreshLayout.setOnRefreshListener {
             mainPresenter.loadProducts(isNetworkAvailable())
+            Timber.d("Refresh data triggered")
         }
 
         productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
         with(productsRecyclerView) {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
+        }
+    }
+
+    private fun initTimberLogging() {
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
         }
     }
 
