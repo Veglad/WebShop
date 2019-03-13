@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation.di
+package com.example.vshcheglov.webshop.presentation.di.modules
 
 import android.app.Application
 import dagger.Module
