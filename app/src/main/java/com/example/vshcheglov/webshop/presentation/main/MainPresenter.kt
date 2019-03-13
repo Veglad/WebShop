@@ -54,7 +54,7 @@ class MainPresenter(private var mainView: MainView?, private val productReposito
                 }
 
                 override fun onError(e: Throwable) {
-                    Timber.d("Products fetching error")
+                    Timber.e("Products fetching error:" + e.message)
                     mainView?.let {
                         it.hideLoading()
                         it.showError(e)
