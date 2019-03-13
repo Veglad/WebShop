@@ -16,6 +16,8 @@ import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecycle
 import kotlinx.android.synthetic.main.activity_main_primary.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -23,9 +25,19 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
+
+    private val interceptor = HttpLoggingInterceptor().also {
+        it.level = HttpLoggingInterceptor.Level.BODY
+    }
+
+    private val client = OkHttpClient().newBuilder()
+        .addInterceptor(interceptor)
+        .build()
+
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://us-central1-webshop-58013.cloudfunctions.net")
         .addConverterFactory(MoshiConverterFactory.create())
+        .client(client)
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
 
