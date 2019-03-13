@@ -10,7 +10,7 @@ import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 
 class MainPresenter(private var mainView: MainView?, private val productRepository: ProductRepository) {
-
+    
     private var compositeDisposable = CompositeDisposable()
 
     fun clearResources() {
