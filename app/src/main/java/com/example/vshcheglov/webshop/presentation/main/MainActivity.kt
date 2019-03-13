@@ -73,12 +73,12 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         mainPresenter.loadProducts(isNetworkAvailable())
 
         tryAgainButton.setOnClickListener {
-            mainPresenter.loadProducts(isNetworkAvailable())
             Timber.d("Try again button clicked")
+            mainPresenter.loadProducts(isNetworkAvailable())
         }
         productsSwipeRefreshLayout.setOnRefreshListener {
-            mainPresenter.loadProducts(isNetworkAvailable())
             Timber.d("Refresh data triggered")
+            mainPresenter.loadProducts(isNetworkAvailable())
         }
 
         productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
