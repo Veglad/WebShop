@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.presentation.main
 
+import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single
@@ -9,11 +10,16 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
+import javax.inject.Inject
 
-class MainPresenter(private val productRepository: ProductRepository) {
-
+class MainPresenter {
+    @Inject lateinit var productRepository: ProductRepository
     private val compositeDisposable = CompositeDisposable()
     private var mainView: MainView? = null
+
+    init {
+        App.productsComponent.inject(this)
+    }
 
     fun clearResources() {
         compositeDisposable.dispose()

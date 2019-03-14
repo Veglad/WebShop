@@ -5,28 +5,25 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
-import com.example.vshcheglov.webshop.BuildConfig
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
-import com.example.vshcheglov.webshop.presentation.App
+import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main_primary.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
-import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
 
-    @Inject lateinit var mainPresenter: MainPresenter
+    private val mainPresenter = MainPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as App).productsComponent.inject(this)
         setContentView(R.layout.activity_main)
         mainPresenter.onAttached(this)
 

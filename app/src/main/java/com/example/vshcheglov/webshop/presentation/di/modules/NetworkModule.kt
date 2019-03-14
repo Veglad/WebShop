@@ -14,26 +14,24 @@ import javax.inject.Singleton
 
 @Module
 class NetworkModule {
-    private val retrofit: Retrofit
-
-    init {
+    @Singleton
+    @Provides
+    fun provideShopApi(): WebShopApi {
         val interceptor = HttpLoggingInterceptor().also {
             it.level = HttpLoggingInterceptor.Level.BODY
         }
         val client = OkHttpClient().newBuilder()
             .addInterceptor(interceptor)
             .build()
-        retrofit = Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
             .baseUrl(NetworkDataSource.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .client(client)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
-    }
 
-    @Singleton
-    @Provides
-    fun provideShopApi(): WebShopApi = retrofit.create(WebShopApi::class.java)
+        return retrofit.create(WebShopApi::class.java)
+    }
 
     @Singleton
     @Provides
