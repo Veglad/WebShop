@@ -24,22 +24,8 @@ class App : Application() {
 
         initTimber()
 
-        val interceptor = HttpLoggingInterceptor().also {
-            it.level = HttpLoggingInterceptor.Level.BODY
-        }
-        val client =  OkHttpClient().newBuilder()
-            .addInterceptor(interceptor)
-            .build()
-        val retrofit = Retrofit.Builder()
-            .baseUrl(NetworkDataSource.BASE_URL)
-            .addConverterFactory(MoshiConverterFactory.create())
-            .client(client)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .build()
-
-
         productsComponent = DaggerProductsComponent.builder()
-            .networkModule(NetworkModule(retrofit))
+            .networkModule(NetworkModule())
             .appModule(AppModule(this))
             .mainActivityModule(MainActivityModule())
             .build()
