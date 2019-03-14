@@ -1,25 +1,32 @@
 package com.example.vshcheglov.webshop.presentation.basket
 
+import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
+import nucleus.presenter.Presenter
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
-class BasketPresenter(
-    private var basketView: BasketView?,
-    private val productBasketCardMapper: ProductBasketCardMapper) {
+class BasketPresenter : Presenter<BasketPresenter.BasketView>() {
 
+    @Inject
+    lateinit var productBasketCardMapper: ProductBasketCardMapper
     private lateinit var productToCount: Pair<Product, Int>
     private var deletedIndex by Delegates.notNull<Int>()
 
+    init {
+        App.appComponent.inject(this)
+    }
+
     fun makeOrder() {
-        basketView?.startOrderActivity()
+        view?.startOrderActivity()
     }
 
     fun initProductListWithBasketInfo() {
         updateBasketInfo()
-        basketView?.showBasket(productBasketCardMapper.map(Basket))
+        view?.showBasket(productBasketCardMapper.map(Basket))
     }
 
     fun productNumberIncreased(position: Int) {
@@ -40,7 +47,7 @@ class BasketPresenter(
 
         updateBasketInfo()
 
-        basketView?.let {
+        view?.let {
             it.setSameProductsNumber(position, productCount)
             it.setTotalProductPrice(position, Basket.getSameProductDiscountPrice(product.id))
             if (product.percentageDiscount > 0) {
@@ -55,7 +62,7 @@ class BasketPresenter(
 
 
     private fun updateBasketInfo() {
-        basketView?.let {
+        view?.let {
             it.setBasketAmount(Basket.totalPriceWithDiscount)
             it.setBasketItemsNumber(Basket.productsNumber.toString())
         }
@@ -68,7 +75,7 @@ class BasketPresenter(
         Basket.removeSameProducts(position)
 
         val removedItemName = productToCount.first.name
-        basketView?.let {
+        view?.let {
             it.removeProductCard(position)
             it.setOrderButtonIsEnabled(Basket.productsNumber > 0)
             it.showUndo(removedItemName)
@@ -79,19 +86,11 @@ class BasketPresenter(
 
     fun restoreProductCard() {
         Basket.addProductToCountEntry(productToCount, deletedIndex)
-        basketView?.let {
+        view?.let {
             it.restoreSameProductsCard(deletedIndex)
             it.setOrderButtonIsEnabled(Basket.productsNumber > 0)
         }
         updateBasketInfo()
-    }
-
-    fun onDetached() {
-        basketView = null
-    }
-
-    fun onAttached(basketView: BasketView) {
-        this.basketView = basketView
     }
 
     interface BasketView {
