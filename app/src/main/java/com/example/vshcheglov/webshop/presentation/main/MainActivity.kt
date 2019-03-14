@@ -7,67 +7,28 @@ import android.view.View
 import android.widget.Toast
 import com.example.vshcheglov.webshop.BuildConfig
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
-import com.example.vshcheglov.webshop.data.network.WebShopApi
-import com.example.vshcheglov.webshop.data.products.NetworkDataSource
-import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
+import com.example.vshcheglov.webshop.presentation.App
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main_primary.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
-
+import javax.inject.Inject
 
 
 class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
 
-    private val interceptor = HttpLoggingInterceptor().also {
-        it.level = HttpLoggingInterceptor.Level.BODY
-    }
-
-    private val client = OkHttpClient().newBuilder()
-        .addInterceptor(interceptor)
-        .build()
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://us-central1-webshop-58013.cloudfunctions.net")
-        .addConverterFactory(MoshiConverterFactory.create())
-        .client(client)
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .build()
-
-    private val mainPresenter = MainPresenter(
-        this,
-        ProductRepository(
-            NetworkDataSource(
-                ProductEntityDataMapper(),
-                retrofit.create(WebShopApi::class.java)
-            )
-        )
-    )
-
-    override fun onAttachedToWindow() {
-        mainPresenter.onAttached(this)
-        super.onAttachedToWindow()
-    }
-
-    override fun onDetachedFromWindow() {
-        mainPresenter.onDetached()
-        super.onDetachedFromWindow()
-    }
+    @Inject lateinit var mainPresenter: MainPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as App).productsComponent.inject(this)
         setContentView(R.layout.activity_main)
+        mainPresenter.onAttached(this)
 
         initTimberLogging()
         mainPresenter.loadProducts(isNetworkAvailable())
@@ -96,6 +57,7 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
     override fun onDestroy() {
         mainPresenter.clearResources()
+        mainPresenter.onDetached()
         super.onDestroy()
     }
 

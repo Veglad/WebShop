@@ -10,9 +10,10 @@ import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-class MainPresenter(private var mainView: MainView?, private val productRepository: ProductRepository) {
+class MainPresenter(private val productRepository: ProductRepository) {
 
     private var compositeDisposable = CompositeDisposable()
+    private var mainView: MainView? = null
 
     fun clearResources() {
         compositeDisposable.dispose()
