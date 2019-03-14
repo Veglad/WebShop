@@ -20,7 +20,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private var isLoading = false
 
     init {
-        App.productsComponent.inject(this)
+        App.appComponent.inject(this)
     }
 
     fun loadProducts(isNetworkAvailable: Boolean) {
