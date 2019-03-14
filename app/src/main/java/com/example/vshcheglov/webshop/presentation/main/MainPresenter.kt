@@ -9,38 +9,35 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
+import nucleus.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainPresenter {
+class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject lateinit var productRepository: ProductRepository
     private val compositeDisposable = CompositeDisposable()
-    private var mainView: MainView? = null
+
+    private var isLoading = false
 
     init {
         App.productsComponent.inject(this)
     }
 
-    fun clearResources() {
-        compositeDisposable.dispose()
-        compositeDisposable.clear()
-        Timber.d("Resources cleared")
-    }
-
     fun loadProducts(isNetworkAvailable: Boolean) {
         Timber.d("Products load")
         if (isNetworkAvailable) {
-            mainView?.setShowRetry(false)
+            view?.setShowRetry(false)
             fetchProducts()
         } else {
             Timber.d("Internet is not available")
-            mainView?.setShowRetry(true)
+            view?.setShowRetry(true)
         }
     }
 
     private fun fetchProducts() {
         Timber.d("Fetching products...")
-        mainView?.showLoading()
+        isLoading = true
+        view?.showLoading(true)
 
         val disposable = Single.zip(
             productRepository.getAllDevices(), productRepository.getAllPromotionalDevices()
@@ -51,19 +48,21 @@ class MainPresenter {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeWith(object : DisposableSingleObserver<Pair<List<Product>, List<Product>>>() {
                 override fun onSuccess(pairProducts: Pair<List<Product>, List<Product>>) {
+                    isLoading = false
                     Timber.d("Products fetched successfully")
                     val promotionalList = pairProducts.second.filter { it.percentageDiscount > 0 }
-                    mainView?.let {
-                        it.hideLoading()
+                    view?.let {
+                        it.showLoading(false)
                         it.showProductList(pairProducts.first)
                         it.showPromotionalProductList(promotionalList)
                     }
                 }
 
                 override fun onError(e: Throwable) {
+                    isLoading = false
                     Timber.e("Products fetching error:" + e)
-                    mainView?.let {
-                        it.hideLoading()
+                    view?.let {
+                        it.showLoading(false)
                         it.showError(e)
                     }
                 }
@@ -72,18 +71,19 @@ class MainPresenter {
         compositeDisposable.add(disposable)
     }
 
-    fun onAttached(mainView: MainView) {
-        this.mainView = mainView
+    override fun onTakeView(view: MainView?) {
+        super.onTakeView(view)
+        view?.showLoading(isLoading)
     }
 
-    fun onDetached() {
-        mainView = null
+    override fun onDestroy() {
+        compositeDisposable.dispose()
+        compositeDisposable.clear()
+        super.onDestroy()
     }
 
     interface MainView {
-        fun showLoading()
-
-        fun hideLoading()
+        fun showLoading(isLoading: Boolean)
 
         fun setShowRetry(isVisible: Boolean)
 

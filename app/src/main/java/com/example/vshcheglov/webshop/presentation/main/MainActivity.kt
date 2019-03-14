@@ -1,6 +1,5 @@
 package com.example.vshcheglov.webshop.presentation.main
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
@@ -8,34 +7,32 @@ import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
-import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main_primary.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
+import nucleus.factory.RequiresPresenter
+import nucleus.view.NucleusAppCompatActivity
 import timber.log.Timber
 
-
-class MainActivity : AppCompatActivity(), MainPresenter.MainView {
+@RequiresPresenter(MainPresenter::class)
+class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.MainView {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
-
-    private val mainPresenter = MainPresenter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mainPresenter.onAttached(this)
 
-        mainPresenter.loadProducts(isNetworkAvailable())
+        presenter?.loadProducts(isNetworkAvailable())
 
         tryAgainButton.setOnClickListener {
             Timber.d("Try again button clicked")
-            mainPresenter.loadProducts(isNetworkAvailable())
+            presenter?.loadProducts(isNetworkAvailable())
         }
         productsSwipeRefreshLayout.setOnRefreshListener {
             Timber.d("Refresh data triggered")
-            mainPresenter.loadProducts(isNetworkAvailable())
+            presenter?.loadProducts(isNetworkAvailable())
         }
 
         productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
@@ -45,20 +42,13 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         }
     }
 
-    override fun onDestroy() {
-        mainPresenter.clearResources()
-        mainPresenter.onDetached()
-        super.onDestroy()
-    }
-
-    override fun showLoading() {
-        productsSwipeRefreshLayout.isRefreshing = true
-        productsRecyclerView.visibility = View.INVISIBLE
-    }
-
-    override fun hideLoading() {
-        productsSwipeRefreshLayout.isRefreshing = false
-        productsRecyclerView.visibility = View.VISIBLE
+    override fun showLoading(isLoading: Boolean) {
+        productsSwipeRefreshLayout.isRefreshing = isLoading
+        if (isLoading) {
+            productsRecyclerView.visibility = View.INVISIBLE
+        } else {
+            productsRecyclerView.visibility = View.VISIBLE
+        }
     }
 
     override fun setShowRetry(isVisible: Boolean) {
