@@ -5,6 +5,7 @@ import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single
 
 class ProductRepository(private val networkDataSource: NetworkDataSource) : ProductDataSource {
+
     override fun getAllDevices(): Single<List<Product>> {
         return networkDataSource.getAllDevices()
     }

@@ -8,6 +8,10 @@ import io.reactivex.Single
 class NetworkDataSource(private val productEntityDataMapper: ProductEntityDataMapper,
                         private val webShopApi: WebShopApi) {
 
+    companion object {
+        const val BASE_URL = "https://us-central1-webshop-58013.cloudfunctions.net"
+    }
+
     fun getAllDevices(): Single<List<Product>> = webShopApi.getDevices().map {
         productEntityDataMapper.mapFrom(it)
     }
