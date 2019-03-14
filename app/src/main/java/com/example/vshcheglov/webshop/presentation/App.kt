@@ -4,8 +4,9 @@ import android.app.Application
 import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import com.example.vshcheglov.webshop.presentation.di.modules.AppModule
 import com.example.vshcheglov.webshop.presentation.di.modules.NetworkModule
-import com.example.vshcheglov.webshop.presentation.di.products.DaggerProductsComponent
-import com.example.vshcheglov.webshop.presentation.di.products.ProductsComponent
+import com.example.vshcheglov.webshop.presentation.di.components.DaggerProductsComponent
+import com.example.vshcheglov.webshop.presentation.di.components.ProductsComponent
+import com.example.vshcheglov.webshop.presentation.di.modules.MainActivityModule
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,6 +37,7 @@ class App : Application() {
         productsComponent = DaggerProductsComponent.builder()
             .networkModule(NetworkModule(retrofit))
             .appModule(AppModule(this))
+            .mainActivityModule(MainActivityModule())
             .build()
     }
 }

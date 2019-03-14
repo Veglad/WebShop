@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.presentation.di.modules
 
+import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
 import com.example.vshcheglov.webshop.data.network.WebShopApi
 import dagger.Module
 import dagger.Provides
@@ -11,4 +12,8 @@ class NetworkModule(private val retrofit: Retrofit) {
     @Singleton
     @Provides
     fun provideShopApi() = retrofit.create(WebShopApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideNetworkProductMapper() = ProductEntityDataMapper()
 }
