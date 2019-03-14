@@ -33,7 +33,8 @@
                     android:layout_centerVertical="true"
                     android:text="@string/delete_uppercase"
                     android:textColor="#fff"
-                    android:textSize="13sp" android:layout_marginEnd="8dp"
+                    android:textSize="13sp"
+                    android:layout_marginEnd="8dp"
                     app:layout_constraintBottom_toBottomOf="@+id/deleteIcon"
                     app:layout_constraintTop_toTopOf="@+id/deleteIcon"
                     app:layout_constraintEnd_toStartOf="@+id/deleteIcon"/>
@@ -59,12 +60,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/TextBasketPrimaryStyle"
-                    app:layout_constraintStart_toEndOf="@+id/basketPriceTextView"
+                    app:layout_constraintStart_toEndOf="@+id/productBasketPriceTextView"
                     android:layout_marginStart="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintEnd_toEndOf="parent"/>
             <ImageView
-                    android:id="@+id/basketImage"
+                    android:id="@+id/productBasketImage"
                     android:layout_width="100dp"
                     android:layout_height="0dp"
                     android:scaleType="centerInside"
@@ -75,27 +77,30 @@
                     android:layout_marginBottom="8dp"/>
 
             <TextView
-                    android:id="@+id/basketTitle"
+                    android:id="@+id/productBasketTitle"
                     tools:text="IPhone X"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textFontWeight="700"
                     android:textSize="18sp"
                     android:textColor="@color/primary_dark"
-                    app:layout_constraintStart_toEndOf="@+id/basketImage" android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@+id/productBasketImage"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintTop_toTopOf="parent"/>
             <TextView
-                    android:id="@+id/basketDescription"
+                    android:id="@+id/productBasketDescription"
                     tools:text="Some short description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="@+id/basketTitle"
-                    app:layout_constraintBottom_toTopOf="@+id/basketProductPriceTitle"
-                    android:layout_marginBottom="8dp" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/basketTitle"
+                    app:layout_constraintStart_toStartOf="@+id/productBasketTitle"
+                    app:layout_constraintBottom_toTopOf="@+id/productBasketPriceTitle"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/productBasketTitle"
                     app:layout_constraintVertical_bias="0.0"/>
             <TextView
-                    android:id="@+id/basketSaleTextView"
+                    android:id="@+id/productBasketSaleTextView"
                     tools:text="-10%"
                     android:textColor="@color/white"
                     android:background="@drawable/sale_drawable"
@@ -107,25 +112,27 @@
                     android:paddingTop="2dp"
                     android:paddingBottom="2dp"
                     android:layout_marginTop="8dp"
-                    app:layout_constraintTop_toTopOf="@+id/basketImage"
-                    app:layout_constraintEnd_toEndOf="@+id/basketImage"/>
+                    app:layout_constraintTop_toTopOf="@+id/productBasketImage"
+                    app:layout_constraintEnd_toEndOf="@+id/productBasketImage"/>
             <TextView
                     android:text="@string/basket_product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/basketProductPriceTitle"
-                    app:layout_constraintBottom_toTopOf="@+id/basketPriceTextView"
-                    style="@style/TextBasketTitleStyle" app:layout_constraintStart_toStartOf="@+id/basketPriceTextView"
-                    app:layout_constraintEnd_toEndOf="@+id/basketPriceTextView"/>
+                    android:id="@+id/productBasketPriceTitle"
+                    app:layout_constraintBottom_toTopOf="@+id/productBasketPriceTextView"
+                    style="@style/TextBasketTitleStyle"
+                    app:layout_constraintStart_toStartOf="@+id/productBasketPriceTextView"
+                    app:layout_constraintEnd_toEndOf="@+id/productBasketPriceTextView"/>
             <TextView
-                    android:id="@+id/basketPriceTextView"
+                    android:id="@+id/productBasketPriceTextView"
                     tools:text="1099 $"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     style="@style/TextBasketPrimaryStyle"
                     app:layout_constraintStart_toEndOf="@+id/addImageButton"
                     android:layout_marginStart="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintEnd_toStartOf="@+id/basketTotalPrice"/>
             <ImageButton
                     android:id="@+id/removeImageButton"
@@ -133,20 +140,22 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_remove_white_24dp"
                     android:background="@drawable/button_primary_drawable"
-                    app:layout_constraintTop_toTopOf="@+id/basketItemCountTextView"
-                    app:layout_constraintBottom_toBottomOf="@+id/basketItemCountTextView"
-                    app:layout_constraintStart_toStartOf="@+id/basketImage" android:layout_marginStart="8dp"
+                    app:layout_constraintTop_toTopOf="@+id/productBasketCountTextView"
+                    app:layout_constraintBottom_toBottomOf="@+id/productBasketCountTextView"
+                    app:layout_constraintStart_toStartOf="@+id/productBasketImage"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintEnd_toStartOf="@+id/basketItemCountTextView"/>
+                    app:layout_constraintEnd_toStartOf="@+id/productBasketCountTextView"/>
             <TextView
-                    android:id="@+id/basketItemCountTextView"
+                    android:id="@+id/productBasketCountTextView"
                     tools:text="3"
                     android:gravity="center"
                     android:layout_width="24dp"
                     android:layout_height="wrap_content"
                     style="@style/TextBasketPrimaryStyle"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/removeImageButton" android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@+id/removeImageButton"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintEnd_toStartOf="@+id/addImageButton"
                     app:layout_constraintHorizontal_bias="0.5"/>
             <ImageButton
@@ -155,9 +164,11 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_add_white_24dp"
                     android:background="@drawable/button_primary_drawable"
-                    app:layout_constraintStart_toEndOf="@+id/basketItemCountTextView" android:layout_marginStart="8dp"
+                    app:layout_constraintStart_toEndOf="@+id/productBasketCountTextView"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintTop_toTopOf="@+id/removeImageButton"
-                    app:layout_constraintEnd_toEndOf="@+id/basketImage" android:layout_marginEnd="8dp"/>
+                    app:layout_constraintEnd_toEndOf="@+id/productBasketImage"
+                    android:layout_marginEnd="8dp"/>
         </android.support.constraint.ConstraintLayout>
     </FrameLayout>
 </android.support.v7.widget.CardView>
