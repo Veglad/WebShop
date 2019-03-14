@@ -26,7 +26,7 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
 
     override fun onResume() {
         super.onResume()
-        presenter.initOrderPrice()
+        presenter?.initOrderPrice()
     }
 
     private fun initActionBar() {

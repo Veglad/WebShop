@@ -10,20 +10,19 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import kotlinx.android.synthetic.main.activity_detail.*
+import nucleus.factory.RequiresPresenter
+import nucleus.view.NucleusAppCompatActivity
 
-class DetailActivity : AppCompatActivity(), DetailPresenter.DetailView {
+@RequiresPresenter(DetailPresenter::class)
+class DetailActivity : NucleusAppCompatActivity<DetailPresenter>(), DetailPresenter.DetailView {
 
     companion object {
         const val PRODUCT_KEY = "product_key"
     }
 
-    private val detailPresenter = DetailPresenter(this)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-
-        detailPresenter.showProductInfo(intent.extras?.getParcelable(DetailActivity.PRODUCT_KEY))
 
         supportActionBar?.let {
             it.setDisplayHomeAsUpEnabled(true)
@@ -31,8 +30,13 @@ class DetailActivity : AppCompatActivity(), DetailPresenter.DetailView {
         }
 
         detailBuyFloatActionButton.setOnClickListener {
-            detailPresenter.buyProduct()
+            presenter?.buyProduct()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter?.showProductInfo(intent.extras?.getParcelable(DetailActivity.PRODUCT_KEY))
     }
 
     override fun showProductInfo(product: Product) {
@@ -63,15 +67,5 @@ class DetailActivity : AppCompatActivity(), DetailPresenter.DetailView {
     override fun startBasketActivity() {
         val intent = Intent(this, BasketActivity::class.java)
         startActivity(intent)
-    }
-
-    override fun onAttachedToWindow() {
-        detailPresenter.onAttached(this)
-        super.onAttachedToWindow()
-    }
-
-    override fun onDetachedFromWindow() {
-        detailPresenter.onDetached()
-        super.onDetachedFromWindow()
     }
 }
