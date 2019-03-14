@@ -19,7 +19,7 @@ class BasketPresenter(
 
     fun initProductListWithBasketInfo() {
         updateBasketInfo()
-        basketView?.showBasket(productBasketCardMapper.mapFrom(Basket))
+        basketView?.showBasket(productBasketCardMapper.map(Basket))
     }
 
     fun productNumberIncreased(position: Int) {
@@ -77,7 +77,7 @@ class BasketPresenter(
         updateBasketInfo()
     }
 
-    fun undoPressed() {
+    fun restoreProductCard() {
         Basket.addProductToCountEntry(productToCount, deletedIndex)
         basketView?.let {
             it.restoreSameProductsCard(deletedIndex)

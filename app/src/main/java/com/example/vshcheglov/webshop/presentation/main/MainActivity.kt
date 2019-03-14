@@ -30,7 +30,6 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         setContentView(R.layout.activity_main)
         mainPresenter.onAttached(this)
 
-        initTimberLogging()
         mainPresenter.loadProducts(isNetworkAvailable())
 
         tryAgainButton.setOnClickListener {
@@ -46,12 +45,6 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
         with(productsRecyclerView) {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
-        }
-    }
-
-    private fun initTimberLogging() {
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
         }
     }
 

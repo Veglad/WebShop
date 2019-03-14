@@ -18,7 +18,7 @@ class NetworkDataSource(private val productEntityDataMapper: ProductEntityDataMa
 
     @Deprecated("Does not work")
     fun getDevice(id: Long): Single<Product> = webShopApi.getDevice(id).map {
-        productEntityDataMapper.mapFrom(it)
+        productEntityDataMapper.map(it)
     }
 
     fun getAllPromotionalDevices(): Single<List<Product>> = webShopApi.getPromotionalDevices().map {

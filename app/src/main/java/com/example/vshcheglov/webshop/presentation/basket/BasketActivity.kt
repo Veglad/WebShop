@@ -88,7 +88,7 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     override fun showUndo(productName: String) {
         val undoTitle = String.format(getString(R.string.removed_item_snackbar_format), productName)
         val snackBar = Snackbar.make(basketMainConstraint, undoTitle, Snackbar.LENGTH_SHORT)
-        snackBar.setAction(getString(R.string.undo_uppercase)) { basketPresenter.undoPressed() }
+        snackBar.setAction(getString(R.string.undo_uppercase)) { basketPresenter.restoreProductCard() }
         snackBar.show()
     }
 

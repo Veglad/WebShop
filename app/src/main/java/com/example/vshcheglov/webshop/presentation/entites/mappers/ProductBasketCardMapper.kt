@@ -5,7 +5,7 @@ import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.domain.common.Mapper
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 
-class ProductBasketCardMapper : Mapper<Basket, MutableList<ProductBasketCard>>() {
+class ProductBasketCardMapper : Mapper<Basket, MutableList<ProductBasketCard>> {
 
     private fun mapFrom(product: Product, productCount: Int, totalProductPrice: Double,
                         totalProductPriceDiscount: Double) = ProductBasketCard().also {
@@ -20,7 +20,7 @@ class ProductBasketCardMapper : Mapper<Basket, MutableList<ProductBasketCard>>()
         it.percentageDiscount = product.percentageDiscount.toDouble()
     }
 
-    override fun mapFrom(basket: Basket) = mutableListOf<ProductBasketCard>().apply {
+    override fun map(basket: Basket) = mutableListOf<ProductBasketCard>().apply {
         for (productToCount in basket.productToCountList) {
             val product = productToCount.first
             val productCount = productToCount.second

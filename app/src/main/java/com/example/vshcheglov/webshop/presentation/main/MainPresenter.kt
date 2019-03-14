@@ -12,7 +12,7 @@ import timber.log.Timber
 
 class MainPresenter(private val productRepository: ProductRepository) {
 
-    private var compositeDisposable = CompositeDisposable()
+    private val compositeDisposable = CompositeDisposable()
     private var mainView: MainView? = null
 
     fun clearResources() {
@@ -55,7 +55,7 @@ class MainPresenter(private val productRepository: ProductRepository) {
                 }
 
                 override fun onError(e: Throwable) {
-                    Timber.e("Products fetching error:" + e.message)
+                    Timber.e("Products fetching error:" + e)
                     mainView?.let {
                         it.hideLoading()
                         it.showError(e)

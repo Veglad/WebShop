@@ -4,9 +4,9 @@ import com.example.vshcheglov.webshop.data.enteties.ProductEntity
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.domain.common.Mapper
 
-class ProductEntityDataMapper : Mapper<ProductEntity, Product>() {
+class ProductEntityDataMapper : Mapper<ProductEntity, Product> {
 
-    override fun mapFrom(productEntity: ProductEntity) = Product().apply {
+    override fun map(productEntity: ProductEntity) = Product().apply {
         id = productEntity.deviceId
         name = productEntity.name
         price = productEntity.price
@@ -21,7 +21,7 @@ class ProductEntityDataMapper : Mapper<ProductEntity, Product>() {
 
     fun mapFrom(productEntityCollection: Collection<ProductEntity>) = mutableListOf<Product>().apply {
         for (productEntity in productEntityCollection) {
-            this.add(mapFrom(productEntity))
+            this.add(map(productEntity))
         }
     }
 }
