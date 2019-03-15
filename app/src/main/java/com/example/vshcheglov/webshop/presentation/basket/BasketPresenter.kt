@@ -5,7 +5,7 @@ import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
-import nucleus.presenter.Presenter
+import nucleus5.presenter.Presenter
 import javax.inject.Inject
 import kotlin.properties.Delegates
 

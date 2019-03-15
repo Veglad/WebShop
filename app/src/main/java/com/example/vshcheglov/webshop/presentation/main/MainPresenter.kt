@@ -9,7 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import nucleus.presenter.Presenter
+import nucleus5.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
 

@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.presentation.detail
 
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
-import nucleus.presenter.Presenter
+import nucleus5.presenter.Presenter
 
 class DetailPresenter : Presenter<DetailPresenter.DetailView>() {
 

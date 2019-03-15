@@ -7,8 +7,8 @@ import android.support.v4.content.ContextCompat
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
 import kotlinx.android.synthetic.main.activity_order.*
-import nucleus.factory.RequiresPresenter
-import nucleus.view.NucleusAppCompatActivity
+import nucleus5.factory.RequiresPresenter
+import nucleus5.view.NucleusAppCompatActivity
 
 @RequiresPresenter(OrderPresenter::class)
 class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter.OrderView{

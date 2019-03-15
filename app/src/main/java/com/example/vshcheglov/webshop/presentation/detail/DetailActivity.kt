@@ -10,8 +10,8 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import kotlinx.android.synthetic.main.activity_detail.*
-import nucleus.factory.RequiresPresenter
-import nucleus.view.NucleusAppCompatActivity
+import nucleus5.factory.RequiresPresenter
+import nucleus5.view.NucleusAppCompatActivity
 
 @RequiresPresenter(DetailPresenter::class)
 class DetailActivity : NucleusAppCompatActivity<DetailPresenter>(), DetailPresenter.DetailView {

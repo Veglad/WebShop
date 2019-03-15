@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.order
 
 import com.example.vshcheglov.webshop.domain.Basket
-import nucleus.presenter.Presenter
+import nucleus5.presenter.Presenter
 
 class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
 

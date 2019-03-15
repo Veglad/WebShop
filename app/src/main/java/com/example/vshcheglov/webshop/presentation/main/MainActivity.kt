@@ -11,8 +11,8 @@ import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecycle
 import kotlinx.android.synthetic.main.activity_main_primary.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
-import nucleus.factory.RequiresPresenter
-import nucleus.view.NucleusAppCompatActivity
+import nucleus5.factory.RequiresPresenter
+import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
 
 @RequiresPresenter(MainPresenter::class)

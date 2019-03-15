@@ -15,8 +15,8 @@ import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecycler
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
-import nucleus.factory.RequiresPresenter
-import nucleus.view.NucleusAppCompatActivity
+import nucleus5.factory.RequiresPresenter
+import nucleus5.view.NucleusAppCompatActivity
 
 @RequiresPresenter(BasketPresenter::class)
 class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresenter.BasketView,
