@@ -25,13 +25,13 @@ class MainPresenter : RxPresenter<MainPresenter.MainView>() {
 
     fun loadProducts(isNetworkAvailable: Boolean) {
         this.isNetworkAvailable = isNetworkAvailable
-        if (isNetworkAvailable) {
+        //if (isNetworkAvailable) {
             view?.setShowRetry(false)
             fetchProducts()
-        } else {
-            Timber.d("Internet is not available")
-            view?.setShowRetry(true)
-        }
+        //} else {
+            //Timber.d("Internet is not available")
+            //view?.setShowRetry(true)
+        //}
     }
 
     private fun fetchProducts() {
@@ -73,7 +73,7 @@ class MainPresenter : RxPresenter<MainPresenter.MainView>() {
 
     override fun onTakeView(view: MainView?) {
         super.onTakeView(view)
-        view?.setShowRetry(!isNetworkAvailable)
+        //view?.setShowRetry(!isNetworkAvailable)
         view?.showLoading(isLoading)
     }
 
