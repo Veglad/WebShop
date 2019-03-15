@@ -9,13 +9,12 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
-import nucleus5.presenter.Presenter
+import nucleus5.presenter.RxPresenter
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainPresenter : Presenter<MainPresenter.MainView>() {
+class MainPresenter : RxPresenter<MainPresenter.MainView>() {
     @Inject lateinit var productRepository: ProductRepository
-    private val compositeDisposable = CompositeDisposable()
 
     private var isLoading = false
     private var isNetworkAvailable = false
@@ -69,19 +68,13 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
                 }
             })
 
-        compositeDisposable.add(disposable)
+        add(disposable)
     }
 
     override fun onTakeView(view: MainView?) {
         super.onTakeView(view)
         view?.setShowRetry(!isNetworkAvailable)
         view?.showLoading(isLoading)
-    }
-
-    override fun onDestroy() {
-        compositeDisposable.dispose()
-        compositeDisposable.clear()
-        super.onDestroy()
     }
 
     interface MainView {
