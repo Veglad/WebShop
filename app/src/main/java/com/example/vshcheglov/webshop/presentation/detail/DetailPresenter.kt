@@ -2,27 +2,20 @@ package com.example.vshcheglov.webshop.presentation.detail
 
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
+import nucleus5.presenter.Presenter
 
-class DetailPresenter(private var detailView: DetailView?) {
+class DetailPresenter : Presenter<DetailPresenter.DetailView>() {
 
     private lateinit var product: Product
 
     fun showProductInfo(product: Product?) {
         this.product = product ?: Product()
-        detailView?.showProductInfo(this.product)
+        view?.showProductInfo(this.product)
     }
 
     fun buyProduct() {
         Basket.addProduct(product)
-        detailView?.startBasketActivity()
-    }
-
-    fun onAttached(detailView: DetailView) {
-        this.detailView = detailView
-    }
-
-    fun onDetached() {
-        detailView = null
+        view?.startBasketActivity()
     }
 
     interface DetailView {

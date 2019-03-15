@@ -1,20 +1,14 @@
 package com.example.vshcheglov.webshop.presentation.order
 
 import com.example.vshcheglov.webshop.domain.Basket
+import nucleus5.presenter.Presenter
 
-class OrderPresenter(private var orderView: OrderView?) {
+class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
 
     fun initOrderPrice() {
         val orderPrice = Basket.totalPriceWithDiscount
-        orderView?.setOrderPrice(orderPrice)
-    }
+        view?.setOrderPrice(orderPrice)
 
-    fun onAttached(orderView: OrderView) {
-        this.orderView = orderView
-    }
-
-    fun onDetached() {
-        orderView = null
     }
 
     interface OrderView {

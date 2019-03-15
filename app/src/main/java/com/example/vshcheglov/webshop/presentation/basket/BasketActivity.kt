@@ -13,32 +13,36 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerItemTouchHelper
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
-import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
+import nucleus5.factory.RequiresPresenter
+import nucleus5.view.NucleusAppCompatActivity
 
-class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
+@RequiresPresenter(BasketPresenter::class)
+class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresenter.BasketView,
     BasketRecyclerItemTouchHelper.BasketRecyclerItemTouchHelperListener {
 
     private lateinit var basketAdapter: BasketRecyclerAdapter
-    private val basketPresenter = BasketPresenter(this, ProductBasketCardMapper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_basket)
 
-        basketPresenter.initProductListWithBasketInfo()
-
         initActionBar()
-        basketMakeOrderButton.setOnClickListener { basketPresenter.makeOrder() }
+        basketMakeOrderButton.setOnClickListener { presenter?.makeOrder() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter?.initProductListWithBasketInfo()
     }
 
     override fun showBasket(productBaseketCardList: MutableList<ProductBasketCard>) {
         with(basketRecyclerView) {
             layoutManager = LinearLayoutManager(this@BasketActivity)
             basketAdapter = BasketRecyclerAdapter(productBaseketCardList).also {
-                it.onProductNumberIncreasedListener = { position -> basketPresenter.productNumberIncreased(position) }
-                it.onProductNumberDecreasedListener = { position -> basketPresenter.productNumberDecreased(position) }
+                it.onProductNumberIncreasedListener = { position -> presenter?.productNumberIncreased(position) }
+                it.onProductNumberDecreasedListener = { position -> presenter?.productNumberDecreased(position) }
             }
             adapter = basketAdapter
             itemAnimator = DefaultItemAnimator()
@@ -61,7 +65,7 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
         val holder = viewHolder as? BasketRecyclerAdapter.ViewHolder
-        holder?.let { basketPresenter.removeProductFromBasket(position) }
+        holder?.let { presenter?.removeProductFromBasket(position) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -88,7 +92,7 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     override fun showUndo(productName: String) {
         val undoTitle = String.format(getString(R.string.removed_item_snackbar_format), productName)
         val snackBar = Snackbar.make(basketMainConstraint, undoTitle, Snackbar.LENGTH_SHORT)
-        snackBar.setAction(getString(R.string.undo_uppercase)) { basketPresenter.restoreProductCard() }
+        snackBar.setAction(getString(R.string.undo_uppercase)) { presenter?.restoreProductCard() }
         snackBar.show()
     }
 
@@ -117,15 +121,5 @@ class BasketActivity : AppCompatActivity(), BasketPresenter.BasketView,
     override fun setTotalProductPriceTitle(position: Int, totalPrice: Double, percentageDiscount: Double) {
         val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
         view?.let { basketAdapter.updateCardTotalPriceTitle(position, totalPrice, view, percentageDiscount) }
-    }
-
-    override fun onDetachedFromWindow() {
-        basketPresenter.onDetached()
-        super.onDetachedFromWindow()
-    }
-
-    override fun onAttachedToWindow() {
-        basketPresenter.onAttached(this)
-        super.onAttachedToWindow()
     }
 }

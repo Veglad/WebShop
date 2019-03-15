@@ -1,29 +1,32 @@
 package com.example.vshcheglov.webshop.presentation.order
 
 import android.graphics.PorterDuff
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
 import kotlinx.android.synthetic.main.activity_order.*
+import nucleus5.factory.RequiresPresenter
+import nucleus5.view.NucleusAppCompatActivity
 
-class OrderActivity : AppCompatActivity(), OrderPresenter.OrderView {
-
-    private val orderPresenter = OrderPresenter(this)
+@RequiresPresenter(OrderPresenter::class)
+class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter.OrderView{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
-
-        orderPresenter.initOrderPrice()
 
         buttonOrder.setOnClickListener {
             Snackbar.make(orderConstraintLayout, getString(R.string.order_completed), Snackbar.LENGTH_SHORT).show()
         }
 
         initActionBar()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter?.initOrderPrice()
     }
 
     private fun initActionBar() {
@@ -49,15 +52,5 @@ class OrderActivity : AppCompatActivity(), OrderPresenter.OrderView {
 
     override fun setOrderPrice(orderPrice: Double) {
         orderTotalPrice.text = String.format(getString(R.string.price_format), orderPrice)
-    }
-
-    override fun onAttachedToWindow() {
-        orderPresenter.onAttached(this)
-        super.onAttachedToWindow()
-    }
-
-    override fun onDetachedFromWindow() {
-        orderPresenter.onDetached()
-        super.onDetachedFromWindow()
     }
 }
