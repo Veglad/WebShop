@@ -5,7 +5,7 @@ import com.example.vshcheglov.webshop.presentation.di.modules.AppModule
 import com.example.vshcheglov.webshop.presentation.di.modules.NetworkModule
 import com.example.vshcheglov.webshop.presentation.di.components.AppComponent
 import com.example.vshcheglov.webshop.presentation.di.components.DaggerAppComponent
-import com.example.vshcheglov.webshop.presentation.di.modules.BasketActivityModule
+import com.example.vshcheglov.webshop.presentation.di.modules.MappersModule
 import com.example.vshcheglov.webshop.presentation.di.modules.StorageModule
 import timber.log.Timber
 
@@ -23,7 +23,7 @@ class App : Application() {
         appComponent = DaggerAppComponent.builder()
             .networkModule(NetworkModule())
             .appModule(AppModule(this))
-            .basketActivityModule(BasketActivityModule())
+            .mappersModule(MappersModule())
             .storageModule(StorageModule())
             .build()
     }
