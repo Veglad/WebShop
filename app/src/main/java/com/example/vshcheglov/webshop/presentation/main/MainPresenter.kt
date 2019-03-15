@@ -18,13 +18,14 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private val compositeDisposable = CompositeDisposable()
 
     private var isLoading = false
+    private var isNetworkAvailable = false
 
     init {
         App.appComponent.inject(this)
     }
 
     fun loadProducts(isNetworkAvailable: Boolean) {
-        Timber.d("Products load")
+        this.isNetworkAvailable = isNetworkAvailable
         if (isNetworkAvailable) {
             view?.setShowRetry(false)
             fetchProducts()
@@ -73,6 +74,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     override fun onTakeView(view: MainView?) {
         super.onTakeView(view)
+        view?.setShowRetry(!isNetworkAvailable)
         view?.showLoading(isLoading)
     }
 
