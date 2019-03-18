@@ -32,9 +32,8 @@ object NetworkService {
             var request = chain.request()
 
             if (!context.isNetworkAvailable()) {
-                val maxStale = MAX_LIFE
                 request = request.newBuilder()
-                    .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
+                    .header("Cache-Control", "public, only-if-cached, max-stale=" + MAX_LIFE)
                     .removeHeader("Pragma")
                     .build()
             }
