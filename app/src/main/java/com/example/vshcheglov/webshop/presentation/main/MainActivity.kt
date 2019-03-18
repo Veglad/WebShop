@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.main
 
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
@@ -19,6 +20,7 @@ import timber.log.Timber
 class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.MainView {
 
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
+    private var snackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +29,9 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         presenter?.loadProducts(isNetworkAvailable())
 
         tryAgainButton.setOnClickListener {
-            Timber.d("Try again button clicked")
+            showErrorScreen(!isNetworkAvailable())
             presenter?.loadProducts(isNetworkAvailable())
+            snackbar?.dismiss()
         }
         productsSwipeRefreshLayout.setOnRefreshListener {
             Timber.d("Refresh data triggered")
@@ -51,22 +54,37 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         }
     }
 
-    override fun setShowRetry(isVisible: Boolean) {
-        activityMainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
-        activityMainPrimaryLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
+    override fun showNoInternetWarning() {
+        snackbar = Snackbar.make(mainFrameLayout,
+            getString(R.string.no_internet_connection_warning), Snackbar.LENGTH_INDEFINITE)
+        snackbar?.setAction(getString(R.string.try_again_button)) {
+                if (isNetworkAvailable()) {
+                    showErrorScreen(false)
+                }
+
+                presenter?.loadProducts(isNetworkAvailable())
+                snackbar?.dismiss()
+            }
+        snackbar?.show()
     }
 
     override fun showError(throwable: Throwable) {
-        val message = getString(R.string.loading_products_error)
-        Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+        showErrorScreen(true)
     }
 
     override fun showProductList(productList: List<Product>) {
+        showErrorScreen(false)
         productsRecyclerAdapter.productList = productList
         productsRecyclerAdapter.notifyDataSetChanged()
     }
 
     override fun showPromotionalProductList(promotionalList: List<Product>) {
+        showErrorScreen(false)
         productsRecyclerAdapter.updatePromotionalList(promotionalList)
+    }
+
+    private fun showErrorScreen(isVisible: Boolean) {
+        activityMainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
+        activityMainPrimaryLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
     }
 }

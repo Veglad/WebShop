@@ -5,7 +5,6 @@ import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
@@ -14,7 +13,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainPresenter : RxPresenter<MainPresenter.MainView>() {
-    @Inject lateinit var productRepository: ProductRepository
+    @Inject
+    lateinit var productRepository: ProductRepository
 
     private var isLoading = false
     private var isNetworkAvailable = false
@@ -25,13 +25,10 @@ class MainPresenter : RxPresenter<MainPresenter.MainView>() {
 
     fun loadProducts(isNetworkAvailable: Boolean) {
         this.isNetworkAvailable = isNetworkAvailable
-        //if (isNetworkAvailable) {
-            view?.setShowRetry(false)
-            fetchProducts()
-        //} else {
-            //Timber.d("Internet is not available")
-            //view?.setShowRetry(true)
-        //}
+        if (!isNetworkAvailable) {
+            view?.showNoInternetWarning()
+        }
+        fetchProducts()
     }
 
     private fun fetchProducts() {
@@ -64,6 +61,7 @@ class MainPresenter : RxPresenter<MainPresenter.MainView>() {
                     view?.let {
                         it.showLoading(false)
                         it.showError(e)
+                        it.showNoInternetWarning()
                     }
                 }
             })
@@ -73,14 +71,16 @@ class MainPresenter : RxPresenter<MainPresenter.MainView>() {
 
     override fun onTakeView(view: MainView?) {
         super.onTakeView(view)
-        //view?.setShowRetry(!isNetworkAvailable)
+        if (!isNetworkAvailable) {
+            view?.showNoInternetWarning()
+        }
         view?.showLoading(isLoading)
     }
 
     interface MainView {
         fun showLoading(isLoading: Boolean)
 
-        fun setShowRetry(isVisible: Boolean)
+        fun showNoInternetWarning()
 
         fun showError(throwable: Throwable)
 
