@@ -1,21 +1,14 @@
 package com.example.vshcheglov.webshop.data.products
 
+import com.example.vshcheglov.webshop.data.enteties.AllProducts
 import com.example.vshcheglov.webshop.domain.Product
 import io.reactivex.Single
 
 class ProductRepository(private val networkDataSource: NetworkDataSource) {
 
-    fun getAllDevices(): Single<List<Product>> {
-        return networkDataSource.getAllDevices()
-    }
+    suspend fun getProducts() = networkDataSource.getProducts()
 
-    @Deprecated("Does not work")
-    fun getDevice(id: Long): Single<Product> {
-        return networkDataSource.getDevice(id)
-    }
+    suspend fun getPromotionalProducts() = networkDataSource.getPromotionalProducts()
 
-    fun getAllPromotionalDevices(): Single<List<Product>> {
-        return networkDataSource.getAllPromotionalDevices()
-    }
-
+    suspend fun getAllProducts() = networkDataSource.getAllProducts()
 }

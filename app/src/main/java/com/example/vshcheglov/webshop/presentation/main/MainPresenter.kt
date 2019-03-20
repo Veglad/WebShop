@@ -1,23 +1,25 @@
 package com.example.vshcheglov.webshop.presentation.main
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.enteties.AllProducts
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.BiFunction
-import io.reactivex.observers.DisposableSingleObserver
-import io.reactivex.schedulers.Schedulers
-import nucleus5.presenter.RxPresenter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import nucleus5.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainPresenter : RxPresenter<MainPresenter.MainView>() {
-    @Inject
-    lateinit var productRepository: ProductRepository
+class MainPresenter : Presenter<MainPresenter.MainView>() {
+    @Inject lateinit var productRepository: ProductRepository
 
     private var isLoading = false
     private var isNetworkAvailable = false
+
+    private val job = Job()
+    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
     init {
         App.appComponent.inject(this)
@@ -31,42 +33,35 @@ class MainPresenter : RxPresenter<MainPresenter.MainView>() {
         fetchProducts()
     }
 
+
     private fun fetchProducts() {
-        Timber.d("Fetching products...")
-        isLoading = true
-        view?.showLoading(true)
+        uiCoroutineScope.launch {
+            Timber.d("Fetching products...")
+            isLoading = true
+            view?.showLoading(true)
 
-        val disposable = Single.zip(
-            productRepository.getAllDevices(), productRepository.getAllPromotionalDevices()
-            , BiFunction { products: List<Product>, promotionals: List<Product> ->
-                Pair(products, promotionals)
-            })
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(object : DisposableSingleObserver<Pair<List<Product>, List<Product>>>() {
-                override fun onSuccess(pairProducts: Pair<List<Product>, List<Product>>) {
-                    isLoading = false
-                    Timber.d("Products fetched successfully")
-                    val promotionalList = pairProducts.second.filter { it.percentageDiscount > 0 }
-                    view?.let {
-                        it.showLoading(false)
-                        it.showProductList(pairProducts.first)
-                        it.showPromotionalProductList(promotionalList)
-                    }
+            try {
+               val allProducts = productRepository.getAllProducts()
+                processUiWithAllProducts(allProducts)
+            } catch (ex: Exception) {
+                Timber.e("Products fetching error:" + ex)
+                view?.let {
+                    it.showError(ex)
+                    it.showNoInternetWarning()
                 }
+            } finally {
+                view?.showLoading(false)
+            }
+        }
+    }
 
-                override fun onError(e: Throwable) {
-                    isLoading = false
-                    Timber.e("Products fetching error:" + e)
-                    view?.let {
-                        it.showLoading(false)
-                        it.showError(e)
-                        it.showNoInternetWarning()
-                    }
-                }
-            })
-
-        add(disposable)
+    private fun processUiWithAllProducts(allProducts: AllProducts) {
+        Timber.d("Products fetched successfully")
+        val promotionalList = allProducts.promotionalProducts.filter { it.percentageDiscount > 0 }
+        view?.let {
+            it.showProductList(allProducts.products)
+            it.showPromotionalProductList(promotionalList)
+        }
     }
 
     override fun onTakeView(view: MainView?) {
