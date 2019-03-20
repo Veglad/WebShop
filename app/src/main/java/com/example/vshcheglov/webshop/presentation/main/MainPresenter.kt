@@ -13,13 +13,16 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class MainPresenter : Presenter<MainPresenter.MainView>() {
-    @Inject lateinit var productRepository: ProductRepository
+    @Inject
+    lateinit var productRepository: ProductRepository
 
     private var isLoading = false
     private var isNetworkAvailable = false
 
     private val job = Job()
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+
+    private var allProducts: AllProducts? = null
 
     init {
         App.appComponent.inject(this)
@@ -30,19 +33,21 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         if (!isNetworkAvailable) {
             view?.showNoInternetWarning()
         }
-        fetchProducts()
+        fetchProducts(true)
     }
 
 
-    private fun fetchProducts() {
+    private fun fetchProducts(refresh: Boolean) {
         uiCoroutineScope.launch {
             Timber.d("Fetching products...")
-            isLoading = true
             view?.showLoading(true)
 
             try {
-               val allProducts = productRepository.getAllProducts()
-                processUiWithAllProducts(allProducts)
+                if (allProducts == null || refresh) {
+                    isLoading = true
+                    allProducts = productRepository.getAllProducts()
+                }
+                processUiWithAllProducts(allProducts!!)
             } catch (ex: Exception) {
                 Timber.e("Products fetching error:" + ex)
                 view?.let {
@@ -50,6 +55,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
                     it.showNoInternetWarning()
                 }
             } finally {
+                isLoading = false
                 view?.showLoading(false)
             }
         }
@@ -70,6 +76,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
             view?.showNoInternetWarning()
         }
         view?.showLoading(isLoading)
+        fetchProducts(false)
     }
 
     interface MainView {
