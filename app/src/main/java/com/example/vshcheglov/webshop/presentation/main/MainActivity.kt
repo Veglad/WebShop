@@ -31,11 +31,16 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         tryAgainButton.setOnClickListener {
             showErrorScreen(!isNetworkAvailable())
             presenter?.loadProducts(isNetworkAvailable())
-            snackbar?.dismiss()
+            if(isNetworkAvailable()) {
+                snackbar?.dismiss()
+            }
         }
         productsSwipeRefreshLayout.setOnRefreshListener {
             Timber.d("Refresh data triggered")
             presenter?.loadProducts(isNetworkAvailable())
+            if(isNetworkAvailable()) {
+                snackbar?.dismiss()
+            }
         }
 
         productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
