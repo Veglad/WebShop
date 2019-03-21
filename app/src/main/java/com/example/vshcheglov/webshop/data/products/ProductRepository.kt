@@ -1,10 +1,16 @@
 package com.example.vshcheglov.webshop.data.products
 
-import com.example.vshcheglov.webshop.data.enteties.AllProducts
-import com.example.vshcheglov.webshop.domain.Product
-import io.reactivex.Single
+import com.example.vshcheglov.webshop.App
+import javax.inject.Inject
 
-class ProductRepository(private val networkDataSource: NetworkDataSource) {
+class ProductRepository {
+
+    @Inject
+    lateinit var networkDataSource: NetworkDataSource
+
+    init {
+        App.appComponent.inject(this)
+    }
 
     suspend fun getProducts() = networkDataSource.getProducts()
 

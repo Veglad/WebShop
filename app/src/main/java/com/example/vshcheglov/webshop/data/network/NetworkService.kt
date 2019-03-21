@@ -50,13 +50,11 @@ object NetworkService {
             .cache(cache)
             .build()
 
-        val coroutineCallAdapterFactory = CoroutineCallAdapterFactory()
-
         return Retrofit.Builder()
             .baseUrl(NetworkDataSource.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .client(client)
-            .addCallAdapterFactory(coroutineCallAdapterFactory)
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
     }
 }

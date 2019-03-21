@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.main
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.AllProducts
+import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.coroutines.CoroutineScope
@@ -22,7 +22,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private val job = Job()
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
-    private var allProducts: AllProducts? = null
+    private var allProducts: AllProductsEntity? = null
 
     init {
         App.appComponent.inject(this)
@@ -52,7 +52,6 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
                 Timber.e("Products fetching error:" + ex)
                 view?.let {
                     it.showError(ex)
-                    it.showNoInternetWarning()
                 }
             } finally {
                 isLoading = false
@@ -61,7 +60,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         }
     }
 
-    private fun processUiWithAllProducts(allProducts: AllProducts) {
+    private fun processUiWithAllProducts(allProducts: AllProductsEntity) {
         Timber.d("Products fetched successfully")
         val promotionalList = allProducts.promotionalProducts.filter { it.percentageDiscount > 0 }
         view?.let {

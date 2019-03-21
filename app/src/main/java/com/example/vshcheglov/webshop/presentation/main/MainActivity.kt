@@ -29,16 +29,20 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         presenter?.loadProducts(isNetworkAvailable())
 
         tryAgainButton.setOnClickListener {
-            showErrorScreen(!isNetworkAvailable())
-            presenter?.loadProducts(isNetworkAvailable())
-            if(isNetworkAvailable()) {
+            val isNetworkAvailable = isNetworkAvailable()
+
+            showErrorScreen(!isNetworkAvailable)
+            presenter?.loadProducts(isNetworkAvailable)
+            if(isNetworkAvailable) {
                 snackbar?.dismiss()
             }
         }
         productsSwipeRefreshLayout.setOnRefreshListener {
+            val isNetworkAvailable = isNetworkAvailable()
+
             Timber.d("Refresh data triggered")
-            presenter?.loadProducts(isNetworkAvailable())
-            if(isNetworkAvailable()) {
+            presenter?.loadProducts(isNetworkAvailable)
+            if(isNetworkAvailable) {
                 snackbar?.dismiss()
             }
         }
@@ -60,14 +64,15 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     }
 
     override fun showNoInternetWarning() {
+        val isNetworkAvailable = isNetworkAvailable()
         snackbar = Snackbar.make(mainFrameLayout,
             getString(R.string.no_internet_connection_warning), Snackbar.LENGTH_INDEFINITE)
         snackbar?.setAction(getString(R.string.try_again_button)) {
-                if (isNetworkAvailable()) {
+                if (isNetworkAvailable) {
                     showErrorScreen(false)
                 }
 
-                presenter?.loadProducts(isNetworkAvailable())
+                presenter?.loadProducts(isNetworkAvailable)
                 snackbar?.dismiss()
             }
         snackbar?.show()
@@ -75,6 +80,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     override fun showError(throwable: Throwable) {
         showErrorScreen(true)
+        showNoInternetWarning()
     }
 
     override fun showProductList(productList: List<Product>) {
