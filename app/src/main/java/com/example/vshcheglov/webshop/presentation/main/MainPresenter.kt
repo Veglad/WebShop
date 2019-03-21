@@ -30,24 +30,26 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     fun loadProducts(isNetworkAvailable: Boolean) {
         this.isNetworkAvailable = isNetworkAvailable
-        if (!isNetworkAvailable) {
-            view?.showNoInternetWarning()
-        }
-        fetchProducts(true)
+        fetchProducts(true, isNetworkAvailable)
     }
 
 
-    private fun fetchProducts(refresh: Boolean) {
+    private fun fetchProducts(refresh: Boolean, isNetworkAvailable: Boolean) {
         uiCoroutineScope.launch {
             Timber.d("Fetching products...")
-            view?.showLoading(true)
 
             try {
                 if (allProducts == null || refresh) {
                     isLoading = true
+                    view?.showLoading(true)
                     allProducts = productRepository.getAllProducts()
                 }
+
                 processUiWithAllProducts(allProducts!!)
+
+                if (!isNetworkAvailable) {
+                    view?.showNoInternetWarning()
+                }
             } catch (ex: Exception) {
                 Timber.e("Products fetching error:" + ex)
                 view?.let {
@@ -71,11 +73,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     override fun onTakeView(view: MainView?) {
         super.onTakeView(view)
-        if (!isNetworkAvailable) {
-            view?.showNoInternetWarning()
-        }
         view?.showLoading(isLoading)
-        fetchProducts(false)
+        fetchProducts(false, isNetworkAvailable)
     }
 
     interface MainView {

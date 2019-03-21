@@ -4,14 +4,13 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
-import kotlinx.android.synthetic.main.activity_main_primary.*
-import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main_error_layout.*
+import kotlinx.android.synthetic.main.activity_main_primary.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
@@ -31,9 +30,9 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         tryAgainButton.setOnClickListener {
             val isNetworkAvailable = isNetworkAvailable()
 
-            showErrorScreen(!isNetworkAvailable)
+            setErrorVisibility(!isNetworkAvailable)
             presenter?.loadProducts(isNetworkAvailable)
-            if(isNetworkAvailable) {
+            if (isNetworkAvailable) {
                 snackbar?.dismiss()
             }
         }
@@ -42,7 +41,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
             Timber.d("Refresh data triggered")
             presenter?.loadProducts(isNetworkAvailable)
-            if(isNetworkAvailable) {
+            if (isNetworkAvailable) {
                 snackbar?.dismiss()
             }
         }
@@ -65,36 +64,37 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     override fun showNoInternetWarning() {
         val isNetworkAvailable = isNetworkAvailable()
-        snackbar = Snackbar.make(mainFrameLayout,
-            getString(R.string.no_internet_connection_warning), Snackbar.LENGTH_INDEFINITE)
+        snackbar = Snackbar.make(
+            mainFrameLayout,
+            getString(R.string.no_internet_connection_warning), Snackbar.LENGTH_INDEFINITE
+        )
         snackbar?.setAction(getString(R.string.try_again_button)) {
-                if (isNetworkAvailable) {
-                    showErrorScreen(false)
-                }
-
-                presenter?.loadProducts(isNetworkAvailable)
-                snackbar?.dismiss()
+            if (isNetworkAvailable) {
+                setErrorVisibility(false)
             }
+
+            presenter?.loadProducts(isNetworkAvailable)
+            snackbar?.dismiss()
+        }
         snackbar?.show()
     }
 
     override fun showError(throwable: Throwable) {
-        showErrorScreen(true)
-        showNoInternetWarning()
+        setErrorVisibility(true)
     }
 
     override fun showProductList(productList: List<Product>) {
-        showErrorScreen(false)
+        setErrorVisibility(false)
         productsRecyclerAdapter.productList = productList
         productsRecyclerAdapter.notifyDataSetChanged()
     }
 
     override fun showPromotionalProductList(promotionalList: List<Product>) {
-        showErrorScreen(false)
+        setErrorVisibility(false)
         productsRecyclerAdapter.updatePromotionalList(promotionalList)
     }
 
-    private fun showErrorScreen(isVisible: Boolean) {
+    private fun setErrorVisibility(isVisible: Boolean) {
         activityMainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
         activityMainPrimaryLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
     }

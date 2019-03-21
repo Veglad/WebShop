@@ -8,7 +8,7 @@
     <string name="loading_promotional_products_error">Promotional products loading error</string>
     <string name="no_internet_connection_warning">Check the internet connection and try again.</string>
     <string name="try_again_button">Try again</string>
-    <string name="tittle_error_main_layout">Something went wrong</string>
+    <string name="tittle_error_main_layout">No data and Internet</string>
     <string name="description_error_main_layout">Check the Internet connection and try again.</string>
     <string name="promotional_title">Promotional devices</string>
     <string name="devices_title">Devices</string>
