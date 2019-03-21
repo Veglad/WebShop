@@ -32,8 +32,13 @@
     <string name="number">Number</string>
     <string name="last_name">Last name</string>
     <string name="name">Name</string>
-    <string name="order_price">Order price: </string>
+    <string name="order_price">Order price:</string>
     <string name="ordering">Ordering</string>
     <string name="card_number">Card number</string>
     <string name="order_completed">Order completed!</string>
+    <string name="login">Login</string>
+    <string name="Register">Register</string>
+    <string name="e_mail">E-Mail</string>
+    <string name="password">Password</string>
+    <string name="sign_up_title">Don\'t have an account?</string>
 </resources>
