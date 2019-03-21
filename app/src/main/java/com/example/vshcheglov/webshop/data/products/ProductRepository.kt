@@ -1,21 +1,20 @@
 package com.example.vshcheglov.webshop.data.products
 
-import com.example.vshcheglov.webshop.domain.Product
-import io.reactivex.Single
+import com.example.vshcheglov.webshop.App
+import javax.inject.Inject
 
-class ProductRepository(private val networkDataSource: NetworkDataSource) {
+class ProductRepository {
 
-    fun getAllDevices(): Single<List<Product>> {
-        return networkDataSource.getAllDevices()
+    @Inject
+    lateinit var networkDataSource: NetworkDataSource
+
+    init {
+        App.appComponent.inject(this)
     }
 
-    @Deprecated("Does not work")
-    fun getDevice(id: Long): Single<Product> {
-        return networkDataSource.getDevice(id)
-    }
+    suspend fun getProducts() = networkDataSource.getProducts()
 
-    fun getAllPromotionalDevices(): Single<List<Product>> {
-        return networkDataSource.getAllPromotionalDevices()
-    }
+    suspend fun getPromotionalProducts() = networkDataSource.getPromotionalProducts()
 
+    suspend fun getAllProducts() = networkDataSource.getAllProducts()
 }

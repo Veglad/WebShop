@@ -1,5 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.di.components
 
+import com.example.vshcheglov.webshop.data.products.NetworkDataSource
+import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
 import com.example.vshcheglov.webshop.presentation.di.modules.AppModule
 import com.example.vshcheglov.webshop.presentation.di.modules.MappersModule
@@ -21,4 +23,6 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(mainPresenter: MainPresenter)
     fun inject(basketPresenter: BasketPresenter)
+    fun inject(networkDataSource: NetworkDataSource)
+    fun inject(productRepository: ProductRepository)
 }

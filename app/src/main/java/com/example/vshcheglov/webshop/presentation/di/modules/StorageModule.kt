@@ -12,6 +12,5 @@ import javax.inject.Singleton
 class StorageModule {
     @Provides
     @Singleton
-    fun providesRepository(webShopApi: WebShopApi, mapper: ProductEntityDataMapper) =
-        ProductRepository(NetworkDataSource(mapper, webShopApi))
+    fun providesRepository() = ProductRepository()
 }

@@ -18,7 +18,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 import javax.inject.Singleton
 
-@Module(includes = [AppModule::class])
+@Module(includes = [AppModule::class, MappersModule::class])
 class NetworkModule {
     @Singleton
     @Provides
@@ -27,7 +27,7 @@ class NetworkModule {
         return retrofit.create(WebShopApi::class.java)
     }
 
-    @Singleton
     @Provides
-    fun provideNetworkProductMapper() = ProductEntityDataMapper()
+    @Singleton
+    fun providesNetworkDataSource() = NetworkDataSource()
 }

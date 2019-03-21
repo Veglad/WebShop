@@ -4,12 +4,12 @@ import android.content.Context
 import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.di.modules.NetworkModule
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.File
 
@@ -54,7 +54,7 @@ object NetworkService {
             .baseUrl(NetworkDataSource.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .client(client)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
     }
 }

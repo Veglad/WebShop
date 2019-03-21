@@ -1,27 +1,37 @@
 package com.example.vshcheglov.webshop.data.products
 
+import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
 import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
 import com.example.vshcheglov.webshop.data.network.WebShopApi
-import com.example.vshcheglov.webshop.domain.Product
-import io.reactivex.Single
+import javax.inject.Inject
 
-class NetworkDataSource(private val productEntityDataMapper: ProductEntityDataMapper,
-                        private val webShopApi: WebShopApi) {
+class NetworkDataSource {
+
+    @Inject lateinit var productEntityDataMapper: ProductEntityDataMapper
+    @Inject lateinit var webShopApi: WebShopApi
 
     companion object {
         const val BASE_URL = "https://us-central1-webshop-58013.cloudfunctions.net"
     }
 
-    fun getAllDevices(): Single<List<Product>> = webShopApi.getDevices().map {
-        productEntityDataMapper.mapFrom(it)
+    init {
+        App.appComponent.inject(this)
     }
 
-    @Deprecated("Does not work")
-    fun getDevice(id: Long): Single<Product> = webShopApi.getDevice(id).map {
-        productEntityDataMapper.map(it)
-    }
+    suspend fun getProducts() =
+        productEntityDataMapper.mapFrom(webShopApi.getProductsAsync().await())
 
-    fun getAllPromotionalDevices(): Single<List<Product>> = webShopApi.getPromotionalDevices().map {
-        productEntityDataMapper.mapFrom(it)
+    suspend fun getPromotionalProducts() =
+        productEntityDataMapper.mapFrom(webShopApi.getPromotionalProductsAsync().await())
+
+    suspend fun getAllProducts(): AllProductsEntity {
+        val productsDeferred = webShopApi.getProductsAsync()
+        val promotionalProductsDeferred = webShopApi.getPromotionalProductsAsync()
+
+        val products = productEntityDataMapper.mapFrom(productsDeferred.await())
+        val promotionalProducts = productEntityDataMapper.mapFrom(promotionalProductsDeferred.await())
+
+        return AllProductsEntity(products, promotionalProducts)
     }
 }
