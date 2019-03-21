@@ -51,4 +51,8 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
             Snackbar.LENGTH_LONG
         ).show()
     }
+
+    override fun showLogInSuccess() {
+        Toast.makeText(this, "Successfully authorized!", Toast.LENGTH_LONG).show()
+    }
 }

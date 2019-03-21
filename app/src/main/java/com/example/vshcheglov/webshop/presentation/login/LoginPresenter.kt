@@ -12,13 +12,13 @@ import javax.inject.Inject
 
 class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
 
-    private var firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var currentUser: FirebaseUser? = firebaseAuth.currentUser
-    @Inject
-    lateinit var appContext: Context
+    @Inject lateinit var firebaseAuth: FirebaseAuth
+    @Inject lateinit var appContext: Context
+    private var currentUser: FirebaseUser? = null
 
     init {
         App.appComponent.inject(this)
+        currentUser = firebaseAuth.currentUser
     }
 
 
@@ -32,12 +32,14 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
 
     fun logOnUser(email: String, password: String) {
         if (appContext.isNetworkAvailable()) {
-            firebaseAuth.createUserWithEmailAndPassword(email, password)
+            firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        Timber.d("user has been created")
+                        Timber.d("user sign in success")
+                        view?.showLogInSuccess()
+                        view?.startMainActivity()
                     } else {
-                        Timber.d("user creating error: " + task.exception)
+                        Timber.e("user sign in error: " + task.exception)
                         view?.showLoginError(task.exception)
                     }
                 }
@@ -60,5 +62,7 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
         fun startRegisterActivity()
 
         fun showNoInternetError()
+
+        fun showLogInSuccess()
     }
 }
