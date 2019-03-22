@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
+import android.text.InputType
+import android.view.MotionEvent
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
@@ -31,6 +33,17 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
 
         buttonRegister.setOnClickListener {
             presenter.registerUser()
+        }
+        initShowPasswordButton()
+    }
+
+    private fun initShowPasswordButton() {
+        loginShowPasswordButton.setOnTouchListener { _, event ->
+            when(event.action) {
+                MotionEvent.ACTION_DOWN -> loginPassword.inputType = InputType.TYPE_CLASS_TEXT
+                MotionEvent.ACTION_UP -> loginPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+            true
         }
     }
 

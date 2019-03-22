@@ -10,7 +10,8 @@
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="delete_item_background">#fa315b</color>
-    <color name="dark_gray">#222</color>
+    <color name="dark_gray">#171717</color>
     <color name="gray_transparent">#AA333333</color>
     <color name="gray">#333</color>
+    <color name="transparent">#00000000</color>
 </resources>
