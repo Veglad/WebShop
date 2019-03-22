@@ -86,4 +86,9 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
             buttonLogin.revertAnimation()
         }
     }
+
+    override fun onDestroy() {
+        buttonLogin.dispose()
+        super.onDestroy()
+    }
 }
