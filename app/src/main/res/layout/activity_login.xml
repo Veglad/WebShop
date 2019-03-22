@@ -76,7 +76,7 @@
             app:spinning_bar_padding="6dp"
             app:spinning_bar_width="4dp"
             style="@style/ButtonPrimaryStyle"
-            android:background="@color/primary"
+            android:background="@drawable/login_button_drawable"
             android:foreground="?selectableItemBackground"
             app:layout_constraintTop_toBottomOf="@+id/passwordTextInput"
             app:layout_constraintBottom_toTopOf="@+id/signUpTitle"
