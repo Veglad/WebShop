@@ -41,4 +41,6 @@
     <string name="e_mail">E-Mail</string>
     <string name="password">Password</string>
     <string name="sign_up_title">Don\'t have an account?</string>
+    <string name="email_error">Invalid e-mail</string>
+    <string name="password_error">Invalid password</string>
 </resources>

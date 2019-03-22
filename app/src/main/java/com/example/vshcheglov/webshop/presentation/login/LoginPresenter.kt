@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.login
 
 import android.content.Context
+import android.util.Patterns
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.google.firebase.auth.FirebaseAuth
@@ -8,12 +9,15 @@ import com.google.firebase.auth.FirebaseUser
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import java.lang.Exception
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
 
-    @Inject lateinit var firebaseAuth: FirebaseAuth
-    @Inject lateinit var appContext: Context
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
+    @Inject
+    lateinit var appContext: Context
     private var currentUser: FirebaseUser? = null
 
     init {
@@ -31,6 +35,18 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
     }
 
     fun logOnUser(email: String, password: String) {
+        var isValid = true
+        if (!isEmailValid(email)) {
+            view?.showInvalidEmail()
+            isValid = false
+        }
+        if (!isPasswordValid(password)) {
+            view?.showInvalidPassword()
+            isValid = false
+        }
+
+        if (!isValid) return
+
         if (appContext.isNetworkAvailable()) {
             firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
@@ -50,6 +66,12 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
 
     }
 
+    private fun isEmailValid(email: String) =
+        email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
+
+    private fun isPasswordValid(password: String) =
+        password.length >= 6 && password.isNotEmpty()
+
     fun registerUser() {
         view?.startRegisterActivity()
     }
@@ -64,5 +86,9 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
         fun showNoInternetError()
 
         fun showLogInSuccess()
+
+        fun showInvalidEmail()
+
+        fun showInvalidPassword()
     }
 }

@@ -3,6 +3,7 @@ package com.example.vshcheglov.webshop.presentation.login
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.widget.TextView
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
@@ -17,7 +18,10 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
         buttonLogin.setOnClickListener {
+            emailTextInput.error = ""
+            passwordTextInput.error = ""
             presenter.logOnUser(loginEmail.text.toString(), loginPassword.text.toString())
         }
 
@@ -54,5 +58,13 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
 
     override fun showLogInSuccess() {
         Toast.makeText(this, "Successfully authorized!", Toast.LENGTH_LONG).show()
+    }
+
+    override fun showInvalidEmail() {
+        passwordTextInput.error = resources.getString(R.string.email_error)
+    }
+
+    override fun showInvalidPassword() {
+        emailTextInput.error = resources.getString(R.string.password_error)
     }
 }
