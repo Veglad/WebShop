@@ -56,15 +56,18 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
     }
 
     private fun signInUser(email: String, password: String) {
+        view?.setShowProgress(true)
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Timber.d("user sign in success")
                     view?.showLogInSuccess()
                     view?.startMainActivity()
+                    view?.setShowProgress(false)
                 } else {
                     Timber.e("user sign in error: " + task.exception)
                     view?.showLoginError(task.exception)
+                    view?.setShowProgress(false)
                 }
             }
     }
@@ -93,5 +96,7 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
         fun showInvalidEmail()
 
         fun showInvalidPassword()
+
+        fun setShowProgress(isLoading: Boolean)
     }
 }

@@ -1,9 +1,10 @@
 package com.example.vshcheglov.webshop.presentation.login
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.widget.TextView
+import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
@@ -76,5 +77,13 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
 
     override fun showInvalidPassword() {
         passwordTextInput.error = resources.getString(R.string.password_error)
+    }
+
+    override fun setShowProgress(isLoading: Boolean) {
+        if(isLoading) {
+            buttonLogin.startAnimation()
+        } else {
+            buttonLogin.revertAnimation()
+        }
     }
 }

@@ -64,7 +64,7 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"/>
     </android.support.design.widget.TextInputLayout>
-    <Button
+    <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -72,14 +72,18 @@
             android:clickable="true"
             android:focusable="true"
             android:text="@string/login"
+            app:spinning_bar_color="@color/white"
+            app:spinning_bar_padding="6dp"
+            app:spinning_bar_width="4dp"
             style="@style/ButtonPrimaryStyle"
+            android:background="@color/primary"
             android:foreground="?selectableItemBackground"
             app:layout_constraintTop_toBottomOf="@+id/passwordTextInput"
             app:layout_constraintBottom_toTopOf="@+id/signUpTitle"
             app:layout_constraintStart_toStartOf="@+id/passwordTextInput"
             app:layout_constraintEnd_toEndOf="@+id/passwordTextInput"
             android:layout_marginTop="32dp">
-    </Button>
+    </br.com.simplepass.loading_button_lib.customViews.CircularProgressButton>
     <Button
             android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
