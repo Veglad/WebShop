@@ -60,7 +60,7 @@
                 app:errorTextAppearance="@style/TextInputLabelErrorState"
                 app:errorEnabled="true"
                 app:layout_constraintTop_toBottomOf="@+id/registerEmailTextInput"
-                app:layout_constraintBottom_toTopOf="@+id/buttonRegisterUser"
+                app:layout_constraintBottom_toTopOf="@+id/registerConfirmPasswordTextInput"
                 app:layout_constraintStart_toStartOf="@+id/registerEmailTextInput"
                 app:layout_constraintEnd_toEndOf="@+id/registerEmailTextInput"
                 android:layout_marginTop="8dp">
@@ -70,6 +70,26 @@
                     android:layout_height="match_parent"
                     android:textColor="@color/white"
                     android:hint="@string/password"
+                    android:inputType="textPassword"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/registerConfirmPasswordTextInput"
+                android:theme="@style/TextInputLabel"
+                app:errorTextAppearance="@style/TextInputLabelErrorState"
+                app:errorEnabled="true"
+                app:layout_constraintTop_toBottomOf="@+id/registerPasswordTextInput"
+                app:layout_constraintBottom_toTopOf="@+id/buttonRegisterUser"
+                app:layout_constraintStart_toStartOf="@+id/registerEmailTextInput"
+                app:layout_constraintEnd_toEndOf="@+id/registerEmailTextInput"
+                android:layout_marginTop="8dp">
+            <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/registerConfirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:hint="@string/confirm_password"
                     android:inputType="textPassword"/>
         </android.support.design.widget.TextInputLayout>
         <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
@@ -86,10 +106,11 @@
                 style="@style/ButtonPrimaryStyle"
                 android:background="@drawable/login_button_drawable"
                 android:foreground="?selectableItemBackground"
-                app:layout_constraintTop_toBottomOf="@+id/registerPasswordTextInput"
+                app:layout_constraintTop_toBottomOf="@+id/registerConfirmPasswordTextInput"
                 app:layout_constraintStart_toStartOf="@+id/registerPasswordTextInput"
                 app:layout_constraintEnd_toEndOf="@+id/registerPasswordTextInput"
-                android:layout_marginTop="32dp" android:layout_marginBottom="8dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent">
         </br.com.simplepass.loading_button_lib.customViews.CircularProgressButton>
     </android.support.constraint.ConstraintLayout>
