@@ -46,4 +46,5 @@
     <string name="unknown_error">Unknown error</string>
     <string name="incorrect_password_for_user">Incorrect password for this e-mail</string>
     <string name="incorrect_email_for_user">There is no user with such e-mail</string>
+    <string name="registration">Registration</string>
 </resources>
