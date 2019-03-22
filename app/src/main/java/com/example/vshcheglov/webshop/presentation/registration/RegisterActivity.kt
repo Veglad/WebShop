@@ -3,7 +3,9 @@ package com.example.vshcheglov.webshop.presentation.registration
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.text.InputType
 import android.view.MenuItem
+import android.view.MotionEvent
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
@@ -29,6 +31,28 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
         supportActionBar?.let {
             it.setDisplayShowHomeEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+        }
+        initShowPasswordButton()
+        initShowConfirmPasswordButton()
+    }
+
+    private fun initShowPasswordButton() {
+        registerShowPasswordButton.setOnTouchListener { _, event ->
+            when(event.action) {
+                MotionEvent.ACTION_DOWN -> registerPassword.inputType = InputType.TYPE_CLASS_TEXT
+                MotionEvent.ACTION_UP -> registerPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+            true
+        }
+    }
+
+    private fun initShowConfirmPasswordButton() {
+        showConfirmPasswordButton.setOnTouchListener { _, event ->
+            when(event.action) {
+                MotionEvent.ACTION_DOWN -> registerConfirmPassword.inputType = InputType.TYPE_CLASS_TEXT
+                MotionEvent.ACTION_UP -> registerConfirmPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+            true
         }
     }
 
