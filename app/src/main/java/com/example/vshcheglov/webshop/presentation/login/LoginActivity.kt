@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
+import com.example.vshcheglov.webshop.presentation.registration.RegisterActivity
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.android.synthetic.main.activity_login.*
@@ -55,8 +56,8 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
     }
 
     override fun startRegisterActivity() {
-        //val intent = Intent(this, MainActivity::class.java)
-        //startActivity(intent)
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
     }
 
     override fun showNoInternetError() {

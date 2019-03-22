@@ -39,7 +39,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.registration.RegisterActivity">
+        <activity android:name=".presentation.registration.RegisterActivity"
+                  android:theme="@style/AppTheme.BlackMode">
         </activity>
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation.login
+package com.example.vshcheglov.webshop.presentation.registration
 
 import android.content.Context
 import android.util.Patterns
@@ -8,12 +8,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import nucleus5.presenter.Presenter
 import timber.log.Timber
-import java.lang.Exception
-import java.util.regex.Pattern
 import javax.inject.Inject
 
-class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
-
+class RegisterPresenter : Presenter<RegisterPresenter.RegisterView>() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
     @Inject
@@ -22,19 +19,9 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
 
     init {
         App.appComponent.inject(this)
-        currentUser = firebaseAuth.currentUser
     }
 
-
-    override fun onTakeView(view: PresenterView?) {
-        super.onTakeView(view)
-        if (currentUser != null) {
-            Timber.d("user is authorized")
-            view?.startMainActivity()
-        }
-    }
-
-    fun logOnUser(email: String, password: String) {
+    fun registerUser(email: String, password: String) {
         var isValid = true
         if (!isEmailValid(email)) {
             view?.showInvalidEmail()
@@ -47,23 +34,23 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
 
         if (appContext.isNetworkAvailable()) {
             if (!isValid) return
-            signInUser(email, password)
+            registerUserWithEmailAndPassword(email, password)
         } else {
             view?.showNoInternetError()
         }
     }
 
-    private fun signInUser(email: String, password: String) {
+    private fun registerUserWithEmailAndPassword(email: String, password: String) {
         view?.setShowProgress(true)
-        firebaseAuth.signInWithEmailAndPassword(email, password)
+        firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Timber.d("user sign in success")
+                    Timber.d("user registration success")
                     view?.showLogInSuccess()
-                    view?.startMainActivity()
                     view?.setShowProgress(false)
+                    view?.startMainActivity()
                 } else {
-                    Timber.e("user sign in error: " + task.exception)
+                    Timber.e("user registration error: " + task.exception)
                     view?.showLoginError(task.exception)
                     view?.setShowProgress(false)
                 }
@@ -76,25 +63,19 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
     private fun isPasswordValid(password: String) =
         password.length >= 6 && password.isNotEmpty()
 
-    fun registerUser() {
-        view?.startRegisterActivity()
-    }
-
-    interface PresenterView {
-        fun startMainActivity()
-
-        fun showLoginError(exception: Exception?)
-
-        fun startRegisterActivity()
-
-        fun showNoInternetError()
-
-        fun showLogInSuccess()
-
+    interface RegisterView {
         fun showInvalidEmail()
 
         fun showInvalidPassword()
 
+        fun showNoInternetError()
+
         fun setShowProgress(isLoading: Boolean)
+
+        fun showLogInSuccess()
+
+        fun showLoginError(exception: Exception?)
+
+        fun startMainActivity()
     }
 }

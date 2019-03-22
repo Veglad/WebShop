@@ -1,13 +1,93 @@
 package com.example.vshcheglov.webshop.presentation.registration
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.view.MenuItem
+import android.widget.Toast
 import com.example.vshcheglov.webshop.R
+import com.example.vshcheglov.webshop.presentation.main.MainActivity
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import kotlinx.android.synthetic.main.activity_register.*
+import nucleus5.factory.RequiresPresenter
+import nucleus5.view.NucleusAppCompatActivity
+import java.lang.Exception
 
-class RegisterActivity : AppCompatActivity() {
+@RequiresPresenter(RegisterPresenter::class)
+class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), RegisterPresenter.RegisterView{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        buttonRegisterUser.setOnClickListener {
+            registerEmailTextInput.error = ""
+            registerPasswordTextInput.error = ""
+            presenter.registerUser(registerEmail.text.toString(), registerPassword.text.toString())
+        }
+        setSupportActionBar(registerActionBar)
+        supportActionBar?.let {
+            it.setDisplayShowHomeEnabled(true)
+            it.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    override fun startMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+    }
+
+    override fun showLoginError(exception: Exception?) {
+        val errorMessage = when (exception) {
+            is FirebaseAuthUserCollisionException -> {
+                resources.getString(R.string.email_address_collision)
+            }
+            else -> {
+                resources.getString(R.string.unknown_error)
+            }
+        }
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun showNoInternetError() {
+        Snackbar.make(
+            registerLinearLayout,
+            resources.getString(R.string.no_internet_connection_warning),
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
+    override fun showLogInSuccess() {
+        Toast.makeText(this, resources.getString(R.string.successfully_authorized), Toast.LENGTH_LONG).show()
+    }
+
+    override fun showInvalidEmail() {
+        registerEmailTextInput.error = resources.getString(R.string.email_error)
+    }
+
+    override fun showInvalidPassword() {
+        registerPasswordTextInput.error = resources.getString(R.string.password_error)
+    }
+
+    override fun setShowProgress(isLoading: Boolean) {
+        if(isLoading) {
+            buttonRegisterUser.startAnimation()
+        } else {
+            buttonRegisterUser.revertAnimation()
+        }
+    }
+
+    override fun onDestroy() {
+        buttonRegisterUser.dispose()
+        super.onDestroy()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> finish()
+        }
+
+        return false
     }
 }
