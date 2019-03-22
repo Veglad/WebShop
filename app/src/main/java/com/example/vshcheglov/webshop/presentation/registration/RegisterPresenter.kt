@@ -21,14 +21,22 @@ class RegisterPresenter : Presenter<RegisterPresenter.RegisterView>() {
         App.appComponent.inject(this)
     }
 
-    fun registerUser(email: String, password: String) {
+    fun registerUser(email: String, password: String, confirmPassword: String) {
         var isValid = true
         if (!isEmailValid(email)) {
             view?.showInvalidEmail()
             isValid = false
         }
+        if (password != confirmPassword) {
+            view?.showPasswordsNotMatchError()
+            isValid = false
+        }
         if (!isPasswordValid(password)) {
             view?.showInvalidPassword()
+            isValid = false
+        }
+        if (!isPasswordValid(confirmPassword)) {
+            view?.showInvalidConfirmPassword()
             isValid = false
         }
 
@@ -77,5 +85,9 @@ class RegisterPresenter : Presenter<RegisterPresenter.RegisterView>() {
         fun showLoginError(exception: Exception?)
 
         fun startMainActivity()
+
+        fun showInvalidConfirmPassword()
+
+        fun showPasswordsNotMatchError()
     }
 }

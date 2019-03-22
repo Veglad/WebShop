@@ -16,7 +16,7 @@ import nucleus5.view.NucleusAppCompatActivity
 import java.lang.Exception
 
 @RequiresPresenter(RegisterPresenter::class)
-class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), RegisterPresenter.RegisterView{
+class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), RegisterPresenter.RegisterView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,9 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
         buttonRegisterUser.setOnClickListener {
             registerEmailTextInput.error = ""
             registerPasswordTextInput.error = ""
-            presenter.registerUser(registerEmail.text.toString(), registerPassword.text.toString())
+            registerConfirmPasswordTextInput.error = ""
+            presenter.registerUser(registerEmail.text.toString(),
+                registerPassword.text.toString(), registerConfirmPassword.text.toString())
         }
         setSupportActionBar(registerActionBar)
         supportActionBar?.let {
@@ -38,9 +40,10 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
 
     private fun initShowPasswordButton() {
         registerShowPasswordButton.setOnTouchListener { _, event ->
-            when(event.action) {
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> registerPassword.inputType = InputType.TYPE_CLASS_TEXT
-                MotionEvent.ACTION_UP -> registerPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                MotionEvent.ACTION_UP -> registerPassword.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
             true
         }
@@ -48,9 +51,10 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
 
     private fun initShowConfirmPasswordButton() {
         showConfirmPasswordButton.setOnTouchListener { _, event ->
-            when(event.action) {
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> registerConfirmPassword.inputType = InputType.TYPE_CLASS_TEXT
-                MotionEvent.ACTION_UP -> registerConfirmPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                MotionEvent.ACTION_UP -> registerConfirmPassword.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
             true
         }
@@ -94,8 +98,16 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
         registerPasswordTextInput.error = resources.getString(R.string.password_error)
     }
 
+    override fun showInvalidConfirmPassword() {
+        registerConfirmPasswordTextInput.error = resources.getString(R.string.password_error)
+    }
+
+    override fun showPasswordsNotMatchError() {
+        registerConfirmPasswordTextInput.error = resources.getString(R.string.password_not_match)
+    }
+
     override fun setShowProgress(isLoading: Boolean) {
-        if(isLoading) {
+        if (isLoading) {
             buttonRegisterUser.startAnimation()
         } else {
             buttonRegisterUser.revertAnimation()
