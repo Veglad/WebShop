@@ -7,6 +7,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.android.synthetic.main.activity_login.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
@@ -37,10 +39,18 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
     }
 
     override fun showLoginError(exception: Exception?) {
-        Toast.makeText(
-            this, "Authentication failed: $exception",
-            Toast.LENGTH_SHORT
-        ).show()
+        val errorMessage = when (exception) {
+            is FirebaseAuthInvalidUserException -> {
+                resources.getString(R.string.incorrect_email_for_user)
+            }
+            is FirebaseAuthInvalidCredentialsException -> {
+                resources.getString(R.string.incorrect_password_for_user)
+            }
+            else -> {
+                resources.getString(R.string.unknown_error)
+            }
+        }
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     override fun startRegisterActivity() {
@@ -61,10 +71,10 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
     }
 
     override fun showInvalidEmail() {
-        passwordTextInput.error = resources.getString(R.string.email_error)
+        emailTextInput.error = resources.getString(R.string.email_error)
     }
 
     override fun showInvalidPassword() {
-        emailTextInput.error = resources.getString(R.string.password_error)
+        passwordTextInput.error = resources.getString(R.string.password_error)
     }
 }

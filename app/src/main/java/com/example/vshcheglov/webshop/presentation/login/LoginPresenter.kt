@@ -45,25 +45,28 @@ class LoginPresenter : Presenter<LoginPresenter.PresenterView>() {
             isValid = false
         }
 
-        if (!isValid) return
-
         if (appContext.isNetworkAvailable()) {
-            firebaseAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Timber.d("user sign in success")
-                        view?.showLogInSuccess()
-                        view?.startMainActivity()
-                    } else {
-                        Timber.e("user sign in error: " + task.exception)
-                        view?.showLoginError(task.exception)
-                    }
-                }
+            if (!isValid) return
+            signInUser(email, password)
         } else {
             view?.showNoInternetError()
         }
 
 
+    }
+
+    private fun signInUser(email: String, password: String) {
+        firebaseAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Timber.d("user sign in success")
+                    view?.showLogInSuccess()
+                    view?.startMainActivity()
+                } else {
+                    Timber.e("user sign in error: " + task.exception)
+                    view?.showLoginError(task.exception)
+                }
+            }
     }
 
     private fun isEmailValid(email: String) =

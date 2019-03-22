@@ -43,4 +43,7 @@
     <string name="sign_up_title">Don\'t have an account?</string>
     <string name="email_error">Invalid e-mail</string>
     <string name="password_error">Invalid password</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="incorrect_password_for_user">Incorrect password for this e-mail</string>
+    <string name="incorrect_email_for_user">There is no user with such e-mail</string>
 </resources>
