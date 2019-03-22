@@ -33,6 +33,7 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
         supportActionBar?.let {
             it.setDisplayShowHomeEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowTitleEnabled(false);
         }
         initShowPasswordButton()
         initShowConfirmPasswordButton()
