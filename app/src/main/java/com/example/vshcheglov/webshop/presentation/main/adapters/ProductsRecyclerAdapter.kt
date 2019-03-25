@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.support.v4.util.Pair
+import android.widget.Filter
+import android.widget.Filterable
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.presentation.detail.DetailActivity
 import com.example.vshcheglov.webshop.R
@@ -22,9 +24,9 @@ import kotlinx.android.synthetic.main.promotional_recycler_view.view.*
 
 class ProductsRecyclerAdapter(
     private val context: Context,
-    var productList: List<Product>,
-    var promotionalProductList: List<Product>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var productList: MutableList<Product>,
+    private var promotionalProductList: List<Product>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
     companion object {
         private const val PROMOTIONAL_POSITION = 1
@@ -42,8 +44,19 @@ class ProductsRecyclerAdapter(
         PromotionalRecyclerAdapter(context, promotionalProductList)
     }
 
+    fun setProductList(productList: MutableList<Product>) {
+        this.productList.clear()
+        this.productList.addAll(productList)
+        productListFull = productList.subList(0, productList.size)
+    }
+
+    private var productListFull: MutableList<Product>
     private val viewPool = RecyclerView.RecycledViewPool()
     private val linearSnapHelper = LinearSnapHelper()
+
+    init {
+        productListFull = productList.toMutableList()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
         TITLE_TYPE -> {
@@ -85,6 +98,42 @@ class ProductsRecyclerAdapter(
             }
         }
     }
+
+    private val productsFilter: Filter = object : Filter() {
+        override fun performFiltering(constraint: CharSequence?): FilterResults {
+            val filteredList: MutableList<Product> = ArrayList()
+
+            if (constraint == null || constraint.isEmpty()) {
+                filteredList.addAll(productListFull)
+            } else {
+                val filterPattern = constraint.toString().toLowerCase().trim()
+
+                for (product in productListFull) {
+                    if (product.name.toLowerCase().contains(filterPattern)) {
+                        filteredList.add(product)
+                    }
+                }
+            }
+
+            return FilterResults().also { it.values = filteredList }
+        }
+
+        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+            hidePromotionalList()
+            val filteredList = results?.values as? List<Product>
+            filteredList?.let {
+                productList.clear()
+                productList.addAll(it)
+                notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun hidePromotionalList() {
+
+    }
+
+    override fun getFilter() = productsFilter
 
     private fun bindTitles(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as TitleViewHolder).apply {

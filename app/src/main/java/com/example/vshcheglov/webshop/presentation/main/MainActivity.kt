@@ -13,6 +13,7 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
@@ -121,9 +122,9 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         setErrorVisibility(true)
     }
 
-    override fun showProductList(productList: List<Product>) {
+    override fun showProductList(productList: MutableList<Product>) {
         setErrorVisibility(false)
-        productsRecyclerAdapter.productList = productList
+        productsRecyclerAdapter.setProductList(productList)
         productsRecyclerAdapter.notifyDataSetChanged()
     }
 
@@ -169,6 +170,21 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
             val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+
+            searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+
+            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(searchText: String?): Boolean {
+                    searchView.clearFocus()
+                    return true
+                }
+
+                override fun onQueryTextChange(searchText: String?): Boolean {
+                    productsRecyclerAdapter.filter.filter(searchText)
+                    return true
+                }
+
+            })
         }
 
         return true

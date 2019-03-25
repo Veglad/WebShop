@@ -103,7 +103,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
         fun showError(throwable: Throwable)
 
-        fun showProductList(productList: List<Product>)
+        fun showProductList(productList: MutableList<Product>)
 
         fun showPromotionalProductList(promotionalList: List<Product>)
 
