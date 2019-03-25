@@ -18,7 +18,7 @@
             android:gravity="center"
             android:layout_marginBottom="24dp"/>
     <TextView
-            android:id="@+id/nav_main_header_email"
+            android:id="@+id/navMainHeaderEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="some@example.com"

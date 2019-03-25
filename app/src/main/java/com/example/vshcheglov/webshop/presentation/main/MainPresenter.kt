@@ -78,6 +78,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         super.onTakeView(view)
         view?.showLoading(isLoading)
         fetchProducts(false, isNetworkAvailable)
+        showUserEmail()
     }
 
     fun logOut() {
@@ -87,6 +88,12 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     fun showBasket() {
         view?.startBasketActivity()
+    }
+
+    fun showUserEmail() {
+        firebaseAuth.currentUser?.let {
+            view?.showUserEmail(it.email)
+        }
     }
 
     interface MainView {
@@ -103,5 +110,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun startLoginActivity()
 
         fun startBasketActivity()
+
+        fun showUserEmail(email: String?)
     }
 }

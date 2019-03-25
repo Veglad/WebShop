@@ -4,19 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import com.example.vshcheglov.webshop.presentation.login.LoginActivity
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main_primary.*
@@ -27,6 +25,7 @@ import timber.log.Timber
 @RequiresPresenter(MainPresenter::class)
 class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.MainView {
 
+    private lateinit var headerUserEmail: TextView
     private var snackbar: Snackbar? = null
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
     private lateinit var toggle: ActionBarDrawerToggle
@@ -36,6 +35,9 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         setContentView(R.layout.activity_main)
 
         presenter?.loadProducts(isNetworkAvailable())
+
+        headerUserEmail = mainNavigationView.getHeaderView(0)
+            .findViewById(R.id.navMainHeaderEmail)
 
         tryAgainButton.setOnClickListener {
             val isNetworkAvailable = isNetworkAvailable()
@@ -133,13 +135,19 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         startActivity(Intent(this, BasketActivity::class.java))
     }
 
+    override fun showUserEmail(email: String?) {
+        email?.let {
+            headerUserEmail.text = it
+        }
+    }
+
     private fun setErrorVisibility(isVisible: Boolean) {
         activityMainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
         activityMainPrimaryLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId) {
+        return when (item?.itemId) {
             android.R.id.home -> {
                 mainDrawerLayout.openDrawer(GravityCompat.START)
                 true
