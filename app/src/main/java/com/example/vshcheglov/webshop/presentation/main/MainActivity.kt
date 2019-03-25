@@ -1,13 +1,18 @@
 package com.example.vshcheglov.webshop.presentation.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
+import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
+import com.example.vshcheglov.webshop.presentation.login.LoginActivity
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main_error_layout.*
 import kotlinx.android.synthetic.main.activity_main_primary.*
@@ -18,8 +23,8 @@ import timber.log.Timber
 @RequiresPresenter(MainPresenter::class)
 class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.MainView {
 
-    private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
     private var snackbar: Snackbar? = null
+    private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,16 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         }
 
         setSupportActionBar(mainToolbar)
+
+        mainNavigationView.setNavigationItemSelectedListener {menuItem ->
+            when(menuItem.itemId) {
+                R.id.nav_main_log_out -> presenter.logOut()
+                R.id.nav_main_basket -> presenter.showBasket()
+            }
+
+            mainDrawerLayout.closeDrawers()
+            true
+        }
     }
 
     override fun showLoading(isLoading: Boolean) {
@@ -94,6 +109,14 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     override fun showPromotionalProductList(promotionalList: List<Product>) {
         setErrorVisibility(false)
         productsRecyclerAdapter.updatePromotionalList(promotionalList)
+    }
+
+    override fun startLoginActivity() {
+        startActivity(Intent(this, LoginActivity::class.java))
+    }
+
+    override fun startBasketActivity() {
+        startActivity(Intent(this, BasketActivity::class.java))
     }
 
     private fun setErrorVisibility(isVisible: Boolean) {

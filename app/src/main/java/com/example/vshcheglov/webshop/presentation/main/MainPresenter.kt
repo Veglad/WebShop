@@ -4,6 +4,7 @@ import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,6 +16,8 @@ import javax.inject.Inject
 class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
     lateinit var productRepository: ProductRepository
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     private var isLoading = false
     private var isNetworkAvailable = false
@@ -77,6 +80,15 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fetchProducts(false, isNetworkAvailable)
     }
 
+    fun logOut() {
+        firebaseAuth.signOut()
+        view?.startLoginActivity()
+    }
+
+    fun showBasket() {
+        view?.startBasketActivity()
+    }
+
     interface MainView {
         fun showLoading(isLoading: Boolean)
 
@@ -87,5 +99,9 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun showProductList(productList: List<Product>)
 
         fun showPromotionalProductList(promotionalList: List<Product>)
+
+        fun startLoginActivity()
+
+        fun startBasketActivity()
     }
 }
