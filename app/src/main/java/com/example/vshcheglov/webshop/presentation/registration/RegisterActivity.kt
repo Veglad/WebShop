@@ -6,8 +6,10 @@ import android.support.design.widget.Snackbar
 import android.text.InputType
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.widget.EditText
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
+import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import kotlinx.android.synthetic.main.activity_register.*
@@ -16,7 +18,7 @@ import nucleus5.view.NucleusAppCompatActivity
 import java.lang.Exception
 
 @RequiresPresenter(RegisterPresenter::class)
-class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), RegisterPresenter.RegisterView {
+class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), RegisterPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,44 +29,40 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
             registerPasswordTextInput.error = ""
             registerConfirmPasswordTextInput.error = ""
             presenter.registerUser(registerEmail.text.toString(),
-                registerPassword.text.toString(), registerConfirmPassword.text.toString())
+                registerPassword.text.toString(), registerConfirmPassword.text.toString(), isNetworkAvailable())
         }
+
         setSupportActionBar(registerActionBar)
         supportActionBar?.let {
             it.setDisplayShowHomeEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowTitleEnabled(false);
         }
-        initShowPasswordButton()
-        initShowConfirmPasswordButton()
-    }
 
-    private fun initShowPasswordButton() {
         registerShowPasswordButton.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> registerPassword.inputType = InputType.TYPE_CLASS_TEXT
-                MotionEvent.ACTION_UP -> registerPassword.inputType =
-                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
+            showPassword(event, registerPassword)
+            true
+        }
+
+        showConfirmPasswordButton.setOnTouchListener { _, event ->
+            showPassword(event, registerConfirmPassword)
             true
         }
     }
 
-    private fun initShowConfirmPasswordButton() {
-        showConfirmPasswordButton.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> registerConfirmPassword.inputType = InputType.TYPE_CLASS_TEXT
-                MotionEvent.ACTION_UP -> registerConfirmPassword.inputType =
-                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-            true
+    private fun showPassword(event: MotionEvent, editText: EditText) {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> editText.inputType = InputType.TYPE_CLASS_TEXT
+            MotionEvent.ACTION_UP -> editText.inputType =
+                InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         }
     }
 
     override fun startMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(this)
+        }
     }
 
     override fun showLoginError(exception: Exception?) {

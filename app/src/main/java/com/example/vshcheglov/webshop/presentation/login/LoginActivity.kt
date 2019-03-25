@@ -1,14 +1,13 @@
 package com.example.vshcheglov.webshop.presentation.login
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
 import android.text.InputType
 import android.view.MotionEvent
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
+import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.example.vshcheglov.webshop.presentation.registration.RegisterActivity
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -19,7 +18,7 @@ import nucleus5.view.NucleusAppCompatActivity
 import java.lang.Exception
 
 @RequiresPresenter(LoginPresenter::class)
-class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter.PresenterView {
+class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,29 +27,28 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
         buttonLogin.setOnClickListener {
             emailTextInput.error = ""
             passwordTextInput.error = ""
-            presenter.logOnUser(loginEmail.text.toString(), loginPassword.text.toString())
+            presenter.logInUser(loginEmail.text.toString(),
+                loginPassword.text.toString(), isNetworkAvailable())
         }
 
         buttonRegister.setOnClickListener {
             presenter.registerUser()
         }
-        initShowPasswordButton()
-    }
-
-    private fun initShowPasswordButton() {
         loginShowPasswordButton.setOnTouchListener { _, event ->
-            when(event.action) {
+            when (event.action) {
                 MotionEvent.ACTION_DOWN -> loginPassword.inputType = InputType.TYPE_CLASS_TEXT
-                MotionEvent.ACTION_UP -> loginPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                MotionEvent.ACTION_UP -> loginPassword.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
             true
         }
     }
 
     override fun startMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        startActivity(intent)
+        Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            startActivity(this)
+        }
     }
 
     override fun showLoginError(exception: Exception?) {
@@ -69,8 +67,9 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
     }
 
     override fun startRegisterActivity() {
-        val intent = Intent(this, RegisterActivity::class.java)
-        startActivity(intent)
+        Intent(this, RegisterActivity::class.java).apply {
+            startActivity(this)
+        }
     }
 
     override fun showNoInternetError() {
@@ -94,7 +93,7 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
     }
 
     override fun setShowProgress(isLoading: Boolean) {
-        if(isLoading) {
+        if (isLoading) {
             buttonLogin.startAnimation()
         } else {
             buttonLogin.revertAnimation()

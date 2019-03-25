@@ -45,7 +45,6 @@
                 android:hint="@string/e_mail"
                 android:inputType="textEmailAddress"/>
     </android.support.design.widget.TextInputLayout>
-
     <FrameLayout
             android:id="@+id/loginPasswordFrameLayout"
             android:layout_width="match_parent"
@@ -62,7 +61,6 @@
                 android:theme="@style/TextInputLabel"
                 app:errorTextAppearance="@style/TextInputLabelErrorState"
                 app:errorEnabled="true">
-
             <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/loginPassword"
                     android:layout_width="match_parent"
@@ -114,8 +112,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signUpTitle"
             app:layout_constraintStart_toStartOf="@+id/buttonLogin"
-            app:layout_constraintEnd_toEndOf="@+id/buttonLogin"
-    >
+            app:layout_constraintEnd_toEndOf="@+id/buttonLogin">
     </Button>
     <TextView
             android:text="@string/sign_up_title"
@@ -126,5 +123,6 @@
             app:layout_constraintTop_toBottomOf="@+id/buttonLogin"
             app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
             app:layout_constraintStart_toStartOf="@+id/buttonLogin"
-            app:layout_constraintEnd_toEndOf="@+id/buttonLogin" android:layout_marginTop="24dp"/>
+            app:layout_constraintEnd_toEndOf="@+id/buttonLogin"
+            android:layout_marginTop="24dp"/>
 </android.support.constraint.ConstraintLayout>

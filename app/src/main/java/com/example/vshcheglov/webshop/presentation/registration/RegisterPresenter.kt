@@ -1,50 +1,50 @@
 package com.example.vshcheglov.webshop.presentation.registration
 
-import android.content.Context
-import android.util.Patterns
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
+import com.example.vshcheglov.webshop.extensions.isEmailValid
+import com.example.vshcheglov.webshop.extensions.isPasswordValid
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
 
-class RegisterPresenter : Presenter<RegisterPresenter.RegisterView>() {
+class RegisterPresenter : Presenter<RegisterPresenter.View>() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
-    @Inject
-    lateinit var appContext: Context
     private var currentUser: FirebaseUser? = null
 
     init {
         App.appComponent.inject(this)
     }
 
-    fun registerUser(email: String, password: String, confirmPassword: String) {
+    fun registerUser(email: String, password: String, confirmPassword: String, isNetworkAvailable: Boolean) {
         var isValid = true
-        if (!isEmailValid(email)) {
-            view?.showInvalidEmail()
-            isValid = false
-        }
-        if (password != confirmPassword) {
-            view?.showPasswordsNotMatchError()
-            isValid = false
-        }
-        if (!isPasswordValid(password)) {
-            view?.showInvalidPassword()
-            isValid = false
-        }
-        if (!isPasswordValid(confirmPassword)) {
-            view?.showInvalidConfirmPassword()
-            isValid = false
-        }
 
-        if (appContext.isNetworkAvailable()) {
-            if (!isValid) return
-            registerUserWithEmailAndPassword(email, password)
-        } else {
-            view?.showNoInternetError()
+        view?.let {
+            if (!email.isEmailValid()) {
+                it.showInvalidEmail()
+                isValid = false
+            }
+            if (password != confirmPassword) {
+                it.showPasswordsNotMatchError()
+                isValid = false
+            }
+            if (!password.isPasswordValid()) {
+                it.showInvalidPassword()
+                isValid = false
+            }
+            if (!confirmPassword.isPasswordValid()) {
+                it.showInvalidConfirmPassword()
+                isValid = false
+            }
+
+            if (isNetworkAvailable) {
+                if (!isValid) return
+                registerUserWithEmailAndPassword(email, password)
+            } else {
+                it.showNoInternetError()
+            }
         }
     }
 
@@ -65,13 +65,7 @@ class RegisterPresenter : Presenter<RegisterPresenter.RegisterView>() {
             }
     }
 
-    private fun isEmailValid(email: String) =
-        email.isNotEmpty() && Patterns.EMAIL_ADDRESS.matcher(email).matches()
-
-    private fun isPasswordValid(password: String) =
-        password.length >= 6 && password.isNotEmpty()
-
-    interface RegisterView {
+    interface View {
         fun showInvalidEmail()
 
         fun showInvalidPassword()
