@@ -3,25 +3,36 @@
         xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/mainDrawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-    <FrameLayout
-            android:id="@+id/mainFrameLayout"
+        android:layout_height="match_parent">
+    <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_width="match_parent">
-        <include
-                android:id="@+id/activityMainPrimaryLayout"
-                layout="@layout/activity_main_primary"/>
+            android:orientation="vertical">
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/mainToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/primary"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        <FrameLayout
+                android:id="@+id/mainFrameLayout"
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="1">
+            <include
+                    android:id="@+id/activityMainPrimaryLayout"
+                    layout="@layout/activity_main_primary"/>
 
-        <include
-                android:id="@+id/activityMainErrorLayout"
-                layout="@layout/activity_main_error_layout"
-                android:visibility="gone"/>
-    </FrameLayout>
+            <include
+                    android:id="@+id/activityMainErrorLayout"
+                    layout="@layout/activity_main_error_layout"
+                    android:visibility="gone"/>
+        </FrameLayout>
+    </LinearLayout>
     <android.support.design.widget.NavigationView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
             android:layout_gravity="start"
-            app:menu="@menu/main_drawer_menu"/>
+            app:menu="@menu/main_drawer_menu"
+            app:headerLayout="@layout/nav_main_header"/>
 </android.support.v4.widget.DrawerLayout>

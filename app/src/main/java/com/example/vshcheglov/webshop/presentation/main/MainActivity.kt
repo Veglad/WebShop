@@ -51,6 +51,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
         }
+
+        setSupportActionBar(mainToolbar)
     }
 
     override fun showLoading(isLoading: Boolean) {
