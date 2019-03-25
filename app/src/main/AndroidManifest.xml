@@ -14,11 +14,6 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
         <activity android:name=".presentation.main.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
                 android:name=".presentation.detail.DetailActivity"
@@ -29,8 +24,22 @@
                 android:name=".presentation.basket.BasketActivity"
                 android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".presentation.order.OrderActivity"
-                  android:theme="@style/TransparentNoTitleActionBar"
+        <activity
+                android:name=".presentation.order.OrderActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.TransparentNoTitleActionBar">
+        </activity>
+        <activity
+                android:name=".presentation.login.LoginActivity"
+                android:screenOrientation="portrait"
+                android:theme="@style/AppTheme.BlackMode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".presentation.registration.RegisterActivity"
+                  android:theme="@style/AppTheme.BlackMode"
                   android:screenOrientation="portrait">
         </activity>
     </application>

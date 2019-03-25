@@ -3,11 +3,10 @@ package com.example.vshcheglov.webshop.presentation.di.components
 import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
-import com.example.vshcheglov.webshop.presentation.di.modules.AppModule
-import com.example.vshcheglov.webshop.presentation.di.modules.MappersModule
-import com.example.vshcheglov.webshop.presentation.di.modules.StorageModule
-import com.example.vshcheglov.webshop.presentation.di.modules.NetworkModule
+import com.example.vshcheglov.webshop.presentation.di.modules.*
+import com.example.vshcheglov.webshop.presentation.login.LoginPresenter
 import com.example.vshcheglov.webshop.presentation.main.MainPresenter
+import com.example.vshcheglov.webshop.presentation.registration.RegisterPresenter
 import dagger.Component
 import javax.inject.Singleton
 
@@ -17,7 +16,8 @@ import javax.inject.Singleton
         AppModule::class,
         NetworkModule::class,
         StorageModule::class,
-        MappersModule::class
+        MappersModule::class,
+        FirebaseModule::class
     ]
 )
 interface AppComponent {
@@ -25,4 +25,6 @@ interface AppComponent {
     fun inject(basketPresenter: BasketPresenter)
     fun inject(networkDataSource: NetworkDataSource)
     fun inject(productRepository: ProductRepository)
+    fun inject(loginPresenter: LoginPresenter)
+    fun inject(registerPresenter: RegisterPresenter)
 }
