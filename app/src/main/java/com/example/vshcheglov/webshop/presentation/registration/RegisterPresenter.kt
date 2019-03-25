@@ -12,7 +12,6 @@ import javax.inject.Inject
 class RegisterPresenter : Presenter<RegisterPresenter.View>() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
-    private var currentUser: FirebaseUser? = null
 
     init {
         App.appComponent.inject(this)

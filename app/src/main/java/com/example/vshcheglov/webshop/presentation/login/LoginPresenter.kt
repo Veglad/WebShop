@@ -53,16 +53,14 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
         view?.setShowProgress(true)
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Timber.d("user sign in success")
-                    view?.let {
+                view?.let {
+                    if (task.isSuccessful) {
+                        Timber.d("user sign in success")
                         it.showLogInSuccess()
                         it.startMainActivity()
                         it.setShowProgress(false)
-                    }
-                } else {
-                    Timber.e("user sign in error: " + task.exception)
-                    view?.let {
+                    } else {
+                        Timber.e("user sign in error: " + task.exception)
                         it.showLoginError(task.exception)
                         it.setShowProgress(false)
                     }

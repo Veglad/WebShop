@@ -59,10 +59,9 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
     }
 
     override fun startMainActivity() {
-        Intent(this, MainActivity::class.java).apply {
+        startActivity(Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-            startActivity(this)
-        }
+        })
     }
 
     override fun showLoginError(exception: Exception?) {
