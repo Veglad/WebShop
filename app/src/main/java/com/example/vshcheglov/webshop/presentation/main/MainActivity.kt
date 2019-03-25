@@ -3,8 +3,12 @@ package com.example.vshcheglov.webshop.presentation.main
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.Toolbar
+import android.view.MenuItem
 import android.view.View
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
@@ -25,6 +29,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     private var snackbar: Snackbar? = null
     private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
+    private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,9 +63,14 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         }
 
         setSupportActionBar(mainToolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        mainNavigationView.setNavigationItemSelectedListener {menuItem ->
-            when(menuItem.itemId) {
+        initNavigationDrawer()
+    }
+
+    private fun initNavigationDrawer() {
+        mainNavigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
                 R.id.nav_main_log_out -> presenter.logOut()
                 R.id.nav_main_basket -> presenter.showBasket()
             }
@@ -68,6 +78,10 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             mainDrawerLayout.closeDrawers()
             true
         }
+
+        toggle = ActionBarDrawerToggle(this, mainDrawerLayout, R.string.open, R.string.close)
+        mainDrawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
     }
 
     override fun showLoading(isLoading: Boolean) {
@@ -122,5 +136,15 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     private fun setErrorVisibility(isVisible: Boolean) {
         activityMainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
         activityMainPrimaryLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId) {
+            android.R.id.home -> {
+                mainDrawerLayout.openDrawer(GravityCompat.START)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
