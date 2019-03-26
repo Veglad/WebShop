@@ -26,7 +26,7 @@ class ProductsRecyclerAdapter(
     private val context: Context,
     private var productList: MutableList<Product>,
     private var promotionalProductList: List<Product>
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val PROMOTIONAL_POSITION = 1
@@ -98,42 +98,6 @@ class ProductsRecyclerAdapter(
             }
         }
     }
-
-    private val productsFilter: Filter = object : Filter() {
-        override fun performFiltering(constraint: CharSequence?): FilterResults {
-            val filteredList: MutableList<Product> = ArrayList()
-
-            if (constraint == null || constraint.isEmpty()) {
-                filteredList.addAll(productListFull)
-            } else {
-                val filterPattern = constraint.toString().toLowerCase().trim()
-
-                for (product in productListFull) {
-                    if (product.name.toLowerCase().contains(filterPattern)) {
-                        filteredList.add(product)
-                    }
-                }
-            }
-
-            return FilterResults().also { it.values = filteredList }
-        }
-
-        override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-            hidePromotionalList()
-            val filteredList = results?.values as? List<Product>
-            filteredList?.let {
-                productList.clear()
-                productList.addAll(it)
-                notifyDataSetChanged()
-            }
-        }
-    }
-
-    private fun hidePromotionalList() {
-
-    }
-
-    override fun getFilter() = productsFilter
 
     private fun bindTitles(holder: RecyclerView.ViewHolder, position: Int) {
         (holder as TitleViewHolder).apply {

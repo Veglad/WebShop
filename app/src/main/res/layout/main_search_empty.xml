@@ -4,11 +4,14 @@
         android:id="@+id/mainSearchEmptyLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:orientation="vertical">
     <TextView
             android:id="@+id/mainSearchEmptyTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textSize="20sp"
             android:gravity="center"
             tools:text="No results"/>
 </LinearLayout>

@@ -22,10 +22,12 @@ import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import com.example.vshcheglov.webshop.presentation.login.LoginActivity
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
+import com.example.vshcheglov.webshop.presentation.main.adapters.SearchRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_error_layout.*
 import kotlinx.android.synthetic.main.main_products.*
 import kotlinx.android.synthetic.main.main_search_empty.*
+import kotlinx.android.synthetic.main.main_search_list.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
@@ -35,8 +37,11 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     private lateinit var headerUserEmail: TextView
     private var snackbar: Snackbar? = null
-    private lateinit var productsRecyclerAdapter: ProductsRecyclerAdapter
+    private val productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
+    private val searchRecyclerAdapter = SearchRecyclerAdapter(this, mutableListOf())
+
     private lateinit var toggle: ActionBarDrawerToggle
+    private var isErrorVisible = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,10 +71,14 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             }
         }
 
-        productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
         with(productsRecyclerView) {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
+        }
+
+        with(mainSearchRecyclerView) {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = searchRecyclerAdapter
         }
 
         setSupportActionBar(mainToolbar)
@@ -150,13 +159,14 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     }
 
     private fun setErrorVisibility(isVisible: Boolean) {
-        mainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
-        mainProductsLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
-    }
+        if (isVisible) {
+            showLayout(MainLayouts.ERROR)
+        } else {
+            showLayout(MainLayouts.PRODUCTS)
+        }
 
-    private fun setEmptySearchVisibility(isVisible: Boolean) {
-        mainSearchEmptyLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
-        mainProductsLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
+        isErrorVisible = isVisible
+        invalidateOptionsMenu()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -170,6 +180,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (isErrorVisible) return false
+
         menu?.let {
             menuInflater.inflate(R.menu.main_menu, menu)
             val searchItem = menu.findItem(R.id.actionSearch)
@@ -187,24 +199,25 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 }
 
                 override fun onQueryTextChange(searchText: String?): Boolean {//TODO: Redevelop
-                    if(searchText != null && searchText.isNotEmpty()) {
-                        mainSearchEmptyLayout.visibility = View.GONE
-                        mainSearchListLayout.visibility = View.VISIBLE
+                    if(searchText != null && searchText.isEmpty() || searchText == null) {
+                        showLayout(MainLayouts.SEARCH_EMPTY)
+                        mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
+                    } else {
+                        presenter.searchProducts(searchText)
                     }
-                    productsRecyclerAdapter.filter.filter(searchText)
                     return true
                 }
             })
 
             searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                    setEmptySearchVisibility(true)
+                    showLayout(MainLayouts.SEARCH_EMPTY)
                     mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
                     return true
                 }
 
                 override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                    setEmptySearchVisibility(false)
+                    showLayout(MainLayouts.PRODUCTS)
                     return true
                 }
 
@@ -212,5 +225,35 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         }
 
         return true
+    }
+
+    override fun showNoResults() {
+        showLayout(MainLayouts.SEARCH_EMPTY)
+        mainSearchEmptyTextView.text = resources.getString(R.string.no_search_result)
+    }
+
+    override fun showSearchedProducts(productList: List<Product>) {
+        showLayout(MainLayouts.SEARCH_PRODUCTS)
+        searchRecyclerAdapter.productList.clear()
+        searchRecyclerAdapter.productList.addAll(productList)
+        searchRecyclerAdapter.notifyDataSetChanged()
+    }
+
+    fun showLayout(mainLayouts: MainLayouts) {
+        mainSearchEmptyLayout.visibility = View.GONE
+        mainProductsLayout.visibility = View.GONE
+        mainSearchListLayout.visibility = View.GONE
+        mainErrorLayout.visibility = View.GONE
+
+        when(mainLayouts) {
+            MainLayouts.PRODUCTS -> mainProductsLayout.visibility = View.VISIBLE
+            MainLayouts.SEARCH_PRODUCTS -> mainSearchListLayout.visibility = View.VISIBLE
+            MainLayouts.SEARCH_EMPTY -> mainSearchEmptyLayout.visibility = View.VISIBLE
+            MainLayouts.ERROR -> mainErrorLayout.visibility = View.VISIBLE
+        }
+    }
+
+    enum class MainLayouts {
+        PRODUCTS, SEARCH_PRODUCTS, SEARCH_EMPTY, ERROR
     }
 }

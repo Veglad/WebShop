@@ -4,6 +4,7 @@ import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
     private var allProducts: AllProductsEntity? = null
+
+    private lateinit var searchFilter: SearchFilter
 
     init {
         App.appComponent.inject(this)
@@ -74,6 +77,12 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         }
     }
 
+    private fun showUserEmail() {
+        firebaseAuth.currentUser?.let {
+            view?.showUserEmail(it.email)
+        }
+    }
+
     override fun onTakeView(view: MainView?) {
         super.onTakeView(view)
         view?.showLoading(isLoading)
@@ -90,9 +99,18 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         view?.startBasketActivity()
     }
 
-    fun showUserEmail() {
-        firebaseAuth.currentUser?.let {
-            view?.showUserEmail(it.email)
+    fun searchProducts(searchText: String) {
+        view?.showLoading(true)
+        allProducts?.let {
+            val searchFilter = SearchFilter(it.products) { productList: List<Product>? ->
+                view?.showLoading(false)
+                if (productList == null || productList.isEmpty()) {
+                    view?.showNoResults()
+                } else {
+                    view?.showSearchedProducts(productList)
+                }
+            }
+            searchFilter.filter.filter(searchText)
         }
     }
 
@@ -112,5 +130,9 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun startBasketActivity()
 
         fun showUserEmail(email: String?)
+
+        fun showNoResults()
+
+        fun showSearchedProducts(productList: List<Product>)
     }
 }
