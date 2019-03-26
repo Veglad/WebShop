@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
-import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -148,8 +147,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     }
 
     private fun setErrorVisibility(isVisible: Boolean) {
-        activityMainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
-        activityMainPrimaryLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
+        mainErrorLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
+        mainProductsLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

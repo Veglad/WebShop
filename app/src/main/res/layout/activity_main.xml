@@ -14,7 +14,6 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/primary"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
         </android.support.v7.widget.Toolbar>
         <FrameLayout
                 android:id="@+id/mainFrameLayout"
@@ -22,11 +21,18 @@
                 android:layout_width="match_parent"
                 android:layout_weight="1">
             <include
-                    android:id="@+id/activityMainPrimaryLayout"
+                    android:id="@+id/mainProductsLayout"
                     layout="@layout/main_products"/>
-
             <include
-                    android:id="@+id/activityMainErrorLayout"
+                    android:id="@+id/mainErrorLayout"
+                    layout="@layout/main_error_layout"
+                    android:visibility="gone"/>
+            <include
+                    android:id="@+id/mainSearchEmptyLayout"
+                    layout="@layout/main_error_layout"
+                    android:visibility="gone"/>
+            <include
+                    android:id="@+id/mainSearchListLayout"
                     layout="@layout/main_error_layout"
                     android:visibility="gone"/>
         </FrameLayout>
