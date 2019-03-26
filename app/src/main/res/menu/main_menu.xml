@@ -6,4 +6,8 @@
           android:icon="@drawable/ic_search_white_24dp"
           app:showAsAction="ifRoom|collapseActionView"
           app:actionViewClass="android.support.v7.widget.SearchView"/>
+    <item android:id="@+id/actionBasket"
+          android:title="@string/basket"
+          android:icon="@drawable/basket_white"
+          app:showAsAction="ifRoom"/>
 </menu>

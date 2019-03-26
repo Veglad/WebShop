@@ -175,6 +175,10 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 mainDrawerLayout.openDrawer(GravityCompat.START)
                 true
             }
+            R.id.actionBasket -> {
+                startActivity(Intent(this, BasketActivity::class.java))
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -186,10 +190,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             menuInflater.inflate(R.menu.main_menu, menu)
             val searchItem = menu.findItem(R.id.actionSearch)
             val searchView = searchItem.actionView as SearchView
-
             val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-
             searchView.imeOptions = EditorInfo.IME_ACTION_DONE
 
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -198,7 +200,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                     return true
                 }
 
-                override fun onQueryTextChange(searchText: String?): Boolean {//TODO: Redevelop
+                override fun onQueryTextChange(searchText: String?): Boolean {
                     if(searchText != null && searchText.isEmpty() || searchText == null) {
                         showLayout(MainLayouts.SEARCH_EMPTY)
                         mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
