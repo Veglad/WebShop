@@ -22,8 +22,8 @@ import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
 import com.example.vshcheglov.webshop.presentation.login.LoginActivity
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main_error_layout.*
-import kotlinx.android.synthetic.main.activity_main_primary.*
+import kotlinx.android.synthetic.main.main_error_layout.*
+import kotlinx.android.synthetic.main.main_products.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
@@ -183,7 +183,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                     productsRecyclerAdapter.filter.filter(searchText)
                     return true
                 }
-
             })
         }
 

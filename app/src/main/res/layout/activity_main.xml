@@ -23,11 +23,11 @@
                 android:layout_weight="1">
             <include
                     android:id="@+id/activityMainPrimaryLayout"
-                    layout="@layout/activity_main_primary"/>
+                    layout="@layout/main_products"/>
 
             <include
                     android:id="@+id/activityMainErrorLayout"
-                    layout="@layout/activity_main_error_layout"
+                    layout="@layout/main_error_layout"
                     android:visibility="gone"/>
         </FrameLayout>
     </LinearLayout>
