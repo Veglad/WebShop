@@ -264,6 +264,14 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         }
     }
 
+    override fun onBackPressed() {
+        if (!searchView.isIconified) {
+            searchView.isIconified = true
+        } else {
+            super.onBackPressed()
+        }
+    }
+
     enum class MainLayouts {
         PRODUCTS, SEARCH_PRODUCTS, SEARCH_EMPTY, ERROR
     }
