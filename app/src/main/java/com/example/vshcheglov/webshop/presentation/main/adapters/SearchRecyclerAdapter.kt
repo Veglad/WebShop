@@ -55,31 +55,8 @@ class SearchRecyclerAdapter(private val context: Context, var productList: Mutab
                     putParcelable(DetailActivity.PRODUCT_KEY, productList[position])
                 })
             }
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                val imagePair = Pair.create(
-                    holder.view.productImage as View,
-                    context.getString(R.string.shared_image_transition_name)
-                )
-                val titlePair = Pair.create(
-                    holder.view.productTitle as View,
-                    context.getString(R.string.shared_title_transition_name)
-                )
-                /*val salePair = Pair.create(
-                    holder.view.saleTextView as View,
-                    context.getString(R.string.shared_sale_transition_name)
-                )*/
-                val pricePair = Pair.create(
-                    holder.view.productPrice as View,
-                    context.getString(R.string.shared_price_transition_name)
-                )
-                val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    context as Activity,
-                    imagePair, titlePair, /*salePair,*/ pricePair
-                )
-                context.startActivity(intent, options.toBundle())
-            } else {
-                context.startActivity(intent)
-            }
+        
+            context.startActivity(intent)
         }
     }
 
