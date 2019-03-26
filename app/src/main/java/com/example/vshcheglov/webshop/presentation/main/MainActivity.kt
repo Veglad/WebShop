@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -70,6 +71,10 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 snackbar?.dismiss()
             }
         }
+        productsSwipeRefreshLayout.setColorSchemeColors(
+            ContextCompat.getColor(this, R.color.primary),
+            ContextCompat.getColor(this, R.color.color_accent),
+            ContextCompat.getColor(this, R.color.dark_gray))
 
         with(productsRecyclerView) {
             layoutManager = LinearLayoutManager(this@MainActivity)
