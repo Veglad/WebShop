@@ -18,6 +18,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
+import com.example.vshcheglov.webshop.R.id.actionSearch
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
@@ -36,6 +37,11 @@ import timber.log.Timber
 @RequiresPresenter(MainPresenter::class)
 class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.MainView {
 
+    companion object {
+        private const val SEARCH_KEY = "search"
+    }
+
+    private lateinit var searchView: SearchView
     private lateinit var headerUserEmail: TextView
     private var snackbar: Snackbar? = null
     private val productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
@@ -43,12 +49,17 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     private lateinit var toggle: ActionBarDrawerToggle
     private var isErrorVisible = false
+    private var searchString: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         presenter?.loadProducts(isNetworkAvailable())
+
+        savedInstanceState?.let {
+            searchString = savedInstanceState.getString(SEARCH_KEY)
+        }
 
         headerUserEmail = mainNavigationView.getHeaderView(0)
             .findViewById(R.id.navMainHeaderEmail)
@@ -74,7 +85,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         productsSwipeRefreshLayout.setColorSchemeColors(
             ContextCompat.getColor(this, R.color.primary),
             ContextCompat.getColor(this, R.color.color_accent),
-            ContextCompat.getColor(this, R.color.dark_gray))
+            ContextCompat.getColor(this, R.color.dark_gray)
+        )
 
         with(productsRecyclerView) {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -91,6 +103,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
         initNavigationDrawer()
     }
+
 
     private fun initNavigationDrawer() {
         mainNavigationView.setNavigationItemSelectedListener { menuItem ->
@@ -163,6 +176,12 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        searchString = searchView.query.toString()
+        outState.putString(SEARCH_KEY, searchString)
+    }
+
     private fun setErrorVisibility(isVisible: Boolean) {
         if (isVisible) {
             showLayout(MainLayouts.ERROR)
@@ -194,10 +213,19 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         menu?.let {
             menuInflater.inflate(R.menu.main_menu, menu)
             val searchItem = menu.findItem(R.id.actionSearch)
-            val searchView = searchItem.actionView as SearchView
+            searchView = searchItem.actionView as SearchView
             val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
             searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
             searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+
+            //restore searchView state
+            if (!searchString.isNullOrEmpty()) {
+                searchItem.expandActionView();
+                searchView.setQuery(searchString, true)
+                searchString?.let {
+                    presenter.searchProducts(it)
+                }
+            }
 
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(searchText: String?): Boolean {
@@ -206,7 +234,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 }
 
                 override fun onQueryTextChange(searchText: String?): Boolean {
-                    if(searchText != null && searchText.isEmpty() || searchText == null) {
+                    if (searchText != null && searchText.isEmpty() || searchText == null) {
                         showLayout(MainLayouts.SEARCH_EMPTY)
                         mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
                     } else {
@@ -252,7 +280,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         mainSearchListLayout.visibility = View.GONE
         mainErrorLayout.visibility = View.GONE
 
-        when(mainLayouts) {
+        when (mainLayouts) {
             MainLayouts.PRODUCTS -> mainProductsLayout.visibility = View.VISIBLE
             MainLayouts.SEARCH_PRODUCTS -> mainSearchListLayout.visibility = View.VISIBLE
             MainLayouts.SEARCH_EMPTY -> mainSearchEmptyLayout.visibility = View.VISIBLE
