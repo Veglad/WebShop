@@ -39,6 +39,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fetchProducts(true, isNetworkAvailable)
     }
 
+    override fun onDropView() {
+        super.onDropView()
+        job.cancel()
+    }
 
     private fun fetchProducts(refresh: Boolean, isNetworkAvailable: Boolean) {
         uiCoroutineScope.launch {

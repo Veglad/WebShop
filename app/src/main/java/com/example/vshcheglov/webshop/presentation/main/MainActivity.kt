@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.GravityCompat
-import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -16,9 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
-import android.widget.Toast
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.R.id.actionSearch
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
@@ -49,7 +46,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     private lateinit var toggle: ActionBarDrawerToggle
     private var isErrorVisible = false
-    private var searchString: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +53,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
         presenter?.loadProducts(isNetworkAvailable())
 
-        savedInstanceState?.let {
-            searchString = savedInstanceState.getString(SEARCH_KEY)
-        }
-
-        headerUserEmail = mainNavigationView.getHeaderView(0)
-            .findViewById(R.id.navMainHeaderEmail)
+        headerUserEmail = mainNavigationView.getHeaderView(0).findViewById(R.id.navMainHeaderEmail)
 
         tryAgainButton.setOnClickListener {
             val isNetworkAvailable = isNetworkAvailable()
@@ -176,12 +167,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        searchString = searchView.query.toString()
-        outState.putString(SEARCH_KEY, searchString)
-    }
-
     private fun setErrorVisibility(isVisible: Boolean) {
         if (isVisible) {
             showLayout(MainLayouts.ERROR)
@@ -218,15 +203,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
             searchView.imeOptions = EditorInfo.IME_ACTION_DONE
 
-            //restore searchView state
-            if (!searchString.isNullOrEmpty()) {
-                searchItem.expandActionView();
-                searchView.setQuery(searchString, true)
-                searchString?.let {
-                    presenter.searchProducts(it)
-                }
-            }
-
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(searchText: String?): Boolean {
                     searchView.clearFocus()
@@ -252,10 +228,10 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 }
 
                 override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    searchView.setQuery("", true)
                     showLayout(MainLayouts.PRODUCTS)
                     return true
                 }
-
             })
         }
 
