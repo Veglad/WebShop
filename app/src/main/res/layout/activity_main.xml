@@ -29,11 +29,11 @@
                     android:visibility="gone"/>
             <include
                     android:id="@+id/mainSearchEmptyLayout"
-                    layout="@layout/main_error_layout"
+                    layout="@layout/main_search_empty"
                     android:visibility="gone"/>
             <include
                     android:id="@+id/mainSearchListLayout"
-                    layout="@layout/main_error_layout"
+                    layout="@layout/main_search_list"
                     android:visibility="gone"/>
         </FrameLayout>
     </LinearLayout>

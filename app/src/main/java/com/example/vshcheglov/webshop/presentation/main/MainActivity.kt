@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.view.GravityCompat
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.SearchView
@@ -14,6 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
@@ -23,6 +25,7 @@ import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecycle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.main_error_layout.*
 import kotlinx.android.synthetic.main.main_products.*
+import kotlinx.android.synthetic.main.main_search_empty.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
@@ -151,6 +154,11 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         mainProductsLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
     }
 
+    private fun setEmptySearchVisibility(isVisible: Boolean) {
+        mainSearchEmptyLayout.visibility = if (isVisible) View.VISIBLE else View.GONE
+        mainProductsLayout.visibility = if (isVisible) View.GONE else View.VISIBLE
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
             android.R.id.home -> {
@@ -172,16 +180,34 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
             searchView.imeOptions = EditorInfo.IME_ACTION_DONE
 
-            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(searchText: String?): Boolean {
                     searchView.clearFocus()
                     return true
                 }
 
-                override fun onQueryTextChange(searchText: String?): Boolean {
+                override fun onQueryTextChange(searchText: String?): Boolean {//TODO: Redevelop
+                    if(searchText != null && searchText.isNotEmpty()) {
+                        mainSearchEmptyLayout.visibility = View.GONE
+                        mainSearchListLayout.visibility = View.VISIBLE
+                    }
                     productsRecyclerAdapter.filter.filter(searchText)
                     return true
                 }
+            })
+
+            searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    setEmptySearchVisibility(true)
+                    mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
+                    return true
+                }
+
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    setEmptySearchVisibility(false)
+                    return true
+                }
+
             })
         }
 

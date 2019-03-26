@@ -57,4 +57,5 @@
     <string name="close">Close</string>
     <string name="search">Search</string>
     <string name="search_hint">Search</string>
+    <string name="search_list_empty_query">Type something to find products</string>
 </resources>
