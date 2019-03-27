@@ -1,10 +1,9 @@
 package com.example.vshcheglov.webshop.presentation.login
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.users.UserStorage
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import java.lang.Exception
@@ -13,18 +12,15 @@ import javax.inject.Inject
 class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     @Inject
-    lateinit var firebaseAuth: FirebaseAuth
-    private var currentUser: FirebaseUser? = null
+    lateinit var userStorage: UserStorage
 
     init {
         App.appComponent.inject(this)
-        currentUser = firebaseAuth.currentUser
     }
-
 
     override fun onTakeView(view: View?) {
         super.onTakeView(view)
-        if (currentUser != null) {
+        if (userStorage.isSignedIn) {
             Timber.d("user is authorized")
             view?.startMainActivity()
         }
@@ -51,21 +47,20 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     private fun signInUser(email: String, password: String) {
         view?.setShowProgress(true)
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                view?.let {
-                    if (task.isSuccessful) {
-                        Timber.d("user sign in success")
-                        it.showLogInSuccess()
-                        it.startMainActivity()
-                        it.setShowProgress(false)
-                    } else {
-                        Timber.e("user sign in error: " + task.exception)
-                        it.showLoginError(task.exception)
-                        it.setShowProgress(false)
-                    }
+        userStorage.signInUserWithEmailAndPassword(email, password) { task ->
+            view?.let {
+                if (task.isSuccessful) {
+                    Timber.d("user sign in success")
+                    it.showLogInSuccess()
+                    it.startMainActivity()
+                    it.setShowProgress(false)
+                } else {
+                    Timber.e("user sign in error: " + task.exception)
+                    it.showLoginError(task.exception)
+                    it.setShowProgress(false)
                 }
             }
+        }
     }
 
     fun registerUser() {
