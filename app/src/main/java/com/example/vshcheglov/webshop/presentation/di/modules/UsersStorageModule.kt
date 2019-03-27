@@ -4,13 +4,14 @@ import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMap
 import com.example.vshcheglov.webshop.data.network.WebShopApi
 import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
+import com.example.vshcheglov.webshop.data.users.UserRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [NetworkModule::class])
-class StorageModule {
+@Module
+class UsersStorageModule {
     @Provides
     @Singleton
-    fun providesRepository() = ProductRepository()
+    fun providesRepository() = UserRepository()
 }

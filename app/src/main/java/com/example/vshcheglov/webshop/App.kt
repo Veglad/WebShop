@@ -1,12 +1,9 @@
 package com.example.vshcheglov.webshop
 
 import android.app.Application
-import com.example.vshcheglov.webshop.presentation.di.modules.AppModule
-import com.example.vshcheglov.webshop.presentation.di.modules.NetworkModule
 import com.example.vshcheglov.webshop.presentation.di.components.AppComponent
 import com.example.vshcheglov.webshop.presentation.di.components.DaggerAppComponent
-import com.example.vshcheglov.webshop.presentation.di.modules.MappersModule
-import com.example.vshcheglov.webshop.presentation.di.modules.StorageModule
+import com.example.vshcheglov.webshop.presentation.di.modules.*
 import timber.log.Timber
 
 class App : Application() {
@@ -24,7 +21,8 @@ class App : Application() {
             .networkModule(NetworkModule())
             .appModule(AppModule(this))
             .mappersModule(MappersModule())
-            .storageModule(StorageModule())
+            .productStorageModule(ProductStorageModule())
+            .usersStorageModule(UsersStorageModule())
             .build()
     }
 
