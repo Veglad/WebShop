@@ -1,17 +1,16 @@
 package com.example.vshcheglov.webshop.presentation.registration
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.users.UserStorage
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
 
 class RegisterPresenter : Presenter<RegisterPresenter.View>() {
     @Inject
-    lateinit var firebaseAuth: FirebaseAuth
+    lateinit var userStorage: UserStorage
 
     init {
         App.appComponent.inject(this)
@@ -40,6 +39,7 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
 
             if (isNetworkAvailable) {
                 if (!isValid) return
+                view?.setShowProgress(true)
                 registerUserWithEmailAndPassword(email, password)
             } else {
                 it.showNoInternetError()
@@ -49,19 +49,18 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
 
     private fun registerUserWithEmailAndPassword(email: String, password: String) {
         view?.setShowProgress(true)
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Timber.d("user registration success")
-                    view?.showLogInSuccess()
-                    view?.setShowProgress(false)
-                    view?.startMainActivity()
-                } else {
-                    Timber.e("user registration error: " + task.exception)
-                    view?.showLoginError(task.exception)
-                    view?.setShowProgress(false)
-                }
+        userStorage.registerUserWithEmailAndPassword(email, password) { task ->
+            if (task.isSuccessful) {
+                Timber.d("user registration success")
+                view?.showLogInSuccess()
+                view?.setShowProgress(false)
+                view?.startMainActivity()
+            } else {
+                Timber.e("user registration error: " + task.exception)
+                view?.showLoginError(task.exception)
+                view?.setShowProgress(false)
             }
+        }
     }
 
     interface View {
