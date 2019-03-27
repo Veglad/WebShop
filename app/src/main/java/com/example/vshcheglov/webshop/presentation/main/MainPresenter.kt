@@ -4,6 +4,8 @@ import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,6 +17,8 @@ import javax.inject.Inject
 class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
     lateinit var productRepository: ProductRepository
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     private var isLoading = false
     private var isNetworkAvailable = false
@@ -23,6 +27,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
     private var allProducts: AllProductsEntity? = null
+
+    private lateinit var searchFilter: SearchFilter
 
     init {
         App.appComponent.inject(this)
@@ -33,6 +39,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fetchProducts(true, isNetworkAvailable)
     }
 
+    override fun onDropView() {
+        super.onDropView()
+        job.cancel()
+    }
 
     private fun fetchProducts(refresh: Boolean, isNetworkAvailable: Boolean) {
         uiCoroutineScope.launch {
@@ -71,10 +81,41 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         }
     }
 
+    private fun showUserEmail() {
+        firebaseAuth.currentUser?.let {
+            view?.showUserEmail(it.email)
+        }
+    }
+
     override fun onTakeView(view: MainView?) {
         super.onTakeView(view)
         view?.showLoading(isLoading)
         fetchProducts(false, isNetworkAvailable)
+        showUserEmail()
+    }
+
+    fun logOut() {
+        firebaseAuth.signOut()
+        view?.startLoginActivity()
+    }
+
+    fun showBasket() {
+        view?.startBasketActivity()
+    }
+
+    fun searchProducts(searchText: String) {
+        view?.showLoading(true)
+        allProducts?.let {
+            val searchFilter = SearchFilter(it.products) { productList: List<Product>? ->
+                view?.showLoading(false)
+                if (productList == null || productList.isEmpty()) {
+                    view?.showNoResults()
+                } else {
+                    view?.showSearchedProducts(productList)
+                }
+            }
+            searchFilter.filter.filter(searchText)
+        }
     }
 
     interface MainView {
@@ -84,8 +125,18 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
         fun showError(throwable: Throwable)
 
-        fun showProductList(productList: List<Product>)
+        fun showProductList(productList: MutableList<Product>)
 
         fun showPromotionalProductList(promotionalList: List<Product>)
+
+        fun startLoginActivity()
+
+        fun startBasketActivity()
+
+        fun showUserEmail(email: String?)
+
+        fun showNoResults()
+
+        fun showSearchedProducts(productList: List<Product>)
     }
 }

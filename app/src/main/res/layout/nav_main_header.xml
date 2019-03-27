@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent" android:layout_height="@dimen/nav_main_header_height"
+        android:background="@drawable/form_screen_background"
+        android:padding="16dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:orientation="vertical">
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="@string/app_name"
+            android:textColor="@color/primary"
+            android:textStyle="bold"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
+    <TextView
+            android:id="@+id/navMainHeaderEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="some@example.com"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+</LinearLayout>

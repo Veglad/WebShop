@@ -12,6 +12,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.support.v4.util.Pair
+import android.widget.Filter
+import android.widget.Filterable
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.presentation.detail.DetailActivity
 import com.example.vshcheglov.webshop.R
@@ -22,8 +24,8 @@ import kotlinx.android.synthetic.main.promotional_recycler_view.view.*
 
 class ProductsRecyclerAdapter(
     private val context: Context,
-    var productList: List<Product>,
-    var promotionalProductList: List<Product>
+    private var productList: MutableList<Product> = mutableListOf(),
+    private var promotionalProductList: List<Product> = mutableListOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -40,6 +42,13 @@ class ProductsRecyclerAdapter(
 
     private val promotionalRecyclerAdapter by lazy {
         PromotionalRecyclerAdapter(context, promotionalProductList)
+    }
+
+    fun setProductList(productList: MutableList<Product>) {
+        this.productList.apply {
+            clear()
+            addAll(productList)
+        }
     }
 
     private val viewPool = RecyclerView.RecycledViewPool()
