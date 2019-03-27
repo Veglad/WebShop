@@ -41,8 +41,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     private lateinit var searchView: SearchView
     private lateinit var headerUserEmail: TextView
     private var snackbar: Snackbar? = null
-    private val productsRecyclerAdapter = ProductsRecyclerAdapter(this, mutableListOf(), mutableListOf())
-    private val searchRecyclerAdapter = SearchRecyclerAdapter(this, mutableListOf())
+    private val productsRecyclerAdapter = ProductsRecyclerAdapter(this)
+    private val searchRecyclerAdapter = SearchRecyclerAdapter(this)
 
     private lateinit var toggle: ActionBarDrawerToggle
     private var isErrorVisible = false
@@ -144,8 +144,10 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     override fun showProductList(productList: MutableList<Product>) {
         setErrorVisibility(false)
-        productsRecyclerAdapter.setProductList(productList)
-        productsRecyclerAdapter.notifyDataSetChanged()
+        productsRecyclerAdapter.apply {
+            setProductList(productList)
+            notifyDataSetChanged()
+        }
     }
 
     override fun showPromotionalProductList(promotionalList: List<Product>) {
@@ -245,9 +247,11 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     override fun showSearchedProducts(productList: List<Product>) {
         showLayout(MainLayouts.SEARCH_PRODUCTS)
-        searchRecyclerAdapter.productList.clear()
-        searchRecyclerAdapter.productList.addAll(productList)
-        searchRecyclerAdapter.notifyDataSetChanged()
+        searchRecyclerAdapter.apply {
+            this.productList.clear()
+            this.productList.addAll(productList)
+            notifyDataSetChanged()
+        }
     }
 
     fun showLayout(mainLayouts: MainLayouts) {

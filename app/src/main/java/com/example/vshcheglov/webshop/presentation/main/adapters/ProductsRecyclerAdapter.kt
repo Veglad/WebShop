@@ -24,8 +24,8 @@ import kotlinx.android.synthetic.main.promotional_recycler_view.view.*
 
 class ProductsRecyclerAdapter(
     private val context: Context,
-    private var productList: MutableList<Product>,
-    private var promotionalProductList: List<Product>
+    private var productList: MutableList<Product> = mutableListOf(),
+    private var promotionalProductList: List<Product> = mutableListOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -45,8 +45,10 @@ class ProductsRecyclerAdapter(
     }
 
     fun setProductList(productList: MutableList<Product>) {
-        this.productList.clear()
-        this.productList.addAll(productList)
+        this.productList.apply {
+            clear()
+            addAll(productList)
+        }
         productListFull = productList.subList(0, productList.size)
     }
 

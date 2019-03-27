@@ -16,7 +16,8 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.product_recycler_item.view.*
 
-class SearchRecyclerAdapter(private val context: Context, var productList: MutableList<Product>) :
+class SearchRecyclerAdapter(private val context: Context,
+                            var productList: MutableList<Product> = mutableListOf()) :
     RecyclerView.Adapter<SearchRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
