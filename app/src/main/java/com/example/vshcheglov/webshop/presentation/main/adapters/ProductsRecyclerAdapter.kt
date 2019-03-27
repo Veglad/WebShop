@@ -49,16 +49,10 @@ class ProductsRecyclerAdapter(
             clear()
             addAll(productList)
         }
-        productListFull = productList.subList(0, productList.size)
     }
 
-    private var productListFull: MutableList<Product>
     private val viewPool = RecyclerView.RecycledViewPool()
     private val linearSnapHelper = LinearSnapHelper()
-
-    init {
-        productListFull = productList.toMutableList()
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
         TITLE_TYPE -> {
