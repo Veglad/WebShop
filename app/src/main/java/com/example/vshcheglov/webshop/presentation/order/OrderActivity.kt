@@ -17,8 +17,8 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
 
-        buttonLogin.setOnClickListener {
-            Snackbar.make(orderConstraintLayout, getString(R.string.order_completed), Snackbar.LENGTH_SHORT).show()
+        buttonOrder.setOnClickListener {
+            Snackbar.make(orderLinearLayout, getString(R.string.order_completed), Snackbar.LENGTH_SHORT).show()
         }
 
         initActionBar()

@@ -24,7 +24,7 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        buttonLogin.setOnClickListener {
+        buttonOrder.setOnClickListener {
             emailTextInput.error = ""
             passwordTextInput.error = ""
             presenter.logInUser(loginEmail.text.toString(),
@@ -93,14 +93,14 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
 
     override fun setShowProgress(isLoading: Boolean) {
         if (isLoading) {
-            buttonLogin.startAnimation()
+            buttonOrder.startAnimation()
         } else {
-            buttonLogin.revertAnimation()
+            buttonOrder.revertAnimation()
         }
     }
 
     override fun onDestroy() {
-        buttonLogin.dispose()
+        buttonOrder.dispose()
         super.onDestroy()
     }
 }

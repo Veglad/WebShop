@@ -17,7 +17,7 @@
             android:text="@string/app_name"
             android:textColor="@color/primary"
             android:textSize="42sp"
-            android:id="@+id/textView"
+            android:id="@+id/orderTextView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/emailTextInput"
             android:layout_marginStart="8dp"
@@ -32,7 +32,7 @@
             android:theme="@style/TextInputLabel"
             app:errorTextAppearance="@style/TextInputLabelErrorState"
             android:id="@+id/emailTextInput"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
+            app:layout_constraintTop_toBottomOf="@+id/orderTextView"
             app:layout_constraintBottom_toTopOf="@+id/loginPasswordFrameLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/emailTextInput"
-            app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
+            app:layout_constraintBottom_toTopOf="@+id/buttonOrder"
             app:layout_constraintStart_toStartOf="@+id/emailTextInput"
             app:layout_constraintEnd_toEndOf="@+id/emailTextInput"
             android:layout_marginTop="8dp">
@@ -80,7 +80,7 @@
                 android:src="@drawable/ic_show_password_white_24dp"/>
     </FrameLayout>
     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
-            android:id="@+id/buttonLogin"
+            android:id="@+id/buttonOrder"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
@@ -111,8 +111,8 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signUpTitle"
-            app:layout_constraintStart_toStartOf="@+id/buttonLogin"
-            app:layout_constraintEnd_toEndOf="@+id/buttonLogin">
+            app:layout_constraintStart_toStartOf="@+id/buttonOrder"
+            app:layout_constraintEnd_toEndOf="@+id/buttonOrder">
     </Button>
     <TextView
             android:text="@string/sign_up_title"
@@ -120,9 +120,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/signUpTitle"
             android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@+id/buttonLogin"
+            app:layout_constraintTop_toBottomOf="@+id/buttonOrder"
             app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
-            app:layout_constraintStart_toStartOf="@+id/buttonLogin"
-            app:layout_constraintEnd_toEndOf="@+id/buttonLogin"
+            app:layout_constraintStart_toStartOf="@+id/buttonOrder"
+            app:layout_constraintEnd_toEndOf="@+id/buttonOrder"
             android:layout_marginTop="24dp"/>
 </android.support.constraint.ConstraintLayout>
