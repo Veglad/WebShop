@@ -9,7 +9,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module(includes = [NetworkModule::class])
-class StorageModule {
+class ProductStorageModule {
     @Provides
     @Singleton
     fun providesRepository() = ProductRepository()

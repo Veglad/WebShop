@@ -2,6 +2,7 @@ package com.example.vshcheglov.webshop.presentation.di.components
 
 import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
+import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
 import com.example.vshcheglov.webshop.presentation.di.modules.*
 import com.example.vshcheglov.webshop.presentation.login.LoginPresenter
@@ -15,7 +16,8 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         NetworkModule::class,
-        StorageModule::class,
+        ProductStorageModule::class,
+        UserRepositoryModule::class,
         MappersModule::class,
         FirebaseModule::class
     ]
@@ -27,4 +29,5 @@ interface AppComponent {
     fun inject(productRepository: ProductRepository)
     fun inject(loginPresenter: LoginPresenter)
     fun inject(registerPresenter: RegisterPresenter)
+    fun inject(usersRepository: UserRepository)
 }

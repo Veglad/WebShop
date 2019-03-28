@@ -3,9 +3,9 @@ package com.example.vshcheglov.webshop.presentation.main
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
 import com.example.vshcheglov.webshop.data.products.ProductRepository
+import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,7 +18,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
     lateinit var productRepository: ProductRepository
     @Inject
-    lateinit var firebaseAuth: FirebaseAuth
+    lateinit var userRepository: UserRepository
 
     private var isLoading = false
     private var isNetworkAvailable = false
@@ -82,8 +82,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     private fun showUserEmail() {
-        firebaseAuth.currentUser?.let {
-            view?.showUserEmail(it.email)
+        userRepository.getCurrentUser { user ->
+            user?.let {
+                view?.showUserEmail(it.email)
+            }
         }
     }
 
@@ -95,7 +97,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     fun logOut() {
-        firebaseAuth.signOut()
+        userRepository.logOut()
         view?.startLoginActivity()
     }
 
