@@ -27,7 +27,7 @@ class UserRepository {
         App.appComponent.inject(this)
     }
 
-    fun registerUserWithEmailAndPassword(
+    fun registerUser(
         email: String, password: String,
         completeCallback: (task: Task<AuthResult>) -> Unit
     ) {
@@ -41,13 +41,13 @@ class UserRepository {
                         firestore.collection("users").document(user.uid).set(User(user.email, user.uid))
                         Timber.d("Added uid to Firestore")
                     } else {
-                        Timber.d("User id saving error")
+                        Timber.e("User id saving error")
                     }
                 }
             }
     }
 
-    fun signInUserWithEmailAndPassword(
+    fun signInUser(
         email: String, password: String,
         completeCallback: (task: Task<AuthResult>) -> Unit
     ) {

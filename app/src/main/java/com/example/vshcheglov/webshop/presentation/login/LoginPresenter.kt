@@ -47,7 +47,7 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     private fun signInUser(email: String, password: String) {
         view?.setShowProgress(true)
-        userRepository.signInUserWithEmailAndPassword(email, password) { task ->
+        userRepository.signInUser(email, password) { task ->
             view?.let {
                 if (task.isSuccessful) {
                     Timber.d("user sign in success")

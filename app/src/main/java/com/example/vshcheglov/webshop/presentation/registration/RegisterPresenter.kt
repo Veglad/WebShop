@@ -49,7 +49,7 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
 
     private fun registerUserWithEmailAndPassword(email: String, password: String) {
         view?.setShowProgress(true)
-        userRepository.registerUserWithEmailAndPassword(email, password) { task ->
+        userRepository.registerUser(email, password) { task ->
             if (task.isSuccessful) {
                 Timber.d("user registration success")
                 view?.showLogInSuccess()
