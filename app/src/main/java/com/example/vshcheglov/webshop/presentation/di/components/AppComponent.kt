@@ -7,6 +7,7 @@ import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
 import com.example.vshcheglov.webshop.presentation.di.modules.*
 import com.example.vshcheglov.webshop.presentation.login.LoginPresenter
 import com.example.vshcheglov.webshop.presentation.main.MainPresenter
+import com.example.vshcheglov.webshop.presentation.order.OrderPresenter
 import com.example.vshcheglov.webshop.presentation.registration.RegisterPresenter
 import dagger.Component
 import javax.inject.Singleton
@@ -29,5 +30,6 @@ interface AppComponent {
     fun inject(productRepository: ProductRepository)
     fun inject(loginPresenter: LoginPresenter)
     fun inject(registerPresenter: RegisterPresenter)
+    fun inject(orderPresenter: OrderPresenter)
     fun inject(usersRepository: UserRepository)
 }
