@@ -13,23 +13,24 @@ import com.google.firebase.firestore.FirebaseFirestore
 import timber.log.Timber
 import javax.inject.Inject
 
-class UserRepository : UserStorage {
+class UserRepository {
 
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
     @Inject
     lateinit var firestore: FirebaseFirestore
 
-    override val isSignedIn: Boolean
+    val isSignedIn: Boolean
         get() = firebaseAuth.currentUser != null
 
     init {
         App.appComponent.inject(this)
     }
 
-    override fun registerUserWithEmailAndPassword(
+    fun registerUserWithEmailAndPassword(
         email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit) {
+        completeCallback: (task: Task<AuthResult>) -> Unit
+    ) {
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -46,15 +47,16 @@ class UserRepository : UserStorage {
             }
     }
 
-    override fun signInUserWithEmailAndPassword(
+    fun signInUserWithEmailAndPassword(
         email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit) {
+        completeCallback: (task: Task<AuthResult>) -> Unit
+    ) {
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task -> completeCallback(task) }
     }
 
-    override fun getCurrentUser(processUser: (user: User?) -> Unit) {
+    fun getCurrentUser(processUser: (user: User?) -> Unit) {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users")
@@ -72,25 +74,7 @@ class UserRepository : UserStorage {
         }
     }
 
-    override fun logOut() {
+    fun logOut() {
         firebaseAuth.signOut()
     }
-}
-
-interface UserStorage {
-    val isSignedIn: Boolean
-
-    fun getCurrentUser(processUser: (user: User?) -> Unit)
-
-    fun registerUserWithEmailAndPassword(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    )
-
-    fun signInUserWithEmailAndPassword(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    )
-
-    fun logOut()
 }

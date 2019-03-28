@@ -17,7 +17,7 @@ import javax.inject.Singleton
         AppModule::class,
         NetworkModule::class,
         ProductStorageModule::class,
-        UsersStorageModule::class,
+        UserRepositoryModule::class,
         MappersModule::class,
         FirebaseModule::class
     ]

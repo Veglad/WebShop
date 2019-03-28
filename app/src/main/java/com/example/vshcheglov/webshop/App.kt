@@ -22,7 +22,7 @@ class App : Application() {
             .appModule(AppModule(this))
             .mappersModule(MappersModule())
             .productStorageModule(ProductStorageModule())
-            .usersStorageModule(UsersStorageModule())
+            .userRepositoryModule(UserRepositoryModule())
             .build()
     }
 

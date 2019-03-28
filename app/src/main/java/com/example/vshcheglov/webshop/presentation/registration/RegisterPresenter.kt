@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.registration
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.users.UserStorage
+import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
 import nucleus5.presenter.Presenter
@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class RegisterPresenter : Presenter<RegisterPresenter.View>() {
     @Inject
-    lateinit var userStorage: UserStorage
+    lateinit var userRepository: UserRepository
 
     init {
         App.appComponent.inject(this)
@@ -49,7 +49,7 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
 
     private fun registerUserWithEmailAndPassword(email: String, password: String) {
         view?.setShowProgress(true)
-        userStorage.registerUserWithEmailAndPassword(email, password) { task ->
+        userRepository.registerUserWithEmailAndPassword(email, password) { task ->
             if (task.isSuccessful) {
                 Timber.d("user registration success")
                 view?.showLogInSuccess()
