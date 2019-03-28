@@ -10,6 +10,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -19,6 +20,8 @@ class UserRepository : UserStorage {
     lateinit var firebaseAuth: FirebaseAuth
     @Inject
     lateinit var firebaseDatabase: FirebaseDatabase
+    @Inject
+    lateinit var firebaseFirestore: FirebaseFirestore
 
     override val isSignedIn: Boolean
         get() = firebaseAuth.currentUser != null
