@@ -59,4 +59,10 @@
     <string name="search_hint">Search</string>
     <string name="search_list_empty_query">Type something to find products</string>
     <string name="no_search_result">No results</string>
+    <string name="order_invalid_name">Invalid name</string>
+    <string name="order_invalid_last_name">Invalid last name</string>
+    <string name="order_invalid_card_number">Invalid card number</string>
+    <string name="order_invalid_card_month">Invalid month</string>
+    <string name="order_invalid_card_year">Invalid year</string>
+    <string name="order_invalid_cv">Invalid cv</string>
 </resources>
