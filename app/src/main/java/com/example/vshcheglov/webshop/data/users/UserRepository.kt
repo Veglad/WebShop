@@ -6,7 +6,10 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -36,7 +39,7 @@ class UserRepository : UserStorage {
                     val user = firebaseAuth.currentUser
                     if (user != null) {
                         val userReference = firebaseDatabase.getReference("users").child(user.uid)
-                        userReference.setValue(User(user.uid, user.email))
+                        userReference.setValue(User(user.email, user.uid))
                         Timber.d("Added uid to Firestore")
                     } else {
                         Timber.d("User id saving error")
@@ -57,7 +60,7 @@ class UserRepository : UserStorage {
                     val user = firebaseAuth.currentUser
                     if (user != null) {
                         val userReference = firebaseDatabase.getReference("users").child(user.uid)
-                        userReference.setValue(User(user.uid, user.email))
+                        userReference.setValue(User(user.email, user.uid))
                         Timber.d("Added uid to Firestore")
                     } else {
                         Timber.d("User id saving error")
@@ -65,10 +68,35 @@ class UserRepository : UserStorage {
                 }
             }
     }
+
+    override fun getCurrentUser(processUser: (user: User?) -> Unit) {
+        val currentUser = firebaseAuth.currentUser
+        var user: User?
+        if (currentUser != null) {
+            val userReference = firebaseDatabase.getReference("users").child(currentUser.uid)
+            userReference.addListenerForSingleValueEvent(object: ValueEventListener{
+                override fun onCancelled(dataError: DatabaseError) {}
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    user = dataSnapshot.getValue<User>(User::class.java)
+                    processUser(user)
+                }
+
+            })
+        } else {
+            processUser(null)
+        }
+    }
+
+    override fun logOut() {
+        firebaseAuth.signOut()
+    }
 }
 
 interface UserStorage {
     val isSignedIn: Boolean
+
+    fun getCurrentUser(processUser: (user: User?) -> Unit)
 
     fun registerUserWithEmailAndPassword(
         email: String, password: String,
@@ -79,4 +107,6 @@ interface UserStorage {
         email: String, password: String,
         completeCallback: (task: Task<AuthResult>) -> Unit
     )
+
+    fun logOut()
 }
