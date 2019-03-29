@@ -4,7 +4,7 @@ import com.example.vshcheglov.webshop.domain.Product
 import com.google.firebase.Timestamp
 
 data class Order(
-    var productToNumberList: MutableList<OrderProduct>,
+    var orderProducts: MutableList<OrderProduct>,
     var timestamp: Timestamp,
     var amount: Double,
     var id: String = "") {
