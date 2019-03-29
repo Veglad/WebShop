@@ -99,4 +99,12 @@ object Basket {
         totalPrice += productToCount.first.price * productToCount.second
         totalPriceWithDiscount += productToCount.first.priceWithDiscount * productToCount.second
     }
+
+    fun clear() {
+        size = 0
+        productToCountList.clear()
+        productsNumber = 0
+        totalPrice = 0.0
+        totalPriceWithDiscount = 0.0
+    }
 }

@@ -84,10 +84,12 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
         val order = basketToOrderMapper.map(Basket)
         userRepository.saveOrder(order) { exception ->
             view.setShowProgress(false)
-            if (exception != null) {
-                view.showOrderSaveError()
-            } else {
+            if (exception == null) {
+                Basket.clear()
                 view.notifyOrderCompleted()
+                view.startMainScreen()
+            } else {
+                view.showOrderSaveError()
             }
         }
     }
@@ -114,5 +116,7 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
         fun notifyOrderCompleted()
 
         fun showOrderSaveError()
+
+        fun startMainScreen()
     }
 }

@@ -1,12 +1,15 @@
 package com.example.vshcheglov.webshop.presentation.order
 
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.view.MenuItem
+import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
+import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import kotlinx.android.synthetic.main.activity_order.*
 import kotlinx.android.synthetic.main.activity_register.*
 import nucleus5.factory.RequiresPresenter
@@ -115,10 +118,16 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
     }
 
     override fun notifyOrderCompleted() {
-        Snackbar.make(orderLinearLayout, getString(R.string.order_completed), Snackbar.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.order_completed), Toast.LENGTH_LONG).show()
     }
 
     override fun showOrderSaveError() {
         Snackbar.make(orderLinearLayout, getString(R.string.order_error), Snackbar.LENGTH_SHORT).show()
+    }
+
+    override fun startMainScreen() {
+        startActivity(Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        })
     }
 }
