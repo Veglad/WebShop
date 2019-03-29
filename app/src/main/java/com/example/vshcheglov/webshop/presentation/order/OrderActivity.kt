@@ -29,8 +29,8 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
             val cardNumber = orderCardNumber.text.toString()
             val cardMonth = orderCardMonth.text.toString().toIntOrNull()
             val cardYear = orderCardYear.text.toString().toIntOrNull()
-            val cardCv = orderCardCV.text.toString()
-            val orderCard = OrderCard(name, lastName, cardNumber, cardMonth, cardYear, cardCv)
+            val cardCvv = orderCardCvv.text.toString()
+            val orderCard = OrderCard(name, lastName, cardNumber, cardMonth, cardYear, cardCvv)
 
             clearErrors()
             presenter.makeOrder(orderCard, isNetworkAvailable())
@@ -45,7 +45,7 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
         cardNumberTextInput.error = ""
         cardMonthTextInput.error = ""
         cardYearTextInput.error = ""
-        cardCvTextInput.error = ""
+        cardCvvTextInput.error = ""
     }
 
     override fun onResume() {
@@ -106,8 +106,8 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
         cardYearTextInput.error = resources.getString(R.string.order_invalid_card_year)
     }
 
-    override fun showInvalidCardCv() {
-        cardCvTextInput.error = resources.getString(R.string.order_invalid_cv)
+    override fun showInvalidCardCvv() {
+        cardCvvTextInput.error = resources.getString(R.string.order_invalid_cv)
     }
 
     override fun showNoInternetError() {

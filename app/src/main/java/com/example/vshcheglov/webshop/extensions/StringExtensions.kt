@@ -16,7 +16,7 @@ fun String.isCardNumberValid(): Boolean {
     return all { char -> char.isDigit() } && length in MIN_CARD_NUMBER_LENGTH..MAX_CARD_NUMBER_LENGTH
 }
 
-fun String.isCvValid(): Boolean {
+fun String.isCvvValid(): Boolean {
     val CV_LENGTH = 3
     return all { char -> char.isDigit() } && length == CV_LENGTH
 }

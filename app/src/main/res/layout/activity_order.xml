@@ -137,8 +137,8 @@
                 app:layout_constraintTop_toTopOf="@+id/cardMonthTextInput"
                 app:layout_constraintStart_toEndOf="@+id/monthYearSeparator"
                 android:id="@+id/cardYearTextInput"
-                android:nextFocusForward="@id/cardCvTextInput"
-                app:layout_constraintEnd_toStartOf="@+id/cardCvTextInput">
+                android:nextFocusForward="@id/cardCvvTextInput"
+                app:layout_constraintEnd_toStartOf="@+id/cardCvvTextInput">
             <android.support.v7.widget.AppCompatEditText
                     android:id="@+id/orderCardYear"
                     android:layout_width="match_parent"
@@ -159,10 +159,10 @@
                 app:layout_constraintTop_toTopOf="@+id/cardMonthTextInput"
                 app:layout_constraintStart_toEndOf="@+id/cardYearTextInput"
                 android:layout_marginStart="24dp"
-                android:id="@+id/cardCvTextInput"
+                android:id="@+id/cardCvvTextInput"
                 app:layout_constraintEnd_toEndOf="parent">
             <android.support.v7.widget.AppCompatEditText
-                    android:id="@+id/orderCardCV"
+                    android:id="@+id/orderCardCvv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/cv"

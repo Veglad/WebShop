@@ -6,5 +6,5 @@ data class OrderCard (
     var cardNumber: String = "",
     var cardMonth: Int? = 0,
     var cardYear: Int? = 0,
-    var cardCv: String = ""
+    var cardCvv: String = ""
 )

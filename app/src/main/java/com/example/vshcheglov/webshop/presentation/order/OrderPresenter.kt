@@ -1,14 +1,12 @@
 package com.example.vshcheglov.webshop.presentation.order
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.Order
 import com.example.vshcheglov.webshop.data.enteties.mappers.BasketToOrderMapper
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.extensions.isCardNumberValid
-import com.example.vshcheglov.webshop.extensions.isCvValid
+import com.example.vshcheglov.webshop.extensions.isCvvValid
 import com.example.vshcheglov.webshop.presentation.entites.OrderCard
-import com.google.firebase.Timestamp
 import nucleus5.presenter.Presenter
 import java.util.*
 import javax.inject.Inject
@@ -64,9 +62,9 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
                 isValid = false
                 it.showInvalidCardYear()
             }
-            if (!card.cardCv.isCvValid()) {
+            if (!card.cardCvv.isCvvValid()) {
                 isValid = false
-                it.showInvalidCardCv()
+                it.showInvalidCardCvv()
             }
 
             if (isNetworkAvailable) {
@@ -110,7 +108,7 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
 
         fun showInvalidCardYear()
 
-        fun showInvalidCardCv()
+        fun showInvalidCardCvv()
 
         fun showNoInternetError()
 
