@@ -25,7 +25,7 @@
     <string name="removed_item_snackbar_format">%s removed from basket.</string>
     <string name="undo_uppercase">UNDO</string>
     <string name="order">order</string>
-    <string name="cv">CV</string>
+    <string name="cvv">CVV</string>
     <string name="year">YY</string>
     <string name="month_year_separator">/</string>
     <string name="month">MM</string>
