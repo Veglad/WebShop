@@ -13,9 +13,10 @@ class BasketToOrderMapper: Mapper<Basket, Order> {
         Timestamp.now(),
         Basket.totalPriceWithDiscount)
 
-    fun map(from: MutableList<Pair<Product, Int>>) = mutableListOf<Pair<OrderProduct, Int>>().also {
+    fun map(from: MutableList<Pair<Product, Int>>) = mutableListOf<OrderProduct>().also {
         for (productToCount in from) {
-            val orderProductToCount = Pair(map(productToCount.first), productToCount.second)
+            val orderProductToCount = map(productToCount.first)
+            orderProductToCount.count = productToCount.second
             it.add(orderProductToCount)
         }
     }
