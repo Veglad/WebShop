@@ -21,11 +21,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/ordering"
+                tools:text="550.50 $"
                 android:textColor="@color/primary"
                 android:textSize="42sp"
                 android:layout_marginEnd="8dp"
-                android:id="@+id/orderTextView"
+                android:id="@+id/orderTotalPrice"
                 app:layout_constraintVertical_chainStyle="packed"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
                 android:theme="@style/TextInputLabel"
                 app:errorTextAppearance="@style/TextInputLabelErrorState"
                 app:errorEnabled="true"
-                app:layout_constraintTop_toBottomOf="@+id/orderTextView"
+                app:layout_constraintTop_toBottomOf="@+id/orderTotalPrice"
                 app:layout_constraintBottom_toTopOf="@id/lastNameTextInput"
                 app:layout_constraintStart_toStartOf="parent">
             <android.support.v7.widget.AppCompatEditText
@@ -101,7 +101,7 @@
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardNumberTextInput"
-                app:layout_constraintBottom_toTopOf="@id/orderPriceTitle"
+                app:layout_constraintBottom_toTopOf="@id/buttonOrder"
                 android:id="@+id/cardMonthTextInput"
                 android:nextFocusForward="@id/cardYearTextInput"
                 app:layout_constraintEnd_toStartOf="@+id/monthYearSeparator">
@@ -170,29 +170,6 @@
                     android:textColorHint="@color/white"
                     android:maxLength="3"/>
         </android.support.design.widget.TextInputLayout>
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:text="@string/order_price"
-                android:textSize="18sp"
-                app:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/orderPriceTitle"
-                app:layout_constraintHorizontal_bias="0.5"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toStartOf="@+id/orderTotalPrice"
-                app:layout_constraintTop_toBottomOf="@+id/cardMonthTextInput"
-                app:layout_constraintBottom_toTopOf="@id/buttonOrder"/>
-        <TextView
-                android:id="@+id/orderTotalPrice"
-                android:layout_width="0dp"
-                android:layout_height="24dp"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                app:layout_constraintStart_toEndOf="@+id/orderPriceTitle"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5" android:layout_marginStart="8dp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/orderPriceTitle"/>
         <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
                 android:id="@+id/buttonOrder"
                 android:layout_width="match_parent"
@@ -209,7 +186,7 @@
                 android:foreground="?selectableItemBackground"
                 android:background="@drawable/login_button_drawable"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/orderPriceTitle"
+                app:layout_constraintTop_toBottomOf="@id/cardCvvTextInput"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
         </br.com.simplepass.loading_button_lib.customViews.CircularProgressButton>
