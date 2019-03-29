@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
+import com.example.vshcheglov.webshop.presentation.entites.OrderCard
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.kinda.alert.KAlertDialog
 import kotlinx.android.synthetic.main.activity_order.*
@@ -15,9 +16,8 @@ import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 
 
-
 @RequiresPresenter(OrderPresenter::class)
-class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter.OrderView{
+class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter.OrderView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +30,10 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
             val cardMonth = orderCardMonth.text.toString().toIntOrNull()
             val cardYear = orderCardYear.text.toString().toIntOrNull()
             val cardCv = orderCardCV.text.toString()
+            val orderCard = OrderCard(name, lastName, cardNumber, cardMonth, cardYear, cardCv)
 
             clearErrors()
-            presenter.makeOrder(name, lastName, cardNumber, cardMonth, cardYear, cardCv, isNetworkAvailable())
+            presenter.makeOrder(orderCard, isNetworkAvailable())
         }
 
         initActionBar()

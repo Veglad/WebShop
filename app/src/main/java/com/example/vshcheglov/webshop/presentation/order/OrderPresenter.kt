@@ -7,6 +7,7 @@ import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.extensions.isCardNumberValid
 import com.example.vshcheglov.webshop.extensions.isCvValid
+import com.example.vshcheglov.webshop.presentation.entites.OrderCard
 import com.google.firebase.Timestamp
 import nucleus5.presenter.Presenter
 import java.util.*
@@ -35,34 +36,35 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
         view?.setOrderPrice(orderPrice)
     }
 
-    fun makeOrder(name: String, lastName: String, cardNumber: String,
-                  cardMonth: Int?, cardYear: Int?, cardCv: String, isNetworkAvailable: Boolean) {
+    fun makeOrder(card: OrderCard, isNetworkAvailable: Boolean) {
         var isValid = true
         view?.let {
             it.setShowProgress(true)
 
-            if (name.length < MIN_NAME_LENGTH) {
+            if (card.name.length < MIN_NAME_LENGTH) {
                 isValid = false
                 it.showInvalidName()
             }
-            if (lastName.length < MIN_NAME_LENGTH) {
+            if (card.lastName.length < MIN_NAME_LENGTH) {
                 isValid = false
                 it.showInvalidSecondName()
             }
-            if (!cardNumber.isCardNumberValid()) {
+            if (!card.cardNumber.isCardNumberValid()) {
                 isValid = false
                 it.showInvalidCardNumber()
             }
+            val cardMonth = card.cardMonth
             if (cardMonth == null || cardMonth !in MIN_CARD_MONTH_NUMBER..MAX_CARD_MONTH_NUMBER) {
                 isValid = false
                 it.showInvalidCardMonth()
             }
+            val cardYear = card.cardYear
             if (cardYear == null ||
                 cardYear !in Calendar.getInstance().get(Calendar.YEAR) % 100..MAX_CARD_YEAR_NUMBER) {
                 isValid = false
                 it.showInvalidCardYear()
             }
-            if (!cardCv.isCvValid()) {
+            if (!card.cardCv.isCvValid()) {
                 isValid = false
                 it.showInvalidCardCv()
             }

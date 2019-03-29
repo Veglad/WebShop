@@ -71,7 +71,7 @@ class UserRepository {
         }
     }
 
-    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit){
+    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
 
         val user = firebaseAuth.currentUser
         if (user != null) {
