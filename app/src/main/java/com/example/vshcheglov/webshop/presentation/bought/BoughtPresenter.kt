@@ -14,7 +14,18 @@ class BoughtPresenter : Presenter<BoughtPresenter.View>() {
         App.appComponent.inject(this)
     }
 
+    override fun onTakeView(view: View?) {
+        super.onTakeView(view)
+        userRepository.getUserOrders {orderList ->
+            if(orderList != null) {
+
+            } else {
+
+            }
+        }
+    }
+
     interface View {
-        
+
     }
 }

@@ -100,4 +100,21 @@ class UserRepository {
     fun logOut() {
         firebaseAuth.signOut()
     }
+
+    fun getUserOrders (processOrders: (orderList: MutableList<Order>?) -> Unit) {
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            firestore.collection("users/${currentUser.uid}/orders")
+                .get()
+                .addOnSuccessListener { document ->
+                    val order = document?.toObjects(Order::class.java)
+                    processOrders(order)
+                }
+                .addOnFailureListener {
+                    processOrders(null)
+                }
+        } else {
+            processOrders(null)
+        }
+    }
 }

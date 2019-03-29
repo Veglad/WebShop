@@ -6,7 +6,7 @@ import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusActivity
 
 @RequiresPresenter(BoughtPresenter::class)
-class BoughtActivity : NucleusActivity<BoughtPresenter>() {
+class BoughtActivity : NucleusActivity<BoughtPresenter>(), BoughtPresenter.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
