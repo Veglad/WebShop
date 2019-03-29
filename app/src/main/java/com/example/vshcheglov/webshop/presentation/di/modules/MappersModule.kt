@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.presentation.di.modules
 
+import com.example.vshcheglov.webshop.data.enteties.mappers.BasketToOrderMapper
 import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import dagger.Module
@@ -16,4 +17,8 @@ class MappersModule {
     @Singleton
     @Provides
     fun provideNetworkProductMapper() = ProductEntityDataMapper()
+
+    @Singleton
+    @Provides
+    fun provideBasketToOrderMapper() = BasketToOrderMapper()
 }
