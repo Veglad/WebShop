@@ -47,6 +47,7 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
                 isValid = false
                 it.showInvalidSecondName()
             }
+            card.cardNumber = card.cardNumber.replace(" ", "")
             if (!card.cardNumber.isCardNumberValid()) {
                 isValid = false
                 it.showInvalidCardNumber()

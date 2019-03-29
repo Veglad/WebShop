@@ -23,7 +23,7 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order)
 
-        buttonOrder.setOnClickListener {
+        orderButton.setOnClickListener {
             val name = orderName.text.toString()
             val lastName = orderLastName.text.toString()
             val cardNumber = orderCardNumber.text.toString()
@@ -80,9 +80,9 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
 
     override fun setShowProgress(isVisible: Boolean) {
         if (isVisible) {
-            buttonOrder.startAnimation()
+            orderButton.startAnimation()
         } else {
-            buttonOrder.revertAnimation()
+            orderButton.revertAnimation()
         }
     }
 

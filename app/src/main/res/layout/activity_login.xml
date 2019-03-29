@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/emailTextInput"
-            app:layout_constraintBottom_toTopOf="@+id/buttonOrder"
+            app:layout_constraintBottom_toTopOf="@+id/orderButton"
             app:layout_constraintStart_toStartOf="@+id/emailTextInput"
             app:layout_constraintEnd_toEndOf="@+id/emailTextInput"
             android:layout_marginTop="8dp">
@@ -80,7 +80,7 @@
                 android:src="@drawable/ic_show_password_white_24dp"/>
     </FrameLayout>
     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
-            android:id="@+id/buttonOrder"
+            android:id="@+id/orderButton"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_gravity="center_horizontal"
@@ -111,8 +111,8 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/signUpTitle"
-            app:layout_constraintStart_toStartOf="@+id/buttonOrder"
-            app:layout_constraintEnd_toEndOf="@+id/buttonOrder">
+            app:layout_constraintStart_toStartOf="@+id/orderButton"
+            app:layout_constraintEnd_toEndOf="@+id/orderButton">
     </Button>
     <TextView
             android:text="@string/sign_up_title"
@@ -120,9 +120,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/signUpTitle"
             android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@+id/buttonOrder"
+            app:layout_constraintTop_toBottomOf="@+id/orderButton"
             app:layout_constraintBottom_toTopOf="@+id/buttonRegister"
-            app:layout_constraintStart_toStartOf="@+id/buttonOrder"
-            app:layout_constraintEnd_toEndOf="@+id/buttonOrder"
+            app:layout_constraintStart_toStartOf="@+id/orderButton"
+            app:layout_constraintEnd_toEndOf="@+id/orderButton"
             android:layout_marginTop="24dp"/>
 </android.support.constraint.ConstraintLayout>
