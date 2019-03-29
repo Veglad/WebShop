@@ -129,8 +129,6 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
         fun startLoginActivity()
 
-        fun startBasketActivity()
-
         fun showUserEmail(email: String?)
 
         fun showNoResults()
