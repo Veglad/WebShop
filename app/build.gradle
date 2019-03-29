@@ -55,6 +55,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
     implementation 'br.com.simplepass:loading-button-android:1.9.0'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.github.TutorialsAndroid:KAlertDialog:v4.1'
+    implementation 'com.github.Mostafa-MA-Saleh:EditCredit:1.7.1'
     kapt 'com.google.dagger:dagger-android-processor:2.20'
     kapt 'com.google.dagger:dagger-compiler:2.20'
     testImplementation 'junit:junit:4.12'

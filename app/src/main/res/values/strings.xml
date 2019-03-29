@@ -25,7 +25,7 @@
     <string name="removed_item_snackbar_format">%s removed from basket.</string>
     <string name="undo_uppercase">UNDO</string>
     <string name="order">order</string>
-    <string name="cv">CV</string>
+    <string name="cvv">CVV</string>
     <string name="year">YY</string>
     <string name="month_year_separator">/</string>
     <string name="month">MM</string>
@@ -35,7 +35,11 @@
     <string name="order_price">Order price:</string>
     <string name="ordering">Ordering</string>
     <string name="card_number">Card number</string>
-    <string name="order_completed">Order completed!</string>
+    <string name="order_completed_title">Order completed</string>
+    <string name="order_completed_message">Thank you for your purchase!</string>
+    <string name="ok">OK</string>
+    <string name="order_error_title">Oops…</string>
+    <string name="order_error_message">Something went wrong. Try again, please!</string>
     <string name="login">Login</string>
     <string name="Register">Register</string>
     <string name="e_mail">E-Mail</string>
@@ -59,4 +63,10 @@
     <string name="search_hint">Search</string>
     <string name="search_list_empty_query">Type something to find products</string>
     <string name="no_search_result">No results</string>
+    <string name="order_invalid_name">Invalid name</string>
+    <string name="order_invalid_last_name">Invalid last name</string>
+    <string name="order_invalid_card_number">Invalid card number</string>
+    <string name="order_invalid_card_month">Invalid month</string>
+    <string name="order_invalid_card_year">Invalid year</string>
+    <string name="order_invalid_cv">Invalid cv</string>
 </resources>
