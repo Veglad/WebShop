@@ -1,7 +1,8 @@
-package com.example.vshcheglov.webshop
+package com.example.vshcheglov.webshop.presentation.bought
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.vshcheglov.webshop.R
 
 class BoughtActivity : AppCompatActivity() {
 

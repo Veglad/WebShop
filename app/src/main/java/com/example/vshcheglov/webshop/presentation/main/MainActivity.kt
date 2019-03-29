@@ -19,6 +19,7 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
+import com.example.vshcheglov.webshop.presentation.bought.BoughtActivity
 import com.example.vshcheglov.webshop.presentation.login.LoginActivity
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.main.adapters.SearchRecyclerAdapter
@@ -100,7 +101,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         mainNavigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_main_log_out -> presenter.logOut()
-                R.id.nav_main_basket -> presenter.showBasket()
+                R.id.nav_main_basket -> startActivity(Intent(this, BasketActivity::class.java))
+                R.id.nav_main_bought -> startActivity(Intent(this, BoughtActivity::class.java))
             }
 
             mainDrawerLayout.closeDrawers()
@@ -157,10 +159,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     override fun startLoginActivity() {
         startActivity(Intent(this, LoginActivity::class.java))
-    }
-
-    override fun startBasketActivity() {
-        startActivity(Intent(this, BasketActivity::class.java))
     }
 
     override fun showUserEmail(email: String?) {
