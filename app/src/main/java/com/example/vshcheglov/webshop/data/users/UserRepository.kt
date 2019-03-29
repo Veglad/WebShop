@@ -1,14 +1,11 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.enteties.Order
 import com.example.vshcheglov.webshop.data.enteties.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import timber.log.Timber
 import javax.inject.Inject
@@ -71,6 +68,32 @@ class UserRepository {
                 }
         } else {
             processUser(null)
+        }
+    }
+
+    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit){
+
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            val ordersReference = firestore.collection("users")
+                .document(user.uid)
+                .collection("orders")
+                .document()
+
+            order.id = ordersReference.id
+
+            ordersReference.set(order)
+                .addOnSuccessListener {
+                    Timber.d("Order saved successfully")
+                    onResult(null)
+                }
+                .addOnFailureListener {
+                    Timber.e("User order saving error")
+                    onResult(it)
+                }
+        } else {
+            Timber.e("User order saving error")
+            onResult(java.lang.Exception("User not authenticated."))
         }
     }
 

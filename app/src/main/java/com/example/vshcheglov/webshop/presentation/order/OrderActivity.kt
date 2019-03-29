@@ -117,4 +117,8 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
     override fun notifyOrderCompleted() {
         Snackbar.make(orderLinearLayout, getString(R.string.order_completed), Snackbar.LENGTH_SHORT).show()
     }
+
+    override fun showOrderSaveError() {
+        Snackbar.make(orderLinearLayout, getString(R.string.order_error), Snackbar.LENGTH_SHORT).show()
+    }
 }
