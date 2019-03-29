@@ -35,8 +35,11 @@
     <string name="order_price">Order price:</string>
     <string name="ordering">Ordering</string>
     <string name="card_number">Card number</string>
-    <string name="order_completed">Order completed. Thank you for your purchase!</string>
-    <string name="order_error">Order saving error</string>
+    <string name="order_completed_title">Order completed</string>
+    <string name="order_completed_message">Thank you for your purchase!</string>
+    <string name="ok">OK</string>
+    <string name="order_error_title">Oops…</string>
+    <string name="order_error_message">Something went wrong. Try again, please!</string>
     <string name="login">Login</string>
     <string name="Register">Register</string>
     <string name="e_mail">E-Mail</string>

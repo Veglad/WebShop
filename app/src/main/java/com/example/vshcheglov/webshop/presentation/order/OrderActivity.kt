@@ -6,14 +6,15 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.view.MenuItem
-import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
+import com.kinda.alert.KAlertDialog
 import kotlinx.android.synthetic.main.activity_order.*
-import kotlinx.android.synthetic.main.activity_register.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
+
+
 
 @RequiresPresenter(OrderPresenter::class)
 class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter.OrderView{
@@ -31,7 +32,6 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
             val cardCv = orderCardCV.text.toString()
 
             clearErrors()
-
             presenter.makeOrder(name, lastName, cardNumber, cardMonth, cardYear, cardCv, isNetworkAvailable())
         }
 
@@ -118,14 +118,29 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
     }
 
     override fun notifyOrderCompleted() {
-        Toast.makeText(this, getString(R.string.order_completed), Toast.LENGTH_LONG).show()
+        KAlertDialog(this, KAlertDialog.SUCCESS_TYPE)
+            .setTitleText(getString(R.string.order_completed_title))
+            .setContentText(getString(R.string.order_completed_message))
+            .setConfirmText(getString(R.string.ok))
+            .setConfirmClickListener { sDialog ->
+                sDialog.dismissWithAnimation()
+                startMainScreen()
+            }
+            .show()
     }
 
     override fun showOrderSaveError() {
-        Snackbar.make(orderLinearLayout, getString(R.string.order_error), Snackbar.LENGTH_SHORT).show()
+        KAlertDialog(this, KAlertDialog.ERROR_TYPE)
+            .setTitleText(getString(R.string.order_error_title))
+            .setContentText(getString(R.string.order_error_message))
+            .setConfirmText(getString(R.string.ok))
+            .setConfirmClickListener { sDialog ->
+                sDialog.dismissWithAnimation()
+            }
+            .show()
     }
 
-    override fun startMainScreen() {
+    private fun startMainScreen() {
         startActivity(Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
         })
