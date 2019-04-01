@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.login
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
@@ -12,7 +13,7 @@ import javax.inject.Inject
 class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var dataProvider: DataProvider
 
     init {
         App.appComponent.inject(this)
@@ -20,7 +21,7 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     override fun onTakeView(view: View?) {
         super.onTakeView(view)
-        if (userRepository.isSignedIn) {
+        if (dataProvider.isSignedIn) {
             Timber.d("user is authorized")
             view?.startMainActivity()
         }
@@ -47,7 +48,7 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     private fun signInUser(email: String, password: String) {
         view?.setShowProgress(true)
-        userRepository.signInUser(email, password) { task ->
+        dataProvider.signInUser(email, password) { task ->
             view?.let {
                 if (task.isSuccessful) {
                     Timber.d("user sign in success")

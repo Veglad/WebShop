@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.purchase
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.enteties.OrderProduct
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.google.firebase.Timestamp
@@ -10,7 +11,7 @@ import javax.inject.Inject
 class PurchasePresenter : Presenter<PurchasePresenter.View>() {
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var dataProvider: DataProvider
 
     init {
         App.appComponent.inject(this)
@@ -18,7 +19,7 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
 
     override fun onTakeView(view: View?) {
         super.onTakeView(view)
-        userRepository.getUserOrders { orderList ->
+        dataProvider.getUserOrders { orderList ->
             if (orderList != null) {
                 val productToTimeStampList = orderList.map { order ->
                     order.orderProducts.map { Pair(it, order.timestamp) }

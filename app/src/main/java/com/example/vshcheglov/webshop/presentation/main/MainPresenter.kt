@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.main
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
@@ -16,9 +17,7 @@ import javax.inject.Inject
 
 class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
-    lateinit var productRepository: ProductRepository
-    @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var dataProvider: DataProvider
 
     private var isLoading = false
     private var isNetworkAvailable = false
@@ -52,7 +51,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
                 if (allProducts == null || refresh) {
                     isLoading = true
                     view?.showLoading(true)
-                    allProducts = productRepository.getAllProducts()
+                    allProducts = dataProvider.getAllProducts()
                 }
 
                 processUiWithAllProducts(allProducts!!)
@@ -82,7 +81,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     private fun showUserEmail() {
-        userRepository.getCurrentUser { user ->
+        dataProvider.getCurrentUser { user ->
             user?.let {
                 view?.showUserEmail(it.email)
             }
@@ -97,7 +96,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     fun logOut() {
-        userRepository.logOut()
+        dataProvider.logOut()
         view?.startLoginActivity()
     }
 

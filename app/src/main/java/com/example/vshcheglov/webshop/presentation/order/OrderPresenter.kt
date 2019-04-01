@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.order
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.enteties.mappers.BasketToOrderMapper
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.domain.Basket
@@ -21,7 +22,7 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
     }
 
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var dataProvider: DataProvider
     @Inject
     lateinit var basketToOrderMapper: BasketToOrderMapper
 
@@ -83,7 +84,7 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
 
     private fun saveOrder(view: OrderView) {
         val order = basketToOrderMapper.map(Basket)
-        userRepository.saveOrder(order) { exception ->
+        dataProvider.saveOrder(order) { exception ->
             view.setShowProgress(false)
             if (exception == null) {
                 Basket.clear()
