@@ -13,11 +13,11 @@ import kotlinx.android.synthetic.main.bought_product_recycler_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class BoughtRecyclerAdapter(private val context: Context,
-                            var productToTimeStampList: List<Pair<OrderProduct, Timestamp>> = mutableListOf()) :
-    RecyclerView.Adapter<BoughtRecyclerAdapter.ViewHolder>() {
+class PurchaseRecyclerAdapter(private val context: Context,
+                              var productToTimeStampList: List<Pair<OrderProduct, Timestamp>> = mutableListOf()) :
+    RecyclerView.Adapter<PurchaseRecyclerAdapter.ViewHolder>() {
 
-    val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)

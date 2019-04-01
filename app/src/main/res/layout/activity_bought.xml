@@ -17,5 +17,5 @@
             android:id="@+id/boughtRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".presentation.bought.BoughtActivity"/>
+            tools:context=".presentation.bought.PurchaseActivity"/>
 </LinearLayout>

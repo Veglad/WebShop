@@ -4,7 +4,7 @@ import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
-import com.example.vshcheglov.webshop.presentation.bought.BoughtPresenter
+import com.example.vshcheglov.webshop.presentation.bought.PurchasePresenter
 import com.example.vshcheglov.webshop.presentation.di.modules.*
 import com.example.vshcheglov.webshop.presentation.login.LoginPresenter
 import com.example.vshcheglov.webshop.presentation.main.MainPresenter
@@ -32,6 +32,6 @@ interface AppComponent {
     fun inject(loginPresenter: LoginPresenter)
     fun inject(registerPresenter: RegisterPresenter)
     fun inject(orderPresenter: OrderPresenter)
-    fun inject(boughtPresenter: BoughtPresenter)
+    fun inject(boughtPresenter: PurchasePresenter)
     fun inject(usersRepository: UserRepository)
 }

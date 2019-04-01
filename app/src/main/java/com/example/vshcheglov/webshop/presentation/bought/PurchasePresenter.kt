@@ -7,7 +7,7 @@ import com.google.firebase.Timestamp
 import nucleus5.presenter.Presenter
 import javax.inject.Inject
 
-class BoughtPresenter : Presenter<BoughtPresenter.View>() {
+class PurchasePresenter : Presenter<PurchasePresenter.View>() {
 
     @Inject
     lateinit var userRepository: UserRepository

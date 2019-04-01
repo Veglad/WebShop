@@ -11,14 +11,14 @@ import kotlinx.android.synthetic.main.activity_bought.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 
-@RequiresPresenter(BoughtPresenter::class)
-class BoughtActivity : NucleusAppCompatActivity<BoughtPresenter>(), BoughtPresenter.View {
+@RequiresPresenter(PurchasePresenter::class)
+class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), PurchasePresenter.View {
 
     companion object {
         const val COLUMNS_NUMBER = 2
     }
 
-    private lateinit var boughtRecyclerAdapter: BoughtRecyclerAdapter
+    private lateinit var boughtRecyclerAdapter: PurchaseRecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class BoughtActivity : NucleusAppCompatActivity<BoughtPresenter>(), BoughtPresen
     }
 
     override fun showProducts(productToTimeStampList: List<Pair<OrderProduct, Timestamp>>) {
-        boughtRecyclerAdapter = BoughtRecyclerAdapter(this, productToTimeStampList)
+        boughtRecyclerAdapter = PurchaseRecyclerAdapter(this, productToTimeStampList)
         boughtRecyclerView.layoutManager = GridLayoutManager(this, COLUMNS_NUMBER)
         boughtRecyclerView.adapter = boughtRecyclerAdapter
     }
