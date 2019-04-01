@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.presentation.di.components
 
+import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.products.ProductNetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
@@ -18,9 +19,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AppModule::class,
-        ProductNetworkModule::class,
-        ProductRepositoryModule::class,
-        UserRepositoryModule::class,
+        DataProviderModule::class,
         MappersModule::class
     ]
 )
@@ -35,4 +34,5 @@ interface AppComponent {
     fun inject(boughtPresenter: PurchasePresenter)
     fun inject(usersRepository: UserRepository)
     fun inject(userNetwork: UserNetworkDataSource)
+    fun inject(dataProvider: DataProvider)
 }
