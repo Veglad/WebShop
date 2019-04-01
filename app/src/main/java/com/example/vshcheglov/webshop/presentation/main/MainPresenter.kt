@@ -101,10 +101,6 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         view?.startLoginActivity()
     }
 
-    fun showBasket() {
-        view?.startBasketActivity()
-    }
-
     fun searchProducts(searchText: String) {
         view?.showLoading(true)
         allProducts?.let {
@@ -132,8 +128,6 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun showPromotionalProductList(promotionalList: List<Product>)
 
         fun startLoginActivity()
-
-        fun startBasketActivity()
 
         fun showUserEmail(email: String?)
 

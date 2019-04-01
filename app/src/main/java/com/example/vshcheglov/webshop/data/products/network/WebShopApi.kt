@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.data.network
+package com.example.vshcheglov.webshop.data.products.network
 
 import com.example.vshcheglov.webshop.data.enteties.ProductEntity
 import kotlinx.coroutines.Deferred

@@ -3,10 +3,10 @@ package com.example.vshcheglov.webshop.data.products
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
 import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
-import com.example.vshcheglov.webshop.data.network.WebShopApi
+import com.example.vshcheglov.webshop.data.products.network.WebShopApi
 import javax.inject.Inject
 
-class NetworkDataSource {
+class ProductNetworkDataSource {
 
     @Inject lateinit var productEntityDataMapper: ProductEntityDataMapper
     @Inject lateinit var webShopApi: WebShopApi

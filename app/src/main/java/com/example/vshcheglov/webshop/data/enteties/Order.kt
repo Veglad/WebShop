@@ -4,13 +4,18 @@ import com.example.vshcheglov.webshop.domain.Product
 import com.google.firebase.Timestamp
 
 data class Order(
-    var productToNumberList: MutableList<Pair<OrderProduct, Int>>,
+    var orderProducts: MutableList<OrderProduct>,
     var timestamp: Timestamp,
     var amount: Double,
-    var id: String = "")
+    var id: String = "") {
+
+    constructor() : this(mutableListOf(), Timestamp.now(), 0.0)
+
+}
 
 data class OrderProduct(
     var id: Int = -1,
     var name: String = "Noname",
     var price: Double = 0.0,
-    var imageUrl: String = "")
+    var imageUrl: String = "",
+    var count: Int = 0)
