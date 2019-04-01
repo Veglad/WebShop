@@ -1,9 +1,8 @@
-package com.example.vshcheglov.webshop.data.network
+package com.example.vshcheglov.webshop.data.products.network
 
 import android.content.Context
 import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
-import com.example.vshcheglov.webshop.presentation.di.modules.NetworkModule
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Cache
 import okhttp3.Interceptor

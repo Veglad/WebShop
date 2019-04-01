@@ -1,8 +1,8 @@
 package com.example.vshcheglov.webshop.presentation.di.modules
 
 import android.content.Context
-import com.example.vshcheglov.webshop.data.network.NetworkService
-import com.example.vshcheglov.webshop.data.network.WebShopApi
+import com.example.vshcheglov.webshop.data.products.network.NetworkService
+import com.example.vshcheglov.webshop.data.products.network.WebShopApi
 import com.example.vshcheglov.webshop.data.products.NetworkDataSource
 import dagger.Module
 import dagger.Provides
