@@ -2,6 +2,7 @@ package com.example.vshcheglov.webshop.presentation.di.modules
 
 import com.example.vshcheglov.webshop.data.enteties.mappers.BasketToOrderMapper
 import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
+import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import dagger.Module
 import dagger.Provides
@@ -21,4 +22,8 @@ class MappersModule {
     @Singleton
     @Provides
     fun provideBasketToOrderMapper() = BasketToOrderMapper()
+
+    @Singleton
+    @Provides
+    fun provideUserNetworkUserMapper() = UserNetworkUserMapper()
 }
