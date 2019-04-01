@@ -18,7 +18,7 @@ class App : Application() {
         initTimber()
 
         appComponent = DaggerAppComponent.builder()
-            .networkModule(NetworkModule())
+            .productNetworkModule(ProductNetworkModule())
             .appModule(AppModule(this))
             .mappersModule(MappersModule())
             .productStorageModule(ProductStorageModule())

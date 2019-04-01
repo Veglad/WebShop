@@ -3,13 +3,13 @@ package com.example.vshcheglov.webshop.presentation.di.modules
 import android.content.Context
 import com.example.vshcheglov.webshop.data.products.network.NetworkService
 import com.example.vshcheglov.webshop.data.products.network.WebShopApi
-import com.example.vshcheglov.webshop.data.products.NetworkDataSource
+import com.example.vshcheglov.webshop.data.products.ProductNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module(includes = [AppModule::class, MappersModule::class])
-class NetworkModule {
+class ProductNetworkModule {
     @Singleton
     @Provides
     fun provideShopApi(context: Context): WebShopApi {
@@ -19,5 +19,5 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun providesNetworkDataSource() = NetworkDataSource()
+    fun providesNetworkDataSource() = ProductNetworkDataSource()
 }

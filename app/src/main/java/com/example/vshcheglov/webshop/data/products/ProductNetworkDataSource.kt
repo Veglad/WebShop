@@ -6,7 +6,7 @@ import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMap
 import com.example.vshcheglov.webshop.data.products.network.WebShopApi
 import javax.inject.Inject
 
-class NetworkDataSource {
+class ProductNetworkDataSource {
 
     @Inject lateinit var productEntityDataMapper: ProductEntityDataMapper
     @Inject lateinit var webShopApi: WebShopApi

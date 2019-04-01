@@ -1,8 +1,9 @@
 package com.example.vshcheglov.webshop.presentation.di.components
 
-import com.example.vshcheglov.webshop.data.products.NetworkDataSource
+import com.example.vshcheglov.webshop.data.products.ProductNetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
+import com.example.vshcheglov.webshop.data.users.network.UserNetworkDataSource
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
 import com.example.vshcheglov.webshop.presentation.bought.PurchasePresenter
 import com.example.vshcheglov.webshop.presentation.di.modules.*
@@ -17,21 +18,21 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AppModule::class,
-        NetworkModule::class,
+        ProductNetworkModule::class,
         ProductStorageModule::class,
         UserRepositoryModule::class,
-        MappersModule::class,
-        FirebaseModule::class
+        MappersModule::class
     ]
 )
 interface AppComponent {
     fun inject(mainPresenter: MainPresenter)
     fun inject(basketPresenter: BasketPresenter)
-    fun inject(networkDataSource: NetworkDataSource)
+    fun inject(networkDataSource: ProductNetworkDataSource)
     fun inject(productRepository: ProductRepository)
     fun inject(loginPresenter: LoginPresenter)
     fun inject(registerPresenter: RegisterPresenter)
     fun inject(orderPresenter: OrderPresenter)
     fun inject(boughtPresenter: PurchasePresenter)
     fun inject(usersRepository: UserRepository)
+    fun inject(userNetwork: UserNetworkDataSource)
 }

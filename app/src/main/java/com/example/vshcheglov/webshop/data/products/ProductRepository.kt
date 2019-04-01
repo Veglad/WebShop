@@ -6,7 +6,7 @@ import javax.inject.Inject
 class ProductRepository {
 
     @Inject
-    lateinit var networkDataSource: NetworkDataSource
+    lateinit var networkDataSource: ProductNetworkDataSource
 
     init {
         App.appComponent.inject(this)
