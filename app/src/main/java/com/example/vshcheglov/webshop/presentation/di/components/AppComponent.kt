@@ -19,7 +19,7 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         ProductNetworkModule::class,
-        ProductStorageModule::class,
+        ProductRepositoryModule::class,
         UserRepositoryModule::class,
         MappersModule::class
     ]

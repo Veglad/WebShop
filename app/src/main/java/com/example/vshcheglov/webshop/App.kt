@@ -21,7 +21,7 @@ class App : Application() {
             .productNetworkModule(ProductNetworkModule())
             .appModule(AppModule(this))
             .mappersModule(MappersModule())
-            .productStorageModule(ProductStorageModule())
+            .productStorageModule(ProductRepositoryModule())
             .userRepositoryModule(UserRepositoryModule())
             .build()
     }

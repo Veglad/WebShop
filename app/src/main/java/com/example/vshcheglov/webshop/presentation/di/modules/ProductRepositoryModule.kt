@@ -6,7 +6,7 @@ import dagger.Provides
 import javax.inject.Singleton
 
 @Module(includes = [ProductNetworkModule::class])
-class ProductStorageModule {
+class ProductRepositoryModule {
     @Provides
     @Singleton
     fun providesRepository() = ProductRepository()
