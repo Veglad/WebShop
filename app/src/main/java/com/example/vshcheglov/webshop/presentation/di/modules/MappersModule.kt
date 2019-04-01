@@ -2,6 +2,7 @@ package com.example.vshcheglov.webshop.presentation.di.modules
 
 import com.example.vshcheglov.webshop.data.enteties.mappers.BasketToOrderMapper
 import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmAllProductsAllProductsMapper
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmProductProductMapper
 import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
@@ -31,4 +32,9 @@ class MappersModule {
     @Singleton
     @Provides
     fun provideRealmProductProductMapper() = RealmProductProductMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmAllProductsAllProductsMapper(realmProductProductMapper: RealmProductProductMapper)
+            = RealmAllProductsAllProductsMapper(realmProductProductMapper)
 }
