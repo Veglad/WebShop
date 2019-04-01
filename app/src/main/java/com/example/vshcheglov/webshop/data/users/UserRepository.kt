@@ -7,6 +7,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -105,6 +106,7 @@ class UserRepository {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users/${currentUser.uid}/orders")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { document ->
                     Timber.d("Order fetched successfully")
