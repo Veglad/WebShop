@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.data.enteties.OrderProduct
+import com.example.vshcheglov.webshop.data.enteties.OrderProductNetwork
 import com.google.firebase.Timestamp
 import com.kinda.alert.KAlertDialog
 import kotlinx.android.synthetic.main.activity_bought.*
@@ -39,7 +39,7 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
         return false
     }
 
-    override fun showProducts(productToTimeStampList: List<Pair<OrderProduct, Timestamp>>) {
+    override fun showProducts(productToTimeStampList: List<Pair<OrderProductNetwork, Timestamp>>) {
         boughtRecyclerAdapter = PurchaseRecyclerAdapter(this, productToTimeStampList)
         boughtRecyclerView.layoutManager = GridLayoutManager(this, COLUMNS_NUMBER)
         boughtRecyclerView.adapter = boughtRecyclerAdapter

@@ -1,8 +1,8 @@
 package com.example.vshcheglov.webshop.data
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.Order
-import com.example.vshcheglov.webshop.data.enteties.User
+import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
+import com.example.vshcheglov.webshop.data.enteties.UserNetwork
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.google.android.gms.tasks.Task
@@ -42,11 +42,11 @@ class DataProvider {
         userRepository.signInUser(email, password, completeCallback)
     }
 
-    fun getCurrentUser(processUser: (user: User?) -> Unit) {
+    fun getCurrentUser(processUser: (user: UserNetwork?) -> Unit) {
         userRepository.getCurrentUser(processUser)
     }
 
-    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
+    fun saveOrder(order: OrderNetwork, onResult: (exception: Exception?) -> Unit) {
         userRepository.saveOrder(order, onResult)
     }
 
@@ -54,7 +54,7 @@ class DataProvider {
         userRepository.logOut()
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
+    fun getUserOrders(processOrders: (orderList: MutableList<OrderNetwork>?) -> Unit) {
         userRepository.getUserOrders(processOrders)
     }
 }

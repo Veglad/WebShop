@@ -1,8 +1,8 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.Order
-import com.example.vshcheglov.webshop.data.enteties.User
+import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
+import com.example.vshcheglov.webshop.data.enteties.UserNetwork
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
@@ -35,10 +35,10 @@ class UserNetworkDataSource {
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
                     if (user != null) {
-                        firestore.collection("users").document(user.uid).set(User(user.email, user.uid))
+                        firestore.collection("users").document(user.uid).set(UserNetwork(user.email, user.uid))
                         Timber.d("Added uid to Firestore")
                     } else {
-                        Timber.e("User id saving error")
+                        Timber.e("UserNetwork id saving error")
                     }
                 }
             }
@@ -52,14 +52,14 @@ class UserNetworkDataSource {
             .addOnCompleteListener { task -> completeCallback(task) }
     }
 
-    fun getCurrentUser(processUser: (user: User?) -> Unit) {
+    fun getCurrentUser(processUser: (user: UserNetwork?) -> Unit) {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users")
                 .document(currentUser.uid)
                 .get()
                 .addOnSuccessListener { document ->
-                    val user = document?.toObject(User::class.java)
+                    val user = document?.toObject(UserNetwork::class.java)
                     processUser(user)
                 }
                 .addOnFailureListener {
@@ -70,7 +70,7 @@ class UserNetworkDataSource {
         }
     }
 
-    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
+    fun saveOrder(order: OrderNetwork, onResult: (exception: Exception?) -> Unit) {
 
         val user = firebaseAuth.currentUser
         if (user != null) {
@@ -83,16 +83,16 @@ class UserNetworkDataSource {
 
             ordersReference.set(order)
                 .addOnSuccessListener {
-                    Timber.d("Order saved successfully")
+                    Timber.d("OrderNetwork saved successfully")
                     onResult(null)
                 }
                 .addOnFailureListener {
-                    Timber.e("User order saving error: " + it)
+                    Timber.e("UserNetwork order saving error: " + it)
                     onResult(it)
                 }
         } else {
-            Timber.e("User order saving error")
-            onResult(java.lang.Exception("User not authenticated."))
+            Timber.e("UserNetwork order saving error")
+            onResult(java.lang.Exception("UserNetwork not authenticated."))
         }
     }
 
@@ -100,19 +100,19 @@ class UserNetworkDataSource {
         firebaseAuth.signOut()
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
+    fun getUserOrders(processOrders: (orderList: MutableList<OrderNetwork>?) -> Unit) {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users/${currentUser.uid}/orders")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { document ->
-                    Timber.d("Order fetched successfully")
-                    val order = document?.toObjects(Order::class.java)
+                    Timber.d("OrderNetwork fetched successfully")
+                    val order = document?.toObjects(OrderNetwork::class.java)
                     processOrders(order)
                 }
                 .addOnFailureListener {
-                    Timber.d("Order fetching error:" + it)
+                    Timber.d("OrderNetwork fetching error:" + it)
                     processOrders(null)
                 }
         } else {

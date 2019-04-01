@@ -2,9 +2,7 @@ package com.example.vshcheglov.webshop.presentation.main
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
-import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
-import com.example.vshcheglov.webshop.data.products.ProductRepository
-import com.example.vshcheglov.webshop.data.users.UserRepository
+import com.example.vshcheglov.webshop.data.enteties.AllProductsNetwork
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +23,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private val job = Job()
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
-    private var allProducts: AllProductsEntity? = null
+    private var allProducts: AllProductsNetwork? = null
 
     private lateinit var searchFilter: SearchFilter
 
@@ -71,7 +69,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         }
     }
 
-    private fun processUiWithAllProducts(allProducts: AllProductsEntity) {
+    private fun processUiWithAllProducts(allProducts: AllProductsNetwork) {
         Timber.d("Products fetched successfully")
         val promotionalList = allProducts.promotionalProducts.filter { it.percentageDiscount > 0 }
         view?.let {

@@ -1,8 +1,8 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.Order
-import com.example.vshcheglov.webshop.data.enteties.User
+import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
+import com.example.vshcheglov.webshop.data.enteties.UserNetwork
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import javax.inject.Inject
@@ -33,11 +33,11 @@ class UserRepository {
         userNetwork.signInUser(email, password, completeCallback)
     }
 
-    fun getCurrentUser(processUser: (user: User?) -> Unit) {
+    fun getCurrentUser(processUser: (user: UserNetwork?) -> Unit) {
         userNetwork.getCurrentUser(processUser)
     }
 
-    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
+    fun saveOrder(order: OrderNetwork, onResult: (exception: Exception?) -> Unit) {
         userNetwork.saveOrder(order, onResult)
     }
 
@@ -45,7 +45,7 @@ class UserRepository {
         userNetwork.logOut()
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
+    fun getUserOrders(processOrders: (orderList: MutableList<OrderNetwork>?) -> Unit) {
         userNetwork.getUserOrders(processOrders)
     }
 }

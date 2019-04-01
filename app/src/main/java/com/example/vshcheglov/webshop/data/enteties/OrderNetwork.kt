@@ -1,10 +1,9 @@
 package com.example.vshcheglov.webshop.data.enteties
 
-import com.example.vshcheglov.webshop.domain.Product
 import com.google.firebase.Timestamp
 
-data class Order(
-    var orderProducts: MutableList<OrderProduct>,
+data class OrderNetwork(
+    var orderProducts: MutableList<OrderProductNetwork>,
     var timestamp: Timestamp,
     var amount: Double,
     var id: String = "") {
@@ -13,7 +12,7 @@ data class Order(
 
 }
 
-data class OrderProduct(
+data class OrderProductNetwork(
     var id: Int = -1,
     var name: String = "Noname",
     var price: Double = 0.0,
