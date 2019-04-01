@@ -4,7 +4,10 @@ import android.app.Application
 import com.example.vshcheglov.webshop.presentation.di.components.AppComponent
 import com.example.vshcheglov.webshop.presentation.di.components.DaggerAppComponent
 import com.example.vshcheglov.webshop.presentation.di.modules.*
+import io.realm.Realm
 import timber.log.Timber
+
+
 
 class App : Application() {
 
@@ -16,6 +19,7 @@ class App : Application() {
         super.onCreate()
 
         initTimber()
+        initRealmConfiguration()
 
         appComponent = DaggerAppComponent.builder()
             .productNetworkModule(ProductNetworkModule())
@@ -23,6 +27,10 @@ class App : Application() {
             .mappersModule(MappersModule())
             .dataProviderModule(DataProviderModule())
             .build()
+    }
+
+    private fun initRealmConfiguration() {
+        Realm.init(this)
     }
 
     private fun initTimber() {
