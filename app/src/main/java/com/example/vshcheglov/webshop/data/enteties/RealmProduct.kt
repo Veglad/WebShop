@@ -1,6 +1,10 @@
 package com.example.vshcheglov.webshop.data.enteties
 
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+
 data class RealmProduct(
+    @PrimaryKey
     var id: Int = -1,
     var name: String = "Noname",
     var price: Double = 0.0,
@@ -11,4 +15,4 @@ data class RealmProduct(
     var inStockNumber: Int = 0,
     var purchasesNumber: Int = 0,
     var percentageDiscount: Int = 0
-)
+) : RealmObject()
