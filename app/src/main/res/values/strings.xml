@@ -70,4 +70,9 @@
     <string name="order_invalid_card_year">Invalid year</string>
     <string name="order_invalid_cv">Invalid cv</string>
     <string name="bought">Bought</string>
+    <string name="bought_error_title">Oops…</string>
+    <string name="bought_error_message">Something went wrong. Try again, please!</string>
+    <string name="product_price">Price</string>
+    <string name="products_amount">Amount</string>
+    <string name="bought_products">Bought products</string>
 </resources>

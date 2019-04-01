@@ -47,7 +47,9 @@
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme.BlackMode">
         </activity>
-        <activity android:name=".presentation.bought.BoughtActivity">
+        <activity android:name=".presentation.bought.BoughtActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>
 

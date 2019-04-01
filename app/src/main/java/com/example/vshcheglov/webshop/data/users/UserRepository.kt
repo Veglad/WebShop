@@ -88,7 +88,7 @@ class UserRepository {
                     onResult(null)
                 }
                 .addOnFailureListener {
-                    Timber.e("User order saving error")
+                    Timber.e("User order saving error: " + it)
                     onResult(it)
                 }
         } else {
@@ -107,10 +107,12 @@ class UserRepository {
             firestore.collection("users/${currentUser.uid}/orders")
                 .get()
                 .addOnSuccessListener { document ->
+                    Timber.d("Order fetched successfully")
                     val order = document?.toObjects(Order::class.java)
                     processOrders(order)
                 }
                 .addOnFailureListener {
+                    Timber.d("Order fetching error:" + it)
                     processOrders(null)
                 }
         } else {
