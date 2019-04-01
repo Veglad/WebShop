@@ -5,6 +5,7 @@ import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
 import com.example.vshcheglov.webshop.data.enteties.UserNetwork
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
+import com.example.vshcheglov.webshop.domain.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import javax.inject.Inject
@@ -42,7 +43,7 @@ class DataProvider {
         userRepository.signInUser(email, password, completeCallback)
     }
 
-    fun getCurrentUser(processUser: (user: UserNetwork?) -> Unit) {
+    fun getCurrentUser(processUser: (user: User?) -> Unit) {
         userRepository.getCurrentUser(processUser)
     }
 

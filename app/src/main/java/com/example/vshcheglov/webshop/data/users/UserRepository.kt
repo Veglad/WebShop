@@ -3,6 +3,8 @@ package com.example.vshcheglov.webshop.data.users
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
 import com.example.vshcheglov.webshop.data.enteties.UserNetwork
+import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
+import com.example.vshcheglov.webshop.domain.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import javax.inject.Inject
@@ -11,6 +13,8 @@ class UserRepository {
 
     @Inject
     lateinit var userNetwork: UserNetworkDataSource
+    @Inject
+    lateinit var mapper: UserNetworkUserMapper
 
     val isSignedIn: Boolean
         get() = userNetwork.isSignedIn
@@ -33,8 +37,10 @@ class UserRepository {
         userNetwork.signInUser(email, password, completeCallback)
     }
 
-    fun getCurrentUser(processUser: (user: UserNetwork?) -> Unit) {
-        userNetwork.getCurrentUser(processUser)
+    fun getCurrentUser(processUser: (user: User?) -> Unit) {
+        userNetwork.getCurrentUser { userNetwork ->
+            processUser(mapper.map(userNetwork))
+        }
     }
 
     fun saveOrder(order: OrderNetwork, onResult: (exception: Exception?) -> Unit) {
