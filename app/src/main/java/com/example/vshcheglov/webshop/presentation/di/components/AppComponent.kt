@@ -3,7 +3,7 @@ package com.example.vshcheglov.webshop.presentation.di.components
 import com.example.vshcheglov.webshop.data.products.ProductNetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
-import com.example.vshcheglov.webshop.data.users.network.UserNetworkDataSource
+import com.example.vshcheglov.webshop.data.users.UserNetworkDataSource
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
 import com.example.vshcheglov.webshop.presentation.purchase.PurchasePresenter
 import com.example.vshcheglov.webshop.presentation.di.modules.*

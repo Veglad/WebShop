@@ -3,7 +3,6 @@ package com.example.vshcheglov.webshop.data.users
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.Order
 import com.example.vshcheglov.webshop.data.enteties.User
-import com.example.vshcheglov.webshop.data.users.network.UserNetworkDataSource
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import javax.inject.Inject

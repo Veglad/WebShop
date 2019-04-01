@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.di.modules
 
 import com.example.vshcheglov.webshop.data.users.UserRepository
-import com.example.vshcheglov.webshop.data.users.network.UserNetworkDataSource
+import com.example.vshcheglov.webshop.data.users.UserNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.data.users.network
+package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.Order
