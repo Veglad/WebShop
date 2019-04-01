@@ -20,17 +20,17 @@ class ProductNetworkDataSource {
     }
 
     suspend fun getProducts() =
-        productEntityDataMapper.mapFrom(webShopApi.getProductsAsync().await())
+        productEntityDataMapper.map(webShopApi.getProductsAsync().await())
 
     suspend fun getPromotionalProducts() =
-        productEntityDataMapper.mapFrom(webShopApi.getPromotionalProductsAsync().await())
+        productEntityDataMapper.map(webShopApi.getPromotionalProductsAsync().await())
 
     suspend fun getAllProducts(): AllProductsEntity {
         val productsDeferred = webShopApi.getProductsAsync()
         val promotionalProductsDeferred = webShopApi.getPromotionalProductsAsync()
 
-        val products = productEntityDataMapper.mapFrom(productsDeferred.await())
-        val promotionalProducts = productEntityDataMapper.mapFrom(promotionalProductsDeferred.await())
+        val products = productEntityDataMapper.map(productsDeferred.await())
+        val promotionalProducts = productEntityDataMapper.map(promotionalProductsDeferred.await())
 
         return AllProductsEntity(products, promotionalProducts)
     }

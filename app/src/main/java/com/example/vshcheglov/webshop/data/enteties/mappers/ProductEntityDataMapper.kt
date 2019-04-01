@@ -6,21 +6,21 @@ import com.example.vshcheglov.webshop.domain.common.Mapper
 
 class ProductEntityDataMapper : Mapper<ProductEntity, Product> {
 
-    override fun map(productEntity: ProductEntity) = Product().apply {
-        id = productEntity.deviceId
-        name = productEntity.name
-        price = productEntity.price
-        imageThumbnailUrl = productEntity.imageThumbnailUrl
-        shortDescription = productEntity.shortDescription
-        longDescription = productEntity.longDescription
-        imageUrl = productEntity.imageUrl
-        inStockNumber = productEntity.inStok
-        purchasesNumber = productEntity.bought
-        percentageDiscount = productEntity.promotional
+    override fun map(from: ProductEntity) = Product().apply {
+        id = from.deviceId
+        name = from.name
+        price = from.price
+        imageThumbnailUrl = from.imageThumbnailUrl
+        shortDescription = from.shortDescription
+        longDescription = from.longDescription
+        imageUrl = from.imageUrl
+        inStockNumber = from.inStok
+        purchasesNumber = from.bought
+        percentageDiscount = from.promotional
     }
 
-    fun mapFrom(productEntityCollection: Collection<ProductEntity>) = mutableListOf<Product>().apply {
-        for (productEntity in productEntityCollection) {
+    fun map(from: Collection<ProductEntity>) = mutableListOf<Product>().apply {
+        for (productEntity in from) {
             this.add(map(productEntity))
         }
     }
