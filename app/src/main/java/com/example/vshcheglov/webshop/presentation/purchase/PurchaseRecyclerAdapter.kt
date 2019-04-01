@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation.bought
+package com.example.vshcheglov.webshop.presentation.purchase
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView

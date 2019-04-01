@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation.bought
+package com.example.vshcheglov.webshop.presentation.purchase
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager

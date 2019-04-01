@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.presentation.bought
+package com.example.vshcheglov.webshop.presentation.purchase
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.OrderProduct

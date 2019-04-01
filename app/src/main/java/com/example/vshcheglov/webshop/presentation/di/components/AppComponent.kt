@@ -5,7 +5,7 @@ import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.data.users.network.UserNetworkDataSource
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
-import com.example.vshcheglov.webshop.presentation.bought.PurchasePresenter
+import com.example.vshcheglov.webshop.presentation.purchase.PurchasePresenter
 import com.example.vshcheglov.webshop.presentation.di.modules.*
 import com.example.vshcheglov.webshop.presentation.login.LoginPresenter
 import com.example.vshcheglov.webshop.presentation.main.MainPresenter

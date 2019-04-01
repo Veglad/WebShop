@@ -19,7 +19,7 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.basket.BasketActivity
-import com.example.vshcheglov.webshop.presentation.bought.PurchaseActivity
+import com.example.vshcheglov.webshop.presentation.purchase.PurchaseActivity
 import com.example.vshcheglov.webshop.presentation.login.LoginActivity
 import com.example.vshcheglov.webshop.presentation.main.adapters.ProductsRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.main.adapters.SearchRecyclerAdapter
