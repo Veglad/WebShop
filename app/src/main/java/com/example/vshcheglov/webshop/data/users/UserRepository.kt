@@ -1,8 +1,7 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
-import com.example.vshcheglov.webshop.data.enteties.UserNetwork
+import com.example.vshcheglov.webshop.domain.OrderNetwork
 import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import com.example.vshcheglov.webshop.domain.User
 import com.google.android.gms.tasks.Task

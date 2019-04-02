@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.data.enteties.mappers
 
-import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
-import com.example.vshcheglov.webshop.data.enteties.OrderProductNetwork
+import com.example.vshcheglov.webshop.domain.OrderNetwork
+import com.example.vshcheglov.webshop.domain.OrderProductNetwork
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.domain.common.Mapper
@@ -11,7 +11,8 @@ class BasketToOrderMapper: Mapper<Basket, OrderNetwork> {
     override fun map(from: Basket) = OrderNetwork(
         map(from.productToCountList),
         Timestamp.now(),
-        Basket.totalPriceWithDiscount)
+        Basket.totalPriceWithDiscount
+    )
 
     fun map(from: MutableList<Pair<Product, Int>>) = mutableListOf<OrderProductNetwork>().also {
         for (productToCount in from) {
@@ -25,5 +26,6 @@ class BasketToOrderMapper: Mapper<Basket, OrderNetwork> {
         from.id,
         from.name,
         from.priceWithDiscount,
-        from.imageThumbnailUrl)
+        from.imageThumbnailUrl
+    )
 }

@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.data.enteties
+package com.example.vshcheglov.webshop.domain
 
 import com.google.firebase.Timestamp
 

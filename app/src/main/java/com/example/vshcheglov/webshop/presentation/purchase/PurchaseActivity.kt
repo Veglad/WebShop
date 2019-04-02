@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.data.enteties.OrderProductNetwork
+import com.example.vshcheglov.webshop.domain.OrderProductNetwork
 import com.google.firebase.Timestamp
 import com.kinda.alert.KAlertDialog
 import kotlinx.android.synthetic.main.activity_bought.*

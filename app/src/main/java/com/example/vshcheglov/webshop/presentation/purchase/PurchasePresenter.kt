@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.presentation.purchase
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
-import com.example.vshcheglov.webshop.data.enteties.OrderProductNetwork
+import com.example.vshcheglov.webshop.domain.OrderProductNetwork
 import com.google.firebase.Timestamp
 import nucleus5.presenter.Presenter
 import javax.inject.Inject
