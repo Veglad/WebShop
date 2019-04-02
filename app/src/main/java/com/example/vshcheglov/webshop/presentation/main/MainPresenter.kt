@@ -5,13 +5,11 @@ import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.domain.AllProducts
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.system.measureTimeMillis
 
 class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
@@ -23,7 +21,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private val job = Job()
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
-    private var allProducts: AllProducts? = null
+    private var productList: MutableList<Product>? = null
+    private var promotionalProductList: MutableList<Product>? = null
 
     private lateinit var searchFilter: SearchFilter
 
@@ -46,13 +45,21 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
             Timber.d("Fetching products...")
 
             try {
-                if (allProducts == null || refresh) {
+                if (productList == null || promotionalProductList == null || refresh) {
                     isLoading = true
                     view?.showLoading(true)
-                    allProducts = dataProvider.getAllProducts()
+
+                    val productsDeferred = uiCoroutineScope.async { dataProvider.getProducts() }
+                    val promotionalProductsDeferred = uiCoroutineScope.async { dataProvider.getPromotionalProducts() }
+                    productList = productsDeferred.await()
+                    promotionalProductList = promotionalProductsDeferred.await()
                 }
 
-                processUiWithAllProducts(allProducts!!)
+                productList?.let { products ->
+                    promotionalProductList?.let { promotionalProducts ->
+                        processUiWithProducts(products, promotionalProducts)
+                    }
+                }
 
                 if (!isNetworkAvailable) {
                     view?.showNoInternetWarning()
@@ -69,12 +76,14 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         }
     }
 
-    private fun processUiWithAllProducts(allProducts: AllProducts) {
+    private fun processUiWithProducts(
+        productList: MutableList<Product>,
+        promotionalProductList: MutableList<Product>
+    ) {
         Timber.d("Products fetched successfully")
-        val promotionalList = allProducts.promotionalProducts.filter { it.percentageDiscount > 0 }
         view?.let {
-            it.showProductList(allProducts.products)
-            it.showPromotionalProductList(promotionalList)
+            it.showProductList(productList)
+            it.showPromotionalProductList(promotionalProductList)
         }
     }
 
@@ -100,8 +109,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     fun searchProducts(searchText: String) {
         view?.showLoading(true)
-        allProducts?.let {
-            val searchFilter = SearchFilter(it.products) { productList: List<Product>? ->
+        productList?.let {
+            val searchFilter = SearchFilter(it) { productList: List<Product>? ->
                 view?.showLoading(false)
                 if (productList == null || productList.isEmpty()) {
                     view?.showNoResults()
