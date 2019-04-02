@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp
 import io.realm.RealmObject
 
 data class OrderNetwork(
-    var orderProducts: MutableList<OrderRealmProduct>,
+    var orderProducts: MutableList<OrderNetworkProduct>,
     var timestamp: Timestamp,
     var amount: Double,
     var id: String = ""
