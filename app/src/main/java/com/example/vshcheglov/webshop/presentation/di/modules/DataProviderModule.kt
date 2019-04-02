@@ -11,8 +11,4 @@ class DataProviderModule {
     @Provides
     @Singleton
     fun provideDataProvider() = DataProvider()
-
-    @Provides
-    @Singleton
-    fun provideRealm() = Realm.getDefaultInstance()
 }
