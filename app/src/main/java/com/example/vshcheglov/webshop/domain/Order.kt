@@ -6,11 +6,7 @@ data class OrderNetwork(
     var orderProducts: MutableList<OrderProductNetwork>,
     var timestamp: Timestamp,
     var amount: Double,
-    var id: String = "") {
-
-    constructor() : this(mutableListOf(), Timestamp.now(), 0.0)
-
-}
+    var id: String = "")
 
 data class OrderProductNetwork(
     var id: Int = -1,
