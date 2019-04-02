@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [FirebaseModule::class, MappersModule::class])
+@Module(includes = [FirebaseModule::class, MappersModule::class, UserStorageModule::class])
 class UserRepositoryModule {
     @Provides
     @Singleton

@@ -25,6 +25,7 @@ class App : Application() {
         appComponent = DaggerAppComponent.builder()
             .productNetworkModule(ProductNetworkModule())
             .productStorageModule(ProductStorageModule())
+            .userStorageModule(UserStorageModule())
             .appModule(AppModule(this))
             .mappersModule(MappersModule())
             .dataProviderModule(DataProviderModule())

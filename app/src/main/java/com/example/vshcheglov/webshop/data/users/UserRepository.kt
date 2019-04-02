@@ -9,12 +9,15 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import javax.inject.Inject
 
+
 class UserRepository {
 
     @Inject
     lateinit var userNetwork: UserNetworkDataSource
     @Inject
     lateinit var mapper: UserNetworkUserMapper
+    @Inject
+    lateinit var userStorage: UserStorage
 
     val isSignedIn: Boolean
         get() = userNetwork.isSignedIn
