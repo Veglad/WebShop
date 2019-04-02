@@ -21,16 +21,16 @@ class ProductRepository {
         App.appComponent.inject(this)
     }
 
-    suspend fun getProducts() = withContext(Dispatchers.IO) {
+    suspend fun getProducts(): MutableList<Product> {
         var productList: MutableList<Product>
         try {
             productList = networkDataSource.getProducts()
             saveProductsToDb(productList)
-            productList
         } catch (e: Exception) {
             productList = getProductsFromDb()
-            productList
         }
+
+        return productList
     }
 
     private fun saveProductsToDb(productList: MutableList<Product>) {
@@ -72,15 +72,15 @@ class ProductRepository {
         return productList
     }
 
-    suspend fun getPromotionalProducts() = withContext(Dispatchers.IO) {
+    suspend fun getPromotionalProducts() : MutableList<Product> {
         var productList: MutableList<Product>
         try {
             productList = networkDataSource.getPromotionalProducts()
             saveProductsToDb(productList)
-            productList
         } catch (e: Exception) {
             productList = getProductsFromDb(true)
-            productList
         }
+
+        return productList
     }
 }
