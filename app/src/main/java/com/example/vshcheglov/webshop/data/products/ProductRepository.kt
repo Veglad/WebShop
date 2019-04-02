@@ -1,7 +1,6 @@
 package com.example.vshcheglov.webshop.data.products
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.products.database.ProductStorage
 import com.example.vshcheglov.webshop.domain.Product
 import javax.inject.Inject
 
