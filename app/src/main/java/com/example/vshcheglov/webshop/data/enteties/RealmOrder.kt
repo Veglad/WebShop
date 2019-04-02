@@ -1,10 +1,11 @@
 package com.example.vshcheglov.webshop.data.enteties
 
 import com.google.firebase.Timestamp
+import io.realm.RealmList
 import io.realm.RealmObject
 
 open class RealmOrder(
-    var orderProducts: MutableList<OrderRealmProduct>,
+    var orderProducts: RealmList<OrderRealmProduct>,
     var timestamp: Timestamp,
     var amount: Double,
     var id: String = ""
