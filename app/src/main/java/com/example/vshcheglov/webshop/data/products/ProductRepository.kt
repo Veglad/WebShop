@@ -9,7 +9,6 @@ import com.example.vshcheglov.webshop.domain.Product
 import io.realm.Realm
 import io.realm.RealmList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -54,12 +53,17 @@ class ProductRepository {
         }
     }
 
-    private fun getProductsFromDb(): MutableList<Product> {
+    private fun getProductsFromDb(isPromotional: Boolean = false): MutableList<Product> {
 
         var productList: MutableList<Product> = mutableListOf()
         Realm.getDefaultInstance().use { realm ->
             realm.executeTransaction { transactionRealm ->
-                val managedProducts = transactionRealm.where(RealmProduct::class.java).findAll()
+                val managedProducts = if(!isPromotional) {
+                    transactionRealm.where(RealmProduct::class.java).findAll()
+                } else {
+                    transactionRealm.where(RealmProduct::class.java)
+                        .greaterThan("percentageDiscount", 0).findAll()
+                }
 
                 productList = mutableListOf<Product>().apply {
                     for (realmProduct in managedProducts) {
@@ -72,7 +76,17 @@ class ProductRepository {
         return productList
     }
 
-    suspend fun getPromotionalProducts() = networkDataSource.getPromotionalProducts()
+    suspend fun getPromotionalProducts() = withContext(Dispatchers.IO) {
+        var productList: MutableList<Product>
+        try {
+            productList = networkDataSource.getPromotionalProducts()
+            saveProductsToDb(productList)
+            productList
+        } catch (e: Exception) {
+            productList = getProductsFromDb(true)
+            productList
+        }
+    }
 
     suspend fun getAllProducts() = networkDataSource.getAllProducts()
 }
