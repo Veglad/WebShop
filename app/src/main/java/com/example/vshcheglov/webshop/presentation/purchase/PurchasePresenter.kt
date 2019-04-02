@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.presentation.purchase
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
-import com.example.vshcheglov.webshop.domain.OrderProductNetwork
+import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.google.firebase.Timestamp
 import nucleus5.presenter.Presenter
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
     }
 
     interface View {
-        fun showProducts(productToTimeStampList: List<Pair<OrderProductNetwork, Timestamp>>)
+        fun showProducts(productToTimeStampList: List<Pair<OrderProduct, Timestamp>>)
 
         fun showProductsFetchingError()
     }

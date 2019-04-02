@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.domain.OrderNetwork
+import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.enteties.UserNetwork
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
@@ -70,7 +70,7 @@ class UserNetworkDataSource {
         }
     }
 
-    fun saveOrder(order: OrderNetwork, onResult: (exception: Exception?) -> Unit) {
+    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
 
         val user = firebaseAuth.currentUser
         if (user != null) {
@@ -83,7 +83,7 @@ class UserNetworkDataSource {
 
             ordersReference.set(order)
                 .addOnSuccessListener {
-                    Timber.d("OrderNetwork saved successfully")
+                    Timber.d("Order saved successfully")
                     onResult(null)
                 }
                 .addOnFailureListener {
@@ -100,19 +100,19 @@ class UserNetworkDataSource {
         firebaseAuth.signOut()
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<OrderNetwork>?) -> Unit) {
+    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users/${currentUser.uid}/orders")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener { document ->
-                    Timber.d("OrderNetwork fetched successfully")
-                    val order = document?.toObjects(OrderNetwork::class.java)
+                    Timber.d("Order fetched successfully")
+                    val order = document?.toObjects(Order::class.java)
                     processOrders(order)
                 }
                 .addOnFailureListener {
-                    Timber.d("OrderNetwork fetching error:" + it)
+                    Timber.d("Order fetching error:" + it)
                     processOrders(null)
                 }
         } else {

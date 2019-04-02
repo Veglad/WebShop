@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.domain.OrderNetwork
+import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import com.example.vshcheglov.webshop.domain.User
 import com.google.android.gms.tasks.Task
@@ -45,7 +45,7 @@ class UserRepository {
         }
     }
 
-    fun saveOrder(order: OrderNetwork, onResult: (exception: Exception?) -> Unit) {
+    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
         userNetwork.saveOrder(order, onResult)
     }
 
@@ -54,7 +54,7 @@ class UserRepository {
         //TODO: Clear realm database
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<OrderNetwork>?) -> Unit) {
+    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
         userNetwork.getUserOrders(processOrders)
     }
 }

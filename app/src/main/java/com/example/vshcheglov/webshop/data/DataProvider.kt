@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.data
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.domain.OrderNetwork
+import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.domain.User
@@ -44,7 +44,7 @@ class DataProvider {
         userRepository.getCurrentUser(processUser)
     }
 
-    fun saveOrder(order: OrderNetwork, onResult: (exception: Exception?) -> Unit) {
+    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
         userRepository.saveOrder(order, onResult)
     }
 
@@ -52,7 +52,7 @@ class DataProvider {
         userRepository.logOut()
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<OrderNetwork>?) -> Unit) {
+    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
         userRepository.getUserOrders(processOrders)
     }
 }
