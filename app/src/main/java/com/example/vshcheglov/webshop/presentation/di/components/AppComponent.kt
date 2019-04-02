@@ -3,6 +3,7 @@ package com.example.vshcheglov.webshop.presentation.di.components
 import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.products.ProductNetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
+import com.example.vshcheglov.webshop.data.products.database.ProductStorage
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.data.users.UserNetworkDataSource
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
@@ -35,4 +36,5 @@ interface AppComponent {
     fun inject(usersRepository: UserRepository)
     fun inject(userNetwork: UserNetworkDataSource)
     fun inject(dataProvider: DataProvider)
+    fun inject(productStorage: ProductStorage)
 }

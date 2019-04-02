@@ -1,0 +1,58 @@
+package com.example.vshcheglov.webshop.data.products.database
+
+import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.enteties.RealmProduct
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmProductProductMapper
+import com.example.vshcheglov.webshop.domain.Product
+import io.realm.Realm
+import io.realm.RealmList
+import javax.inject.Inject
+
+class ProductStorage {
+
+    @Inject
+    lateinit var productMapper: RealmProductProductMapper
+
+    init {
+        App.appComponent.inject(this)
+    }
+
+    fun saveProductsToDb(productList: MutableList<Product>) {
+        val realmProductList = mutableListOf<RealmProduct>().apply {
+            for (product in productList) {
+                add(productMapper.map(product))
+            }
+        }
+
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransactionAsync { transactionRealm ->
+                val managerProductList = RealmList<RealmProduct>()
+                managerProductList.addAll(realmProductList)
+                transactionRealm.insertOrUpdate(realmProductList)
+            }
+        }
+    }
+
+    fun getProductsFromDb(isPromotional: Boolean = false): MutableList<Product> {
+
+        var productList: MutableList<Product> = mutableListOf()
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction { transactionRealm ->
+                val managedProducts = if(!isPromotional) {
+                    transactionRealm.where(RealmProduct::class.java).findAll()
+                } else {
+                    transactionRealm.where(RealmProduct::class.java)
+                        .greaterThan("percentageDiscount", 0).findAll()
+                }
+
+                productList = mutableListOf<Product>().apply {
+                    for (realmProduct in managedProducts) {
+                        add(productMapper.map(realmProduct))
+                    }
+                }
+            }
+        }
+
+        return productList
+    }
+}

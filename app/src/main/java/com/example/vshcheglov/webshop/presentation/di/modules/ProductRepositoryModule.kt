@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [ProductNetworkModule::class])
+@Module(includes = [ProductNetworkModule::class, ProductStorageModule::class])
 class ProductRepositoryModule {
     @Provides
     @Singleton
