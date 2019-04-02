@@ -2,9 +2,7 @@ package com.example.vshcheglov.webshop.data.products
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.RealmProduct
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmAllProductsAllProductsMapper
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmProductProductMapper
-import com.example.vshcheglov.webshop.domain.AllProducts
 import com.example.vshcheglov.webshop.domain.Product
 import io.realm.Realm
 import io.realm.RealmList
@@ -18,8 +16,6 @@ class ProductRepository {
     lateinit var networkDataSource: ProductNetworkDataSource
     @Inject
     lateinit var productMapper: RealmProductProductMapper
-    @Inject
-    lateinit var allProductsMapper: RealmAllProductsAllProductsMapper
 
     init {
         App.appComponent.inject(this)
@@ -87,6 +83,4 @@ class ProductRepository {
             productList
         }
     }
-
-    suspend fun getAllProducts() = networkDataSource.getAllProducts()
 }

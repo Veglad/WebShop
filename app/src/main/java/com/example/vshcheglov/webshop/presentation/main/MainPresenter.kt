@@ -2,14 +2,12 @@ package com.example.vshcheglov.webshop.presentation.main
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
-import com.example.vshcheglov.webshop.domain.AllProducts
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
 import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.system.measureTimeMillis
 
 class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
