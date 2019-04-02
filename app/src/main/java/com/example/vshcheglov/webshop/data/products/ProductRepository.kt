@@ -76,6 +76,7 @@ class ProductRepository {
         var productList: MutableList<Product>
         try {
             productList = networkDataSource.getPromotionalProducts()
+            productList = productList.filter { it.percentageDiscount > 0 }.toMutableList()
             saveProductsToDb(productList)
         } catch (e: Exception) {
             productList = getProductsFromDb(true)
