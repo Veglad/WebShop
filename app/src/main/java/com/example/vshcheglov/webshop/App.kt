@@ -5,6 +5,7 @@ import com.example.vshcheglov.webshop.presentation.di.components.AppComponent
 import com.example.vshcheglov.webshop.presentation.di.components.DaggerAppComponent
 import com.example.vshcheglov.webshop.presentation.di.modules.*
 import io.realm.Realm
+import io.realm.RealmConfiguration
 import timber.log.Timber
 
 
@@ -31,6 +32,8 @@ class App : Application() {
 
     private fun initRealmConfiguration() {
         Realm.init(this)
+        val config = RealmConfiguration.Builder().build()
+        Realm.setDefaultConfiguration(config)
     }
 
     private fun initTimber() {
