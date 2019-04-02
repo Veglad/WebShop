@@ -44,8 +44,8 @@ object NetworkService {
 
         val client = OkHttpClient().newBuilder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(offlineInterceptor)
-            .addInterceptor(onlineInterceptor)
+            //.addInterceptor(offlineInterceptor)
+            //.addInterceptor(onlineInterceptor)
             .cache(cache)
             .build()
 
