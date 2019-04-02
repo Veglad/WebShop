@@ -52,6 +52,7 @@ class UserRepository {
 
     fun logOut() {
         userNetwork.logOut()
+        //TODO: Clear realm database
     }
 
     fun getUserOrders(processOrders: (orderList: MutableList<OrderNetwork>?) -> Unit) {
