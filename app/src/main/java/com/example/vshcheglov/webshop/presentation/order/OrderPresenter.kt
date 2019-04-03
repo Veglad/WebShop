@@ -47,7 +47,7 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
 
                 if (isNetworkAvailable) {
                     if (isValid) {
-                        saveOrder(it)
+                        saveOrder()
                     }
                 } else {
                     it.showNoInternetError()
@@ -91,16 +91,16 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
         return isValid
     }
 
-    private suspend fun saveOrder(view: OrderView) {
+    private suspend fun saveOrder() {
         val order = basketToOrderMapper.map(Basket)
         try {
             withContext(Dispatchers.IO) {
                 dataProvider.saveOrder(order)
             }
             Basket.clear()
-            view.notifyOrderCompleted()
+            view?.notifyOrderCompleted()
         } catch (ex: Exception) {
-            view.showOrderSaveError()
+            view?.showOrderSaveError()
         }
     }
 

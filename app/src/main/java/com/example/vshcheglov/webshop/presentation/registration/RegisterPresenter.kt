@@ -87,7 +87,7 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
         fun showNoInternetError()
 
         fun setShowProgress(isLoading: Boolean)
-        
+
         fun showLoginError(exception: Exception?)
 
         fun startMainActivity()

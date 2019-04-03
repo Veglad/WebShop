@@ -63,7 +63,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
                     view?.showNoInternetWarning()
                 }
             } catch (ex: Exception) {
-                Timber.e("Products fetching error:" + ex)
+                Timber.e("Products fetching error:$ex")
                 view?.let {
                     it.showError(ex)
                 }
@@ -91,7 +91,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
                 val user = withContext(Dispatchers.IO) { dataProvider.getCurrentUser() }
                 view?.showUserEmail(user.email)
             } catch (ex: Exception) {
-
+                view?.showEmailLoadError(ex)
             }
         }
 
@@ -132,6 +132,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun showNoInternetWarning()
 
         fun showError(throwable: Throwable)
+
+        fun showEmailLoadError(throwable: Throwable)
 
         fun showProductList(productList: MutableList<Product>)
 

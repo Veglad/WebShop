@@ -55,17 +55,15 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     private fun signInUser(email: String, password: String) {
         uiCoroutineScope.launch {
-            view?.let {
-                it.setShowProgress(true)
-                try {
-                    dataProvider.signInUser(email, password)
-                    it.startMainActivity()
-                } catch (ex: Exception) {
-                    Timber.e("user sign in error: $ex")
-                    it.showLoginError(ex)
-                } finally {
-                    it.setShowProgress(false)
-                }
+            view?.setShowProgress(true)
+            try {
+                dataProvider.signInUser(email, password)
+                view?.startMainActivity()
+            } catch (ex: Exception) {
+                Timber.e("user sign in error: $ex")
+                view?.showLoginError(ex)
+            } finally {
+                view?.setShowProgress(false)
             }
         }
     }
