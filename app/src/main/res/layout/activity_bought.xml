@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/boughtLinearlayout"
-        android:orientation="vertical"
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/boughtLinearlayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <android.support.v7.widget.Toolbar
@@ -11,11 +10,22 @@
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:background="@color/primary"/>
+    <ProgressBar
+            android:id="@+id/purchaseProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="@+id/boughtRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
     <android.support.v7.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/boughtRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".presentation.purchase.PurchaseActivity"/>
-</LinearLayout>
+            android:layout_height="0dp"
+            tools:context=".presentation.purchase.PurchaseActivity"
+            app:layout_constraintTop_toBottomOf="@+id/boughtToolbar"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+</android.support.constraint.ConstraintLayout>
