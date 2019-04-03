@@ -145,8 +145,7 @@ class UserNetworkDataSource {
 
     private fun onGetUserOrdersSuccess(
         continuation: CancellableContinuation<MutableList<OrderNetwork>>,
-        document: QuerySnapshot
-    ) {
+        document: QuerySnapshot) {
 
         val order = document.toObjects(OrderNetwork::class.java)
         continuation.resume(order)

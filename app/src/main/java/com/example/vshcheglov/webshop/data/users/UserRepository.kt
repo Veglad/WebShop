@@ -5,11 +5,6 @@ import com.example.vshcheglov.webshop.data.enteties.mappers.OrderNetworkOrderMap
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderOrderMapper
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
-import com.example.vshcheglov.webshop.domain.User
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -58,11 +53,10 @@ class UserRepository {
     suspend fun getUserOrders() : MutableList<Order> {
         val networkOrders = userNetwork.getUserOrders()
 
-        val orderList = mutableListOf<Order>().apply {
+        return mutableListOf<Order>().apply {
             for (orderNetwork in networkOrders) {
                 add(orderNetworkOrderMapper.map(orderNetwork))
             }
         }
-        return orderList
     }
 }
