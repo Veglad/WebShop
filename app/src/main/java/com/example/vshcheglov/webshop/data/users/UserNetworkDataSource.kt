@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.enteties.UserNetwork
 import com.google.android.gms.tasks.Task
@@ -86,7 +87,7 @@ class UserNetworkDataSource {
         }
     }
 
-    suspend fun saveOrder(order: Order) = suspendCancellableCoroutine<Unit> { continuation ->
+    suspend fun saveOrder(order: OrderNetwork) = suspendCancellableCoroutine<Unit> { continuation ->
         val user = firebaseAuth.currentUser
         if (user != null) {
             val ordersReference = firestore.collection("users")
@@ -125,25 +126,29 @@ class UserNetworkDataSource {
         firebaseAuth.signOut()
     }
 
-    suspend fun getUserOrders() = suspendCancellableCoroutine<MutableList<Order>> { continuation ->
+    suspend fun getUserOrders() = suspendCancellableCoroutine<MutableList<OrderNetwork>> { continuation ->
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users/${currentUser.uid}/orders")
-                .orderBy("timestamp", Query.Direction.DESCENDING) //TODO: change to timestampDate
+                .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
-                .addOnSuccessListener { document -> onGetUserOrdersSuccess(continuation, document) }
-                .addOnFailureListener { onSaveOrderError(it, continuation, "Order fetching error") }
+                .addOnSuccessListener { document ->
+                    onGetUserOrdersSuccess(continuation, document)
+                }
+                .addOnFailureListener {
+                    onSaveOrderError(it, continuation, "Order fetching error")
+                }
         } else {
             onSaveOrderError(Exception("User is not authorized"), continuation, "")
         }
     }
 
     private fun onGetUserOrdersSuccess(
-        continuation: CancellableContinuation<MutableList<Order>>,
+        continuation: CancellableContinuation<MutableList<OrderNetwork>>,
         document: QuerySnapshot
     ) {
 
-        val order = document.toObjects(Order::class.java)
+        val order = document.toObjects(OrderNetwork::class.java)
         continuation.resume(order)
     }
 }

@@ -1,6 +1,8 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.enteties.mappers.OrderNetworkOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderOrderMapper
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import com.example.vshcheglov.webshop.domain.User
@@ -19,6 +21,12 @@ class UserRepository {
     lateinit var mapper: UserNetworkUserMapper
     @Inject
     lateinit var userStorage: UserStorage
+    @Inject
+    lateinit var orderNetworkOrderMapper: OrderNetworkOrderMapper
+    @Inject
+    lateinit var realmOrderNetworkOrderMapper: OrderNetworkOrderMapper
+    @Inject
+    lateinit var realmOrderOrderMapper: RealmOrderOrderMapper
 
     val isSignedIn: Boolean
         get() = userNetwork.isSignedIn
@@ -38,8 +46,8 @@ class UserRepository {
     suspend fun getCurrentUser() = mapper.map(userNetwork.getCurrentUser())
 
     suspend fun saveOrder(order: Order) {
-        userNetwork.saveOrder(order)
-        //TODO: Map
+        val orderNetwork = orderNetworkOrderMapper.map(order)
+        userNetwork.saveOrder(orderNetwork)
     }
 
     fun logOut() {
@@ -48,7 +56,13 @@ class UserRepository {
     }
 
     suspend fun getUserOrders() : MutableList<Order> {
-        return userNetwork.getUserOrders()
-        //TODO: Map
+        val networkOrders = userNetwork.getUserOrders()
+
+        val orderList = mutableListOf<Order>().apply {
+            for (orderNetwork in networkOrders) {
+                add(orderNetworkOrderMapper.map(orderNetwork))
+            }
+        }
+        return orderList
     }
 }

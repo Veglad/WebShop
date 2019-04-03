@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
