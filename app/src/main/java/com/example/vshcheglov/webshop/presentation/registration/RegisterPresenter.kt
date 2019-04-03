@@ -5,6 +5,10 @@ import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
@@ -12,6 +16,9 @@ import javax.inject.Inject
 class RegisterPresenter : Presenter<RegisterPresenter.View>() {
     @Inject
     lateinit var dataProvider: DataProvider
+
+    private val job = Job()
+    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
     init {
         App.appComponent.inject(this)
@@ -49,19 +56,27 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
     }
 
     private fun registerUserWithEmailAndPassword(email: String, password: String) {
-        view?.setShowProgress(true)
-        dataProvider.registerUser(email, password) { task ->
-            if (task.isSuccessful) {
+        uiCoroutineScope.launch {
+            view?.setShowProgress(true)
+            try {
+                dataProvider.registerUser(email, password)
                 Timber.d("user registration success")
-                view?.showLogInSuccess()
-                view?.setShowProgress(false)
-                view?.startMainActivity()
-            } else {
-                Timber.e("user registration error: " + task.exception)
-                view?.showLoginError(task.exception)
+                view?.let {
+                    it.setShowProgress(false)
+                    it.startMainActivity()
+                }
+            } catch (ex: Exception) {
+                Timber.e("user registration error: $ex")
+                view?.showLoginError(ex)
+            } finally {
                 view?.setShowProgress(false)
             }
         }
+    }
+
+    override fun onDropView() {
+        super.onDropView()
+        job.cancel()
     }
 
     interface View {
@@ -72,9 +87,7 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
         fun showNoInternetError()
 
         fun setShowProgress(isLoading: Boolean)
-
-        fun showLogInSuccess()
-
+        
         fun showLoginError(exception: Exception?)
 
         fun startMainActivity()

@@ -26,11 +26,8 @@ class DataProvider {
 
     suspend fun getPromotionalProducts() = productRepository.getPromotionalProducts()
 
-    fun registerUser(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    ) {
-        userRepository.registerUser(email, password, completeCallback)
+    suspend fun registerUser(email: String, password: String) {
+        userRepository.registerUser(email, password)
     }
 
     suspend fun signInUser(email: String, password: String) {

@@ -84,10 +84,6 @@ class RegisterActivity : NucleusAppCompatActivity<RegisterPresenter>(), Register
         ).show()
     }
 
-    override fun showLogInSuccess() {
-        Toast.makeText(this, resources.getString(R.string.successfully_authorized), Toast.LENGTH_LONG).show()
-    }
-
     override fun showInvalidEmail() {
         registerEmailTextInput.error = resources.getString(R.string.email_error)
     }

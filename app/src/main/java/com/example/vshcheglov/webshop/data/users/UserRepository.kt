@@ -27,11 +27,8 @@ class UserRepository {
         App.appComponent.inject(this)
     }
 
-    fun registerUser(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    ) {
-        userNetwork.registerUser(email, password, completeCallback)
+    suspend fun registerUser(email: String, password: String) {
+        userNetwork.registerUser(email, password)
     }
 
     suspend fun signInUser(email: String, password: String) {

@@ -29,24 +29,26 @@ class UserNetworkDataSource {
         App.appComponent.inject(this)
     }
 
-    fun registerUser(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    ) {
-
+    suspend fun registerUser(email: String, password: String) = suspendCancellableCoroutine<Unit> { continuation ->
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                completeCallback(task)
                 if (task.isSuccessful) {
-                    val user = firebaseAuth.currentUser
-                    if (user != null) {
-                        firestore.collection("users").document(user.uid).set(UserNetwork(user.email, user.uid))
-                        Timber.d("Added uid to Firestore")
-                    } else {
-                        Timber.e("UserNetwork id saving error")
-                    }
+                    continuation.resume(Unit)
+                    saveNewUserToDb()
+                } else {
+                    continuation.resumeWithException(task.exception!!)
                 }
             }
+    }
+
+    private fun saveNewUserToDb() {
+        val user = firebaseAuth.currentUser
+        if (user != null) {
+            firestore.collection("users").document(user.uid).set(UserNetwork(user.email, user.uid))
+            Timber.d("Added uid to Firestore")
+        } else {
+            Timber.e("UserNetwork id saving error")
+        }
     }
 
     suspend fun signInUser(email: String, password: String) = suspendCancellableCoroutine<Unit> { continuation ->
