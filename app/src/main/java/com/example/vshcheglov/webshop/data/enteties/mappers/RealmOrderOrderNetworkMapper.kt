@@ -4,9 +4,8 @@ import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
 import com.example.vshcheglov.webshop.data.enteties.OrderNetworkProduct
 import com.example.vshcheglov.webshop.data.enteties.OrderRealmProduct
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
-import com.example.vshcheglov.webshop.domain.Order
-import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.example.vshcheglov.webshop.domain.common.Mapper
+import com.google.firebase.Timestamp
 import io.realm.RealmList
 
 class RealmOrderOrderNetworkMapper : Mapper<RealmOrder, OrderNetwork> {
@@ -17,7 +16,7 @@ class RealmOrderOrderNetworkMapper : Mapper<RealmOrder, OrderNetwork> {
             }
         }
 
-        return OrderNetwork(networkProductList, from.timestamp, from.amount, from.id)
+        return OrderNetwork(networkProductList, Timestamp(from.timestampDate), from.amount, from.id)
     }
 
     fun map(from: OrderNetwork): RealmOrder {
@@ -27,7 +26,7 @@ class RealmOrderOrderNetworkMapper : Mapper<RealmOrder, OrderNetwork> {
             }
         }
 
-        return RealmOrder(realmProductList, from.timestamp, from.amount, from.id)
+        return RealmOrder(realmProductList, from.timestamp.toDate(), from.amount, from.id)
     }
 
     fun map(from: OrderRealmProduct) = OrderNetworkProduct(

@@ -6,7 +6,9 @@ data class Order(
     var orderProducts: MutableList<OrderProduct>,
     var timestamp: Timestamp,
     var amount: Double,
-    var id: String = "")
+    var id: String = "") {
+    constructor() : this(mutableListOf(), Timestamp.now(), 0.0, "")
+}
 
 data class OrderProduct(
     var id: Int = -1,

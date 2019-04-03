@@ -104,10 +104,9 @@ class UserNetworkDataSource {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users/${currentUser.uid}/orders")
-                .orderBy("timestampDate", Query.Direction.DESCENDING)
+                .orderBy("timestamp", Query.Direction.DESCENDING) //TODO: change to timestampDate
                 .get()
                 .addOnSuccessListener { document ->
-                    Timber.d("Order fetched successfully")
                     val order = document?.toObjects(Order::class.java)
                     processOrders(order)
                 }

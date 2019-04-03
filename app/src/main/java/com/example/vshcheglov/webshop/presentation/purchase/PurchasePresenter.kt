@@ -19,7 +19,7 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
     override fun onTakeView(view: View?) {
         super.onTakeView(view)
         dataProvider.getUserOrders { orderList ->
-            if (orderList != null) {
+            if (orderList != null) {//TODO: Process empty list
                 val productToTimeStampList = orderList.map { order ->
                     order.orderProducts.map { Pair(it, order.timestamp) }
                 }.flatten()
