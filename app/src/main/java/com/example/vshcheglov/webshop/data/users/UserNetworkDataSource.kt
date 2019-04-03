@@ -101,7 +101,7 @@ class UserNetworkDataSource {
         }
     }
 
-    fun logOut() {
+    suspend fun logOut() = withContext(Dispatchers.IO) {
         firebaseAuth.signOut()
     }
 

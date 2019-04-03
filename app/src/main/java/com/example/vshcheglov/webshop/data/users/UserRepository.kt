@@ -6,6 +6,8 @@ import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import com.example.vshcheglov.webshop.domain.User
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -50,7 +52,7 @@ class UserRepository {
         //TODO: Map
     }
 
-    fun logOut() {
+    suspend fun logOut() {
         userNetwork.logOut()
         //TODO: Clear realm database
     }
