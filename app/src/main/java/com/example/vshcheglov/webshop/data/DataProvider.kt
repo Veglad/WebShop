@@ -40,9 +40,7 @@ class DataProvider {
         userRepository.signInUser(email, password, completeCallback)
     }
 
-    fun getCurrentUser(processUser: (user: User?) -> Unit) {
-        userRepository.getCurrentUser(processUser)
-    }
+    suspend fun getCurrentUser() = userRepository.getCurrentUser()
 
     suspend fun saveOrder(order: Order) {
         userRepository.saveOrder(order)

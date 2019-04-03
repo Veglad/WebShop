@@ -3,10 +3,10 @@ package com.example.vshcheglov.webshop.data.users
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.enteties.UserNetwork
-import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -57,25 +57,31 @@ class UserNetworkDataSource {
             .addOnCompleteListener { task -> completeCallback(task) }
     }
 
-    fun getCurrentUser(processUser: (user: UserNetwork?) -> Unit) {
-        val currentUser = firebaseAuth.currentUser
-        if (currentUser != null) {
-            firestore.collection("users")
-                .document(currentUser.uid)
-                .get()
-                .addOnSuccessListener { document ->
-                    val user = document?.toObject(UserNetwork::class.java)
-                    processUser(user)
-                }
-                .addOnFailureListener {
-                    processUser(null)
-                }
+    suspend fun getCurrentUser() = suspendCancellableCoroutine<UserNetwork> { continuation ->
+            val currentUser = firebaseAuth.currentUser
+            if (currentUser != null) {
+                firestore.collection("users")
+                    .document(currentUser.uid)
+                    .get()
+                    .addOnSuccessListener { document -> onGetUserSuccess(document, continuation) }
+                    .addOnFailureListener {
+                        onSaveOrderError(it, continuation, "User fetching error")
+                    }
+            } else {
+                onSaveOrderError(Exception("User fetching error"), continuation, "")
+            }
+        }
+
+    private fun onGetUserSuccess(document: DocumentSnapshot?, continuation: CancellableContinuation<UserNetwork>) {
+        val user = document?.toObject(UserNetwork::class.java)
+        if (user == null) {
+            continuation.resumeWithException(Exception("User parse error"))
         } else {
-            processUser(null)
+            continuation.resume(user)
         }
     }
 
-    suspend fun saveOrder(order: Order)  = suspendCancellableCoroutine<Unit> { continuation ->
+    suspend fun saveOrder(order: Order) = suspendCancellableCoroutine<Unit> { continuation ->
         val user = firebaseAuth.currentUser
         if (user != null) {
             val ordersReference = firestore.collection("users")
@@ -86,10 +92,10 @@ class UserNetworkDataSource {
             order.id = ordersReference.id
 
             ordersReference.set(order)
-                .addOnSuccessListener {onSaveOrderSuccess(continuation) }
-                .addOnFailureListener { onSaveOrderError(it, continuation)}
+                .addOnSuccessListener { onSaveOrderSuccess(continuation) }
+                .addOnFailureListener { onSaveOrderError(it, continuation, "Order saving error") }
         } else {
-            onSaveOrderError(Exception("User is not authorized"), continuation)
+            onSaveOrderError(Exception("User is not authorized"), continuation, "")
         }
     }
 
@@ -98,11 +104,12 @@ class UserNetworkDataSource {
         continuation.resume(Unit)
     }
 
-    private fun onSaveOrderError(throwable: Throwable, continuation: CancellableContinuation<Unit>) {
-        if(continuation.isCancelled || !continuation.isActive) {
+    private fun onSaveOrderError(throwable: Throwable, continuation: CancellableContinuation<*>,
+                                 exceptionMessage: String) {
+        if (continuation.isCancelled || !continuation.isActive) {
             continuation.resumeWithException(CancellationException())
         } else {
-            Timber.d("Order fetching error:" + throwable)
+            Timber.d("$exceptionMessage: $throwable")
             continuation.resumeWithException(throwable)
         }
     }
@@ -112,17 +119,17 @@ class UserNetworkDataSource {
     }
 
     suspend fun getUserOrders() = suspendCancellableCoroutine<MutableList<Order>> { continuation ->
-            val currentUser = firebaseAuth.currentUser
-            if (currentUser != null) {
-                firestore.collection("users/${currentUser.uid}/orders")
-                    .orderBy("timestamp", Query.Direction.DESCENDING) //TODO: change to timestampDate
-                    .get()
-                    .addOnSuccessListener { document -> onGetUserOrdersSuccess(continuation, document) }
-                    .addOnFailureListener { onGetUserOrdersError(continuation, it) }
-            } else {
-                onGetUserOrdersError(continuation, Exception("User is not authorized"))
-            }
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            firestore.collection("users/${currentUser.uid}/orders")
+                .orderBy("timestamp", Query.Direction.DESCENDING) //TODO: change to timestampDate
+                .get()
+                .addOnSuccessListener { document -> onGetUserOrdersSuccess(continuation, document) }
+                .addOnFailureListener { onSaveOrderError(it, continuation,"Order fetching error") }
+        } else {
+            onSaveOrderError(Exception("User is not authorized"), continuation,"")
         }
+    }
 
     private fun onGetUserOrdersSuccess(
         continuation: CancellableContinuation<MutableList<Order>>,
@@ -131,14 +138,5 @@ class UserNetworkDataSource {
 
         val order = document.toObjects(Order::class.java)
         continuation.resume(order)
-    }
-
-    private fun onGetUserOrdersError(continuation: CancellableContinuation<MutableList<Order>>, throwable: Throwable) {
-        if(continuation.isCancelled || !continuation.isActive) {
-            continuation.resumeWithException(CancellationException())
-        } else {
-            Timber.d("Order fetching error:" + throwable)
-            continuation.resumeWithException(throwable)
-        }
     }
 }

@@ -86,11 +86,15 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     private fun showUserEmail() {
-        dataProvider.getCurrentUser { user ->
-            user?.let {
-                view?.showUserEmail(it.email)
+        uiCoroutineScope.launch {
+            try {
+                val user = withContext(Dispatchers.IO) { dataProvider.getCurrentUser() }
+                view?.showUserEmail(user.email)
+            } catch (ex: Exception) {
+
             }
         }
+
     }
 
     override fun onTakeView(view: MainView?) {

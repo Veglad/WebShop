@@ -41,11 +41,7 @@ class UserRepository {
         userNetwork.signInUser(email, password, completeCallback)
     }
 
-    fun getCurrentUser(processUser: (user: User?) -> Unit) {
-        userNetwork.getCurrentUser { userNetwork ->
-            processUser(mapper.map(userNetwork))
-        }
-    }
+    suspend fun getCurrentUser() = mapper.map(userNetwork.getCurrentUser())
 
     suspend fun saveOrder(order: Order) {
         userNetwork.saveOrder(order)
