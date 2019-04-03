@@ -52,7 +52,7 @@ class UserRepository {
 
     fun logOut() {
         userNetwork.logOut()
-        //TODO: Clear realm database
+        userStorage.clear()
     }
 
     suspend fun getUserOrders() : MutableList<Order> {

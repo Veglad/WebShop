@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
+import io.realm.Realm
 
 class UserStorage {
     fun saveOrders(realmOrderlist: MutableList<RealmOrder>) {
@@ -8,7 +9,11 @@ class UserStorage {
     }
 
     fun clear() {
-
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransactionAsync { transactionRealm ->
+                transactionRealm.deleteAll()
+            }
+        }
     }
 
     fun getOrders() : MutableList<RealmOrder>{
