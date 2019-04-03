@@ -63,7 +63,7 @@
     <string name="search_hint">Search</string>
     <string name="search_list_empty_query">Type something to find products</string>
     <string name="no_search_result">No results</string>
-    <string name="no_order_result">No Orders. All purchases will be here.</string>
+    <string name="no_order_result">No Orders.\n All purchases will be here.</string>
     <string name="order_invalid_name">Invalid name</string>
     <string name="order_invalid_last_name">Invalid last name</string>
     <string name="order_invalid_card_number">Invalid card number</string>
@@ -76,4 +76,5 @@
     <string name="product_price">Price</string>
     <string name="products_amount">Amount</string>
     <string name="bought_products">Bought products</string>
+    <string name="back_to_products">Back to products</string>
 </resources>
