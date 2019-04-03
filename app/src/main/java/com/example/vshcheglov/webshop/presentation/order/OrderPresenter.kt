@@ -3,12 +3,13 @@ package com.example.vshcheglov.webshop.presentation.order
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.enteties.mappers.BasketToOrderMapper
-import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.extensions.isCardNumberValid
 import com.example.vshcheglov.webshop.extensions.isCvvValid
 import com.example.vshcheglov.webshop.presentation.entites.OrderCard
+import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
 
@@ -26,6 +27,9 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
     @Inject
     lateinit var basketToOrderMapper: BasketToOrderMapper
 
+    private val job = Job()
+    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+
     init {
         App.appComponent.inject(this)
     }
@@ -36,63 +40,73 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
     }
 
     fun makeOrder(card: OrderCard, isNetworkAvailable: Boolean) {
-        var isValid = true
-        view?.let {
-            it.setShowProgress(true)
+        uiCoroutineScope.launch {
+            view?.let {
+                it.setShowProgress(true)
+                val isValid = validateOrderCard(card, it)
 
-            if (card.name.length < MIN_NAME_LENGTH) {
-                isValid = false
-                it.showInvalidName()
-            }
-            if (card.lastName.length < MIN_NAME_LENGTH) {
-                isValid = false
-                it.showInvalidSecondName()
-            }
-            card.cardNumber = card.cardNumber.replace(" ", "")
-            if (!card.cardNumber.isCardNumberValid()) {
-                isValid = false
-                it.showInvalidCardNumber()
-            }
-            val cardMonth = card.cardMonth
-            if (cardMonth == null || cardMonth !in MIN_CARD_MONTH_NUMBER..MAX_CARD_MONTH_NUMBER) {
-                isValid = false
-                it.showInvalidCardMonth()
-            }
-            val cardYear = card.cardYear
-            if (cardYear == null ||
-                cardYear !in Calendar.getInstance().get(Calendar.YEAR) % 100..MAX_CARD_YEAR_NUMBER) {
-                isValid = false
-                it.showInvalidCardYear()
-            }
-            if (!card.cardCvv.isCvvValid()) {
-                isValid = false
-                it.showInvalidCardCvv()
-            }
-
-            if (isNetworkAvailable) {
-                if (isValid) {
-                    saveOrder(it)
+                if (isNetworkAvailable) {
+                    if (isValid) {
+                        saveOrder(it)
+                    }
                 } else {
-                    it.setShowProgress(false)
+                    it.showNoInternetError()
                 }
-            } else {
-                it.showNoInternetError()
                 it.setShowProgress(false)
             }
         }
     }
 
-    private fun saveOrder(view: OrderView) {
-        val order = basketToOrderMapper.map(Basket)
-        dataProvider.saveOrder(order) { exception ->
-            view.setShowProgress(false)
-            if (exception == null) {
-                Basket.clear()
-                view.notifyOrderCompleted()
-            } else {
-                view.showOrderSaveError()
-            }
+    private fun validateOrderCard(card: OrderCard, view: OrderView): Boolean {
+        var isValid = true
+        if (card.name.length < MIN_NAME_LENGTH) {
+            isValid = false
+            view.showInvalidName()
         }
+        if (card.lastName.length < MIN_NAME_LENGTH) {
+            isValid = false
+            view.showInvalidSecondName()
+        }
+        card.cardNumber = card.cardNumber.replace(" ", "")
+        if (!card.cardNumber.isCardNumberValid()) {
+            isValid = false
+            view.showInvalidCardNumber()
+        }
+        val cardMonth = card.cardMonth
+        if (cardMonth == null || cardMonth !in MIN_CARD_MONTH_NUMBER..MAX_CARD_MONTH_NUMBER) {
+            isValid = false
+            view.showInvalidCardMonth()
+        }
+        val cardYear = card.cardYear
+        if (cardYear == null ||
+            cardYear !in Calendar.getInstance().get(Calendar.YEAR) % 100..MAX_CARD_YEAR_NUMBER
+        ) {
+            isValid = false
+            view.showInvalidCardYear()
+        }
+        if (!card.cardCvv.isCvvValid()) {
+            isValid = false
+            view.showInvalidCardCvv()
+        }
+        return isValid
+    }
+
+    private suspend fun saveOrder(view: OrderView) {
+        val order = basketToOrderMapper.map(Basket)
+        try {
+            withContext(Dispatchers.IO) {
+                dataProvider.saveOrder(order)
+            }
+            Basket.clear()
+            view.notifyOrderCompleted()
+        } catch (ex: Exception) {
+            view.showOrderSaveError()
+        }
+    }
+
+    override fun onDropView() {
+        super.onDropView()
+        job.cancel()
     }
 
     interface OrderView {

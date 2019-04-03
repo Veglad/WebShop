@@ -47,8 +47,8 @@ class UserRepository {
         }
     }
 
-    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
-        userNetwork.saveOrder(order, onResult)
+    suspend fun saveOrder(order: Order) {
+        userNetwork.saveOrder(order)
         //TODO: Map
     }
 

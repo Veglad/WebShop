@@ -44,8 +44,8 @@ class DataProvider {
         userRepository.getCurrentUser(processUser)
     }
 
-    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
-        userRepository.saveOrder(order, onResult)
+    suspend fun saveOrder(order: Order) {
+        userRepository.saveOrder(order)
     }
 
     suspend fun logOut() {

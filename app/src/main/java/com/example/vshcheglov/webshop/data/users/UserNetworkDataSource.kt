@@ -75,8 +75,7 @@ class UserNetworkDataSource {
         }
     }
 
-    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
-
+    suspend fun saveOrder(order: Order)  = suspendCancellableCoroutine<Unit> { continuation ->
         val user = firebaseAuth.currentUser
         if (user != null) {
             val ordersReference = firestore.collection("users")
@@ -87,17 +86,24 @@ class UserNetworkDataSource {
             order.id = ordersReference.id
 
             ordersReference.set(order)
-                .addOnSuccessListener {
-                    Timber.d("Order saved successfully")
-                    onResult(null)
-                }
-                .addOnFailureListener {
-                    Timber.e("UserNetwork order saving error: " + it)
-                    onResult(it)
-                }
+                .addOnSuccessListener {onSaveOrderSuccess(continuation) }
+                .addOnFailureListener { onSaveOrderError(it, continuation)}
         } else {
-            Timber.e("UserNetwork order saving error")
-            onResult(java.lang.Exception("UserNetwork not authenticated."))
+            onSaveOrderError(Exception("User is not authorized"), continuation)
+        }
+    }
+
+    private fun onSaveOrderSuccess(continuation: CancellableContinuation<Unit>) {
+        Timber.d("Order saved successfully")
+        continuation.resume(Unit)
+    }
+
+    private fun onSaveOrderError(throwable: Throwable, continuation: CancellableContinuation<Unit>) {
+        if(continuation.isCancelled || !continuation.isActive) {
+            continuation.resumeWithException(CancellationException())
+        } else {
+            Timber.d("Order fetching error:" + throwable)
+            continuation.resumeWithException(throwable)
         }
     }
 
@@ -105,8 +111,7 @@ class UserNetworkDataSource {
         firebaseAuth.signOut()
     }
 
-    suspend fun getUserOrders() =
-        suspendCancellableCoroutine<MutableList<Order>> { continuation ->
+    suspend fun getUserOrders() = suspendCancellableCoroutine<MutableList<Order>> { continuation ->
             val currentUser = firebaseAuth.currentUser
             if (currentUser != null) {
                 firestore.collection("users/${currentUser.uid}/orders")
@@ -115,7 +120,7 @@ class UserNetworkDataSource {
                     .addOnSuccessListener { document -> onGetUserOrdersSuccess(continuation, document) }
                     .addOnFailureListener { onGetUserOrdersError(continuation, it) }
             } else {
-                throw Exception("User is not authorized")
+                onGetUserOrdersError(continuation, Exception("User is not authorized"))
             }
         }
 

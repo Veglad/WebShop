@@ -4,10 +4,7 @@ import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.google.firebase.Timestamp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
 import javax.inject.Inject
 
@@ -28,16 +25,18 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
         uiCoroutineScope.launch {
             try {
                 view?.setShowLoading(true)
-                val orderList = dataProvider.getUserOrders()
+                val orderList = withContext(Dispatchers.IO) { dataProvider.getUserOrders() }
+
                 if (orderList.isNotEmpty()) {//TODO: Process empty list
                     val productToTimeStampList = orderList.map { order ->
                         order.orderProducts.map { Pair(it, order.timestamp) }
                     }.flatten()
+
                     view?.showProducts(productToTimeStampList)
                 } else {
                     view?.showNoData()
                 }
-            } catch (ex:Exception) {
+            } catch (ex: Exception) {
                 view?.showProductsFetchingError(ex)
             } finally {
                 view?.setShowLoading(false)
