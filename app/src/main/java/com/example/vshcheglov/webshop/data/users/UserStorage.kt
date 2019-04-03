@@ -10,7 +10,7 @@ class UserStorage {
 
     fun clear() {
         Realm.getDefaultInstance().use { realm ->
-            realm.executeTransactionAsync { transactionRealm ->
+            realm.executeTransaction { transactionRealm ->
                 transactionRealm.deleteAll()
             }
         }
