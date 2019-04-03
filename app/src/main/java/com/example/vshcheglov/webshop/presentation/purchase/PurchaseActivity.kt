@@ -3,6 +3,8 @@ package com.example.vshcheglov.webshop.presentation.purchase
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.MenuItem
+import android.view.View
+import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.google.firebase.Timestamp
@@ -45,7 +47,7 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
         boughtRecyclerView.adapter = boughtRecyclerAdapter
     }
 
-    override fun showProductsFetchingError() {
+    override fun showProductsFetchingError(exception: Exception) {
         KAlertDialog(this, KAlertDialog.ERROR_TYPE)
             .setTitleText(getString(R.string.bought_error_title))
             .setContentText(getString(R.string.bought_error_message))
@@ -54,5 +56,13 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
                 sDialog.dismissWithAnimation()
             }
             .show()
+    }
+
+    override fun showNoData() {
+        Toast.makeText(this, resources.getString(R.string.no_order_result), Toast.LENGTH_LONG).show()
+    }
+
+    override fun setShowLoading(isLoading: Boolean) {
+        purchaseProgressBar.visibility = if(isLoading) View.VISIBLE else View.GONE
     }
 }

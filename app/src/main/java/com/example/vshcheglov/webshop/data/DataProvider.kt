@@ -52,7 +52,6 @@ class DataProvider {
         userRepository.logOut()
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
-        userRepository.getUserOrders(processOrders)
-    }
+    suspend fun getUserOrders()  = userRepository.getUserOrders()
+
 }

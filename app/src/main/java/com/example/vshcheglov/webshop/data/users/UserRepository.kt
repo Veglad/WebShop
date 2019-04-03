@@ -55,8 +55,8 @@ class UserRepository {
         //TODO: Clear realm database
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
-        userNetwork.getUserOrders(processOrders)
+    suspend fun getUserOrders() : MutableList<Order> {
+        return userNetwork.getUserOrders()
         //TODO: Map
     }
 }

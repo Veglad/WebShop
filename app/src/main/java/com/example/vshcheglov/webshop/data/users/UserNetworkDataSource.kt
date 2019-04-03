@@ -3,13 +3,18 @@ package com.example.vshcheglov.webshop.data.users
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.enteties.UserNetwork
+import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import kotlinx.coroutines.*
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 class UserNetworkDataSource {
     @Inject
@@ -100,22 +105,35 @@ class UserNetworkDataSource {
         firebaseAuth.signOut()
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
-        val currentUser = firebaseAuth.currentUser
-        if (currentUser != null) {
-            firestore.collection("users/${currentUser.uid}/orders")
-                .orderBy("timestamp", Query.Direction.DESCENDING) //TODO: change to timestampDate
-                .get()
-                .addOnSuccessListener { document ->
-                    val order = document?.toObjects(Order::class.java)
-                    processOrders(order)
-                }
-                .addOnFailureListener {
-                    Timber.d("Order fetching error:" + it)
-                    processOrders(null)
-                }
+    suspend fun getUserOrders() =
+        suspendCancellableCoroutine<MutableList<Order>> { continuation ->
+            val currentUser = firebaseAuth.currentUser
+            if (currentUser != null) {
+                firestore.collection("users/${currentUser.uid}/orders")
+                    .orderBy("timestamp", Query.Direction.DESCENDING) //TODO: change to timestampDate
+                    .get()
+                    .addOnSuccessListener { document -> onGetUserOrdersSuccess(continuation, document) }
+                    .addOnFailureListener { onGetUserOrdersError(continuation, it) }
+            } else {
+                throw Exception("User is not authorized")
+            }
+        }
+
+    private fun onGetUserOrdersSuccess(
+        continuation: CancellableContinuation<MutableList<Order>>,
+        document: QuerySnapshot
+    ) {
+
+        val order = document.toObjects(Order::class.java)
+        continuation.resume(order)
+    }
+
+    private fun onGetUserOrdersError(continuation: CancellableContinuation<MutableList<Order>>, throwable: Throwable) {
+        if(continuation.isCancelled || !continuation.isActive) {
+            continuation.resumeWithException(CancellationException())
         } else {
-            processOrders(null)
+            Timber.d("Order fetching error:" + throwable)
+            continuation.resumeWithException(throwable)
         }
     }
 }
