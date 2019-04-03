@@ -52,7 +52,7 @@ class UserRepository {
         //TODO: Map
     }
 
-    suspend fun logOut() {
+    fun logOut() {
         userNetwork.logOut()
         //TODO: Clear realm database
     }

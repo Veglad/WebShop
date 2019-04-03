@@ -48,7 +48,7 @@ class DataProvider {
         userRepository.saveOrder(order)
     }
 
-    suspend fun logOut() {
+    fun logOut() {
         userRepository.logOut()
     }
 

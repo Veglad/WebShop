@@ -102,7 +102,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     fun logOut() {
         uiCoroutineScope.launch {
-            dataProvider.logOut()
+            withContext(Dispatchers.IO) { dataProvider.logOut() }
             view?.startLoginActivity()
         }
     }
