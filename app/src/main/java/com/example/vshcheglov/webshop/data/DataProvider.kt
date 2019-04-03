@@ -33,11 +33,8 @@ class DataProvider {
         userRepository.registerUser(email, password, completeCallback)
     }
 
-    fun signInUser(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    ) {
-        userRepository.signInUser(email, password, completeCallback)
+    suspend fun signInUser(email: String, password: String) {
+        userRepository.signInUser(email, password)
     }
 
     suspend fun getCurrentUser() = userRepository.getCurrentUser()

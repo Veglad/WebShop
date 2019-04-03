@@ -5,6 +5,10 @@ import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.users.UserRepository
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import java.lang.Exception
@@ -14,6 +18,9 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     @Inject
     lateinit var dataProvider: DataProvider
+
+    private val job = Job()
+    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
     init {
         App.appComponent.inject(this)
@@ -47,17 +54,16 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
     }
 
     private fun signInUser(email: String, password: String) {
-        view?.setShowProgress(true)
-        dataProvider.signInUser(email, password) { task ->
+        uiCoroutineScope.launch {
             view?.let {
-                if (task.isSuccessful) {
-                    Timber.d("user sign in success")
-                    it.showLogInSuccess()
+                it.setShowProgress(true)
+                try {
+                    dataProvider.signInUser(email, password)
                     it.startMainActivity()
-                    it.setShowProgress(false)
-                } else {
-                    Timber.e("user sign in error: " + task.exception)
-                    it.showLoginError(task.exception)
+                } catch (ex: Exception) {
+                    Timber.e("user sign in error: $ex")
+                    it.showLoginError(ex)
+                } finally {
                     it.setShowProgress(false)
                 }
             }
@@ -68,6 +74,11 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
         view?.startRegisterActivity()
     }
 
+    override fun onDropView() {
+        super.onDropView()
+        job.cancel()
+    }
+
     interface View {
         fun startMainActivity()
 
@@ -76,8 +87,6 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
         fun startRegisterActivity()
 
         fun showNoInternetError()
-
-        fun showLogInSuccess()
 
         fun showInvalidEmail()
 

@@ -34,11 +34,8 @@ class UserRepository {
         userNetwork.registerUser(email, password, completeCallback)
     }
 
-    fun signInUser(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    ) {
-        userNetwork.signInUser(email, password, completeCallback)
+    suspend fun signInUser(email: String, password: String) {
+        userNetwork.signInUser(email, password)
     }
 
     suspend fun getCurrentUser() = mapper.map(userNetwork.getCurrentUser())

@@ -49,28 +49,31 @@ class UserNetworkDataSource {
             }
     }
 
-    fun signInUser(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    ) {
+    suspend fun signInUser(email: String, password: String) = suspendCancellableCoroutine<Unit> { continuation ->
         firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task -> completeCallback(task) }
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    continuation.resume(Unit)
+                } else {
+                    continuation.resumeWithException(task.exception!!)
+                }
+            }
     }
 
     suspend fun getCurrentUser() = suspendCancellableCoroutine<UserNetwork> { continuation ->
-            val currentUser = firebaseAuth.currentUser
-            if (currentUser != null) {
-                firestore.collection("users")
-                    .document(currentUser.uid)
-                    .get()
-                    .addOnSuccessListener { document -> onGetUserSuccess(document, continuation) }
-                    .addOnFailureListener {
-                        onSaveOrderError(it, continuation, "User fetching error")
-                    }
-            } else {
-                onSaveOrderError(Exception("User fetching error"), continuation, "")
-            }
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            firestore.collection("users")
+                .document(currentUser.uid)
+                .get()
+                .addOnSuccessListener { document -> onGetUserSuccess(document, continuation) }
+                .addOnFailureListener {
+                    onSaveOrderError(it, continuation, "User fetching error")
+                }
+        } else {
+            onSaveOrderError(Exception("User fetching error"), continuation, "")
         }
+    }
 
     private fun onGetUserSuccess(document: DocumentSnapshot?, continuation: CancellableContinuation<UserNetwork>) {
         val user = document?.toObject(UserNetwork::class.java)
@@ -104,8 +107,10 @@ class UserNetworkDataSource {
         continuation.resume(Unit)
     }
 
-    private fun onSaveOrderError(throwable: Throwable, continuation: CancellableContinuation<*>,
-                                 exceptionMessage: String) {
+    private fun onSaveOrderError(
+        throwable: Throwable, continuation: CancellableContinuation<*>,
+        exceptionMessage: String
+    ) {
         if (continuation.isCancelled || !continuation.isActive) {
             continuation.resumeWithException(CancellationException())
         } else {
@@ -125,9 +130,9 @@ class UserNetworkDataSource {
                 .orderBy("timestamp", Query.Direction.DESCENDING) //TODO: change to timestampDate
                 .get()
                 .addOnSuccessListener { document -> onGetUserOrdersSuccess(continuation, document) }
-                .addOnFailureListener { onSaveOrderError(it, continuation,"Order fetching error") }
+                .addOnFailureListener { onSaveOrderError(it, continuation, "Order fetching error") }
         } else {
-            onSaveOrderError(Exception("User is not authorized"), continuation,"")
+            onSaveOrderError(Exception("User is not authorized"), continuation, "")
         }
     }
 

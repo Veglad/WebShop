@@ -79,10 +79,6 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
         ).show()
     }
 
-    override fun showLogInSuccess() {
-        Toast.makeText(this, "Successfully authorized!", Toast.LENGTH_LONG).show()
-    }
-
     override fun showInvalidEmail() {
         emailTextInput.error = resources.getString(R.string.email_error)
     }
