@@ -22,8 +22,6 @@ class UserRepository {
     lateinit var orderNetworkOrderMapper: OrderNetworkOrderMapper
     @Inject
     lateinit var realmOrderNetworkOrderMapper: RealmOrderOrderNetworkMapper
-    @Inject
-    lateinit var realmOrderOrderMapper: RealmOrderOrderMapper
 
     val isSignedIn: Boolean
         get() = userNetwork.isSignedIn
