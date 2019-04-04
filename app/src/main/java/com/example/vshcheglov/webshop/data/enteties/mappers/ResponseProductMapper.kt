@@ -4,7 +4,7 @@ import com.example.vshcheglov.webshop.data.enteties.ProductResponse
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.domain.common.Mapper
 
-class ResposeProductMapper : Mapper<ProductResponse, Product> {
+class ResponseProductMapper : Mapper<ProductResponse, Product> {
 
     override fun map(from: ProductResponse) = Product().apply {
         id = from.deviceId

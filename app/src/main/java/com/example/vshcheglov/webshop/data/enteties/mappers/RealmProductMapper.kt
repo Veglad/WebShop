@@ -18,15 +18,15 @@ class RealmProductMapper : Mapper<RealmProduct, Product> {
             from.purchasesNumber,
             from.percentageDiscount)
 
-    fun map(from: Product) = RealmProduct(
-            from.id,
-            from.name,
-            from.price,
-            from.imageThumbnailUrl,
-            from.shortDescription,
-            from.longDescription,
-            from.imageUrl,
-            from.inStockNumber,
-            from.purchasesNumber,
-            from.percentageDiscount)
+    fun map(to: Product) = RealmProduct(
+            to.id,
+            to.name,
+            to.price,
+            to.imageThumbnailUrl,
+            to.shortDescription,
+            to.longDescription,
+            to.imageUrl,
+            to.inStockNumber,
+            to.purchasesNumber,
+            to.percentageDiscount)
 }

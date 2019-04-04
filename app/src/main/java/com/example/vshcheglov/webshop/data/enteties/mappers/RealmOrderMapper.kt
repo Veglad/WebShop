@@ -19,14 +19,14 @@ class RealmOrderMapper : Mapper<RealmOrder, Order> {
         return Order(productList, Timestamp(from.timestampDate), from.amount, from.id)
     }
 
-    fun map(from: Order): RealmOrder {
+    fun map(to: Order): RealmOrder {
         val realmProductList = RealmList<RealmOrderProduct>().apply {
-            for (product in from.orderProducts) {
+            for (product in to.orderProducts) {
                 add(map(product))
             }
         }
 
-        return RealmOrder(realmProductList, from.timestamp.toDate(), from.amount, from.id)
+        return RealmOrder(realmProductList, to.timestamp.toDate(), to.amount, to.id)
     }
 
     fun map(from: RealmOrderProduct) = OrderProduct(
@@ -38,12 +38,12 @@ class RealmOrderMapper : Mapper<RealmOrder, Order> {
         from.count
     )
 
-    fun map(from: OrderProduct) = RealmOrderProduct(
-        from.id,
-        from.productId,
-        from.name,
-        from.price,
-        from.imageUrl,
-        from.count
+    fun map(to: OrderProduct) = RealmOrderProduct(
+        to.id,
+        to.productId,
+        to.name,
+        to.price,
+        to.imageUrl,
+        to.count
     )
 }

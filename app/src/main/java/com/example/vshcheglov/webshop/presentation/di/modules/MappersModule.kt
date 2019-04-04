@@ -16,7 +16,7 @@ class MappersModule {
 
     @Singleton
     @Provides
-    fun provideNetworkProductMapper() = ResposeProductMapper()
+    fun provideNetworkProductMapper() = ResponseProductMapper()
 
     @Singleton
     @Provides

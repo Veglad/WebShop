@@ -17,14 +17,14 @@ class ResponseOrderMapper : Mapper<OrderResponse, Order> {
         return Order(orderList, from.timestamp, from.amount, from.id)
     }
 
-    fun map(from: Order): OrderResponse {
+    fun map(to: Order): OrderResponse {
         val orderNetworkList = mutableListOf<OrderResponseProduct>().apply {
-            for (product in from.orderProducts) {
+            for (product in to.orderProducts) {
                 add(map(product))
             }
         }
 
-        return OrderResponse(orderNetworkList, from.timestamp, from.amount, from.id)
+        return OrderResponse(orderNetworkList, to.timestamp, to.amount, to.id)
     }
 
     fun map(from: OrderResponseProduct) = OrderProduct(
@@ -36,12 +36,12 @@ class ResponseOrderMapper : Mapper<OrderResponse, Order> {
         from.count
     )
 
-    fun map(from: OrderProduct) = OrderResponseProduct(
-        from.id,
-        from.productId,
-        from.name,
-        from.price,
-        from.imageUrl,
-        from.count
+    fun map(to: OrderProduct) = OrderResponseProduct(
+        to.id,
+        to.productId,
+        to.name,
+        to.price,
+        to.imageUrl,
+        to.count
     )
 }
