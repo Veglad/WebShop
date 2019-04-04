@@ -50,4 +50,8 @@ class MappersModule {
     @Singleton
     @Provides
     fun provideResponseOrderProductMapper() = ResponseOrderProductMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmResponseOrderProductMapper() = RealmResponseOrderProductMapper()
 }
