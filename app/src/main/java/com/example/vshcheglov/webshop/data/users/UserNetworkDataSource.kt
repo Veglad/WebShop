@@ -1,11 +1,8 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.OrderNetwork
-import com.example.vshcheglov.webshop.domain.Order
-import com.example.vshcheglov.webshop.data.enteties.UserNetwork
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
+import com.example.vshcheglov.webshop.data.enteties.OrderResponse
+import com.example.vshcheglov.webshop.data.enteties.UserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -45,10 +42,10 @@ class UserNetworkDataSource {
     private fun saveNewUserToDb() {
         val user = firebaseAuth.currentUser
         if (user != null) {
-            firestore.collection("users").document(user.uid).set(UserNetwork(user.email, user.uid))
+            firestore.collection("users").document(user.uid).set(UserResponse(user.email, user.uid))
             Timber.d("Added uid to Firestore")
         } else {
-            Timber.e("UserNetwork id saving error")
+            Timber.e("UserResponse id saving error")
         }
     }
 
@@ -63,7 +60,7 @@ class UserNetworkDataSource {
             }
     }
 
-    suspend fun getCurrentUser() = suspendCancellableCoroutine<UserNetwork> { continuation ->
+    suspend fun getCurrentUser() = suspendCancellableCoroutine<UserResponse> { continuation ->
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users")
@@ -78,8 +75,8 @@ class UserNetworkDataSource {
         }
     }
 
-    private fun onGetUserSuccess(document: DocumentSnapshot?, continuation: CancellableContinuation<UserNetwork>) {
-        val user = document?.toObject(UserNetwork::class.java)
+    private fun onGetUserSuccess(document: DocumentSnapshot?, continuation: CancellableContinuation<UserResponse>) {
+        val user = document?.toObject(UserResponse::class.java)
         if (user == null) {
             continuation.resumeWithException(Exception("User parse error"))
         } else {
@@ -87,7 +84,7 @@ class UserNetworkDataSource {
         }
     }
 
-    suspend fun saveOrder(order: OrderNetwork) = suspendCancellableCoroutine<Unit> { continuation ->
+    suspend fun saveOrder(order: OrderResponse) = suspendCancellableCoroutine<Unit> { continuation ->
         val user = firebaseAuth.currentUser
         if (user != null) {
             val ordersReference = firestore.collection("users")
@@ -130,7 +127,7 @@ class UserNetworkDataSource {
         firebaseAuth.signOut()
     }
 
-    suspend fun getUserOrders() = suspendCancellableCoroutine<MutableList<OrderNetwork>> { continuation ->
+    suspend fun getUserOrders() = suspendCancellableCoroutine<MutableList<OrderResponse>> { continuation ->
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             firestore.collection("users/${currentUser.uid}/orders")
@@ -148,10 +145,10 @@ class UserNetworkDataSource {
     }
 
     private fun onGetUserOrdersSuccess(
-        continuation: CancellableContinuation<MutableList<OrderNetwork>>,
+        continuation: CancellableContinuation<MutableList<OrderResponse>>,
         document: QuerySnapshot) {
 
-        val order = document.toObjects(OrderNetwork::class.java)
+        val order = document.toObjects(OrderResponse::class.java)
         continuation.resume(order)
     }
 }

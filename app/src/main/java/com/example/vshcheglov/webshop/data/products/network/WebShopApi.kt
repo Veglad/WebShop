@@ -1,6 +1,6 @@
 package com.example.vshcheglov.webshop.data.products.network
 
-import com.example.vshcheglov.webshop.data.enteties.ProductNetwork
+import com.example.vshcheglov.webshop.data.enteties.ProductResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -8,13 +8,13 @@ import retrofit2.http.Path
 interface WebShopApi {
 
     @GET("/products")
-    fun getProductsAsync(): Deferred<List<ProductNetwork>>
+    fun getProductsAsync(): Deferred<List<ProductResponse>>
 
     @Deprecated("Does not work")
     @GET("/api/DeviceData/{deviceId}")
-    fun getDeviceAsync(@Path("deviceId") id: Long): Deferred<ProductNetwork>
+    fun getDeviceAsync(@Path("deviceId") id: Long): Deferred<ProductResponse>
 
     @GET("/products")
-    fun getPromotionalProductsAsync(): Deferred<List<ProductNetwork>>
+    fun getPromotionalProductsAsync(): Deferred<List<ProductResponse>>
 
 }

@@ -1,10 +1,9 @@
 package com.example.vshcheglov.webshop.data.enteties
 
 import com.google.firebase.Timestamp
-import io.realm.RealmObject
 
-data class OrderNetwork(
-    var orderProducts: MutableList<OrderNetworkProduct>,
+data class OrderResponse(
+    var orderProducts: MutableList<OrderResponseProduct>,
     var timestamp: Timestamp,
     var amount: Double,
     var id: String = ""
@@ -13,7 +12,7 @@ data class OrderNetwork(
 }
 
 
-data class OrderNetworkProduct(
+data class OrderResponseProduct(
     var id: String = "",
     var productId: Int = 0,
     var name: String = "Noname",
