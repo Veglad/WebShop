@@ -14,7 +14,8 @@ data class OrderNetwork(
 
 
 data class OrderNetworkProduct(
-    var id: Int = -1,
+    var id: String = "",
+    var productId: Int = 0,
     var name: String = "Noname",
     var price: Double = 0.0,
     var imageUrl: String = "",

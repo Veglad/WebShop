@@ -29,6 +29,7 @@ class OrderNetworkOrderMapper : Mapper<OrderNetwork, Order> {
 
     fun map(from: OrderNetworkProduct) = OrderProduct(
         from.id,
+        from.productId,
         from.name,
         from.price,
         from.imageUrl,
@@ -37,6 +38,7 @@ class OrderNetworkOrderMapper : Mapper<OrderNetwork, Order> {
 
     fun map(from: OrderProduct) = OrderNetworkProduct(
         from.id,
+        from.productId,
         from.name,
         from.price,
         from.imageUrl,

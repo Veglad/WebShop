@@ -23,6 +23,7 @@ class BasketToOrderMapper: Mapper<Basket, Order> {
     }
 
     fun map(from: Product) = OrderProduct(
+        "",
         from.id,
         from.name,
         from.priceWithDiscount,

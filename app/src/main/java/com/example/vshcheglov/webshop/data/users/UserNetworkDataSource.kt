@@ -97,6 +97,10 @@ class UserNetworkDataSource {
 
             order.id = ordersReference.id
 
+            for (orderProduct in order.orderProducts) {
+                orderProduct.id = order.id + "$" + orderProduct.productId//Custom id for each product
+            }
+
             ordersReference.set(order)
                 .addOnSuccessListener { onSaveOrderSuccess(continuation) }
                 .addOnFailureListener { onSaveOrderError(it, continuation, "Order saving error") }

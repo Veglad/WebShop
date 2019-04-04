@@ -26,8 +26,8 @@ class ProductStorage {
 
         Realm.getDefaultInstance().use { realm ->
             realm.executeTransactionAsync { transactionRealm ->
-                val managerProductList = RealmList<RealmProduct>()
-                managerProductList.addAll(realmProductList)
+                val managedProductList = RealmList<RealmProduct>()
+                managedProductList.addAll(realmProductList)
                 transactionRealm.insertOrUpdate(realmProductList)
             }
         }

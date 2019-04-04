@@ -31,6 +31,7 @@ class RealmOrderOrderNetworkMapper : Mapper<RealmOrder, OrderNetwork> {
 
     fun map(from: OrderRealmProduct) = OrderNetworkProduct(
         from.id,
+        from.productId,
         from.name,
         from.price,
         from.imageUrl,
@@ -39,6 +40,7 @@ class RealmOrderOrderNetworkMapper : Mapper<RealmOrder, OrderNetwork> {
 
     fun map(from: OrderNetworkProduct) = OrderRealmProduct(
         from.id,
+        from.productId,
         from.name,
         from.price,
         from.imageUrl,
