@@ -5,7 +5,7 @@ import com.example.vshcheglov.webshop.data.enteties.RealmOrder
 import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmResponseOrderMapper
 import com.example.vshcheglov.webshop.domain.Order
-import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseUserMapper
 import javax.inject.Inject
 
 
@@ -14,7 +14,7 @@ class UserRepository {
     @Inject
     lateinit var userNetwork: UserNetworkDataSource
     @Inject
-    lateinit var mapper: UserNetworkUserMapper
+    lateinit var mapper: ResponseUserMapper
     @Inject
     lateinit var userStorage: UserStorage
     @Inject

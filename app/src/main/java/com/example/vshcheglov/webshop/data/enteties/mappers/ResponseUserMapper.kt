@@ -1,10 +1,10 @@
-package com.example.vshcheglov.webshop.data.users.mappers
+package com.example.vshcheglov.webshop.data.enteties.mappers
 
 import com.example.vshcheglov.webshop.data.enteties.UserResponse
 import com.example.vshcheglov.webshop.domain.User
 import com.example.vshcheglov.webshop.domain.common.Mapper
 
-class UserNetworkUserMapper: Mapper<UserResponse, User> {
+class ResponseUserMapper: Mapper<UserResponse, User> {
 
     override fun map(from: UserResponse) = User(from.email, from.id)
 
