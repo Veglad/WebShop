@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.data.products
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.RealmProduct
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmProductProductMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmProductMapper
 import com.example.vshcheglov.webshop.domain.Product
 import io.realm.Realm
 import io.realm.RealmList
@@ -11,7 +11,7 @@ import javax.inject.Inject
 class ProductStorage {
 
     @Inject
-    lateinit var productMapper: RealmProductProductMapper
+    lateinit var productMapper: RealmProductMapper
 
     init {
         App.appComponent.inject(this)
@@ -38,7 +38,7 @@ class ProductStorage {
         var productList: MutableList<Product> = mutableListOf()
         Realm.getDefaultInstance().use { realm ->
             realm.executeTransaction { transactionRealm ->
-                val managedProducts = if(!isPromotional) {
+                val managedProducts = if (!isPromotional) {
                     transactionRealm.where(RealmProduct::class.java).findAll()
                 } else {
                     transactionRealm.where(RealmProduct::class.java)

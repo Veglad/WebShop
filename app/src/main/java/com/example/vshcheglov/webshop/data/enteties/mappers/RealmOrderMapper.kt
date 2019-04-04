@@ -8,7 +8,7 @@ import com.example.vshcheglov.webshop.domain.common.Mapper
 import com.google.firebase.Timestamp
 import io.realm.RealmList
 
-class RealmOrderOrderMapper : Mapper<RealmOrder, Order> {
+class RealmOrderMapper : Mapper<RealmOrder, Order> {
     override fun map(from: RealmOrder): Order {
         val productList = mutableListOf<OrderProduct>().apply {
             for (realmProduct in from.orderProducts) {

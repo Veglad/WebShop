@@ -5,7 +5,6 @@ import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import dagger.Module
 import dagger.Provides
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module
@@ -17,7 +16,7 @@ class MappersModule {
 
     @Singleton
     @Provides
-    fun provideNetworkProductMapper() = ProductEntityDataMapper()
+    fun provideNetworkProductMapper() = ResposeProductMapper()
 
     @Singleton
     @Provides
@@ -29,18 +28,18 @@ class MappersModule {
 
     @Singleton
     @Provides
-    fun provideRealmProductProductMapper() = RealmProductProductMapper()
+    fun provideRealmProductProductMapper() = RealmProductMapper()
 
 
     @Singleton
     @Provides
-    fun provideOrderNetworkOrderMapper() = OrderNetworkOrderMapper()
+    fun provideOrderNetworkOrderMapper() = ResponseOrderMapper()
 
     @Singleton
     @Provides
-    fun provideRealmOrderOrderNetworkMapper() = RealmOrderOrderNetworkMapper()
+    fun provideRealmOrderOrderNetworkMapper() = RealmResposeOrderMapper()
 
     @Singleton
     @Provides
-    fun provideRealmOrderOrderMapper() = RealmOrderOrderMapper()
+    fun provideRealmOrderOrderMapper() = RealmOrderMapper()
 }

@@ -4,7 +4,7 @@ import com.example.vshcheglov.webshop.data.enteties.RealmProduct
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.domain.common.Mapper
 
-class RealmProductProductMapper : Mapper<RealmProduct, Product> {
+class RealmProductMapper : Mapper<RealmProduct, Product> {
 
     override fun map(from: RealmProduct) = Product(
             from.id,

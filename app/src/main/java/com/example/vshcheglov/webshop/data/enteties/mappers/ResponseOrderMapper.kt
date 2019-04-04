@@ -6,7 +6,7 @@ import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.example.vshcheglov.webshop.domain.common.Mapper
 
-class OrderNetworkOrderMapper : Mapper<OrderResponse, Order> {
+class ResponseOrderMapper : Mapper<OrderResponse, Order> {
     override fun map(from: OrderResponse): Order {
         val orderList = mutableListOf<OrderProduct>().apply {
             for (networkProduct in from.orderProducts) {

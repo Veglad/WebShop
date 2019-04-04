@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderMapper
 import com.example.vshcheglov.webshop.domain.Order
 import io.realm.Realm
 import io.realm.RealmList
@@ -11,7 +11,7 @@ import javax.inject.Inject
 class UserStorage {
 
     @Inject
-    lateinit var mapper: RealmOrderOrderMapper
+    lateinit var mapper: RealmOrderMapper
 
     init {
         App.appComponent.inject(this)

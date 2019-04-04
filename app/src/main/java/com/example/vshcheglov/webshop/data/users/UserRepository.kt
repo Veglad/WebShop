@@ -2,9 +2,8 @@ package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
-import com.example.vshcheglov.webshop.data.enteties.mappers.OrderNetworkOrderMapper
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderOrderMapper
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderOrderNetworkMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmResposeOrderMapper
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import javax.inject.Inject
@@ -19,9 +18,9 @@ class UserRepository {
     @Inject
     lateinit var userStorage: UserStorage
     @Inject
-    lateinit var orderNetworkOrderMapper: OrderNetworkOrderMapper
+    lateinit var orderNetworkOrderMapper: ResponseOrderMapper
     @Inject
-    lateinit var realmOrderNetworkOrderMapper: RealmOrderOrderNetworkMapper
+    lateinit var realmOrderNetworkOrderMapper: RealmResposeOrderMapper
 
     val isSignedIn: Boolean
         get() = userNetwork.isSignedIn
