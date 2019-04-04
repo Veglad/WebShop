@@ -6,17 +6,17 @@ import io.realm.annotations.PrimaryKey
 import java.util.*
 
 open class RealmOrder(
-    var orderProducts: RealmList<OrderRealmProduct>,
+    var orderProducts: RealmList<RealmOrderProduct>,
     var timestampDate: Date,
     var amount: Double,
     @PrimaryKey
     var id: String = ""
 ) : RealmObject() {
-    constructor() : this(RealmList<OrderRealmProduct>(), Date(), 0.0)
+    constructor() : this(RealmList<RealmOrderProduct>(), Date(), 0.0)
 }
 
 
-open class OrderRealmProduct(
+open class RealmOrderProduct(
     @PrimaryKey
     var id: String = "",
     var productId: Int = 0,

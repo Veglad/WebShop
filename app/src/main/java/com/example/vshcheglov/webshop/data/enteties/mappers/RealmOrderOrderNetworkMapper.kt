@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.data.enteties.mappers
 
 import com.example.vshcheglov.webshop.data.enteties.OrderResponse
 import com.example.vshcheglov.webshop.data.enteties.OrderResponseProduct
-import com.example.vshcheglov.webshop.data.enteties.OrderRealmProduct
+import com.example.vshcheglov.webshop.data.enteties.RealmOrderProduct
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
 import com.example.vshcheglov.webshop.domain.common.Mapper
 import com.google.firebase.Timestamp
@@ -20,7 +20,7 @@ class RealmOrderOrderNetworkMapper : Mapper<RealmOrder, OrderResponse> {
     }
 
     fun map(from: OrderResponse): RealmOrder {
-        val realmProductList = RealmList<OrderRealmProduct>().apply {
+        val realmProductList = RealmList<RealmOrderProduct>().apply {
             for (networkProduct in from.orderProducts) {
                 add(map(networkProduct))
             }
@@ -29,7 +29,7 @@ class RealmOrderOrderNetworkMapper : Mapper<RealmOrder, OrderResponse> {
         return RealmOrder(realmProductList, from.timestamp.toDate(), from.amount, from.id)
     }
 
-    fun map(from: OrderRealmProduct) = OrderResponseProduct(
+    fun map(from: RealmOrderProduct) = OrderResponseProduct(
         from.id,
         from.productId,
         from.name,
@@ -38,7 +38,7 @@ class RealmOrderOrderNetworkMapper : Mapper<RealmOrder, OrderResponse> {
         from.count
     )
 
-    fun map(from: OrderResponseProduct) = OrderRealmProduct(
+    fun map(from: OrderResponseProduct) = RealmOrderProduct(
         from.id,
         from.productId,
         from.name,

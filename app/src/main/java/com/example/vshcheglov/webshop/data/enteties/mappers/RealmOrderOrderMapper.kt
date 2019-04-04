@@ -1,6 +1,6 @@
 package com.example.vshcheglov.webshop.data.enteties.mappers
 
-import com.example.vshcheglov.webshop.data.enteties.OrderRealmProduct
+import com.example.vshcheglov.webshop.data.enteties.RealmOrderProduct
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.domain.OrderProduct
@@ -20,7 +20,7 @@ class RealmOrderOrderMapper : Mapper<RealmOrder, Order> {
     }
 
     fun map(from: Order): RealmOrder {
-        val realmProductList = RealmList<OrderRealmProduct>().apply {
+        val realmProductList = RealmList<RealmOrderProduct>().apply {
             for (product in from.orderProducts) {
                 add(map(product))
             }
@@ -29,7 +29,7 @@ class RealmOrderOrderMapper : Mapper<RealmOrder, Order> {
         return RealmOrder(realmProductList, from.timestamp.toDate(), from.amount, from.id)
     }
 
-    fun map(from: OrderRealmProduct) = OrderProduct(
+    fun map(from: RealmOrderProduct) = OrderProduct(
         from.id,
         from.productId,
         from.name,
@@ -38,7 +38,7 @@ class RealmOrderOrderMapper : Mapper<RealmOrder, Order> {
         from.count
     )
 
-    fun map(from: OrderProduct) = OrderRealmProduct(
+    fun map(from: OrderProduct) = RealmOrderProduct(
         from.id,
         from.productId,
         from.name,
