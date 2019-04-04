@@ -42,4 +42,8 @@ class MappersModule {
     @Singleton
     @Provides
     fun provideRealmOrderOrderMapper() = RealmOrderMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmOrderProductMapper() = RealmOrderProductMapper()
 }

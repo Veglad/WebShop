@@ -53,7 +53,6 @@ class UserRepository {
         var orderList = mutableListOf<Order>()
         try {
             val networkOrders = userNetwork.getUserOrders()
-
             orderList.apply {
                 for (orderNetwork in networkOrders) {
                     add(orderNetworkOrderMapper.map(orderNetwork))
