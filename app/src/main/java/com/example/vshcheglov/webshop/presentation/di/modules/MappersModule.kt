@@ -24,24 +24,24 @@ class MappersModule {
 
     @Singleton
     @Provides
-    fun provideUserNetworkUserMapper() = ResponseUserMapper()
+    fun provideResponseUserMapper() = ResponseUserMapper()
 
     @Singleton
     @Provides
-    fun provideRealmProductProductMapper() = RealmProductMapper()
+    fun provideRealmProductMapper() = RealmProductMapper()
 
 
     @Singleton
     @Provides
-    fun provideOrderNetworkOrderMapper() = ResponseOrderMapper()
+    fun provideResponseOrderMapper() = ResponseOrderMapper()
 
     @Singleton
     @Provides
-    fun provideRealmOrderOrderNetworkMapper() = RealmResponseOrderMapper()
+    fun provideRealmResponseOrderMapper() = RealmResponseOrderMapper()
 
     @Singleton
     @Provides
-    fun provideRealmOrderOrderMapper() = RealmOrderMapper()
+    fun provideRealmOrderMapper() = RealmOrderMapper()
 
     @Singleton
     @Provides
