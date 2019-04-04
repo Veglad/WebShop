@@ -105,10 +105,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     fun logOut() {
+        dataProvider.logOut()
         view?.startLoginActivity()
-        uiCoroutineScope.launch(Dispatchers.IO) {
-            dataProvider.logOut()
-        }
     }
 
     fun searchProducts(searchText: String) {
