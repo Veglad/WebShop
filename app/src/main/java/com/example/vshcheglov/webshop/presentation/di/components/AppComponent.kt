@@ -2,6 +2,7 @@ package com.example.vshcheglov.webshop.presentation.di.components
 
 import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
 import com.example.vshcheglov.webshop.data.products.ProductNetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.products.ProductStorage
@@ -41,4 +42,5 @@ interface AppComponent {
     fun inject(productStorage: ProductStorage)
     fun inject(userStorage: UserStorage)
     fun inject(realmOrderMapper: RealmOrderMapper)
+    fun inject(responseOrderMapper: ResponseOrderMapper)
 }

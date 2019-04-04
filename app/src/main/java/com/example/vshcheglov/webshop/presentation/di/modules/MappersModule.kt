@@ -37,7 +37,7 @@ class MappersModule {
 
     @Singleton
     @Provides
-    fun provideRealmOrderOrderNetworkMapper() = RealmResposeOrderMapper()
+    fun provideRealmOrderOrderNetworkMapper() = RealmResponseOrderMapper()
 
     @Singleton
     @Provides
@@ -46,4 +46,8 @@ class MappersModule {
     @Singleton
     @Provides
     fun provideRealmOrderProductMapper() = RealmOrderProductMapper()
+
+    @Singleton
+    @Provides
+    fun provideResponseOrderProductMapper() = ResponseOrderProductMapper()
 }
