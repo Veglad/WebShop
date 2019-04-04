@@ -1,13 +1,18 @@
 package com.example.vshcheglov.webshop.presentation.purchase
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.MenuItem
+import android.view.View
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.data.enteties.OrderProduct
+import com.example.vshcheglov.webshop.domain.OrderProduct
+import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.google.firebase.Timestamp
 import com.kinda.alert.KAlertDialog
 import kotlinx.android.synthetic.main.activity_bought.*
+import kotlinx.android.synthetic.main.purchase_error_layout.*
+import kotlinx.android.synthetic.main.purchase_list_layout.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 
@@ -29,6 +34,8 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
             it.setDisplayHomeAsUpEnabled(true)
             it.setTitle(R.string.bought_products)
         }
+
+        purchaseErrorLayoutButton.setOnClickListener { startMainActivity() }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -41,18 +48,34 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
 
     override fun showProducts(productToTimeStampList: List<Pair<OrderProduct, Timestamp>>) {
         boughtRecyclerAdapter = PurchaseRecyclerAdapter(this, productToTimeStampList)
-        boughtRecyclerView.layoutManager = GridLayoutManager(this, COLUMNS_NUMBER)
-        boughtRecyclerView.adapter = boughtRecyclerAdapter
+        purchaseRecyclerView.layoutManager = GridLayoutManager(this, COLUMNS_NUMBER)
+        purchaseRecyclerView.adapter = boughtRecyclerAdapter
     }
 
-    override fun showProductsFetchingError() {
+    override fun showProductsFetchingError(exception: Exception) {
         KAlertDialog(this, KAlertDialog.ERROR_TYPE)
             .setTitleText(getString(R.string.bought_error_title))
             .setContentText(getString(R.string.bought_error_message))
             .setConfirmText(getString(R.string.ok))
             .setConfirmClickListener { sDialog ->
                 sDialog.dismissWithAnimation()
+                startMainActivity()
             }
             .show()
+    }
+
+    private fun startMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        })
+    }
+
+    override fun showNoData() {
+        purchaseListLayout.visibility = View.GONE
+        purchaseErrorLayout.visibility = View.VISIBLE
+    }
+
+    override fun setShowLoading(isLoading: Boolean) {
+        purchaseProgressBar.visibility = if(isLoading) View.VISIBLE else View.GONE
     }
 }

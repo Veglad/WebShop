@@ -277,4 +277,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     enum class MainLayouts {
         PRODUCTS, SEARCH_PRODUCTS, SEARCH_EMPTY, ERROR
     }
+
+    override fun showEmailLoadError(throwable: Throwable) {
+        showUserEmail("")
+    }
 }

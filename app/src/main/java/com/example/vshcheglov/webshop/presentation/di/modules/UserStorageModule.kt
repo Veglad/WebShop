@@ -1,14 +1,14 @@
 package com.example.vshcheglov.webshop.presentation.di.modules
 
-import com.example.vshcheglov.webshop.data.products.ProductStorage
+import com.example.vshcheglov.webshop.data.users.UserStorage
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module(includes = [MappersModule::class])
-class ProductStorageModule {
+class UserStorageModule {
 
     @Provides
     @Singleton
-    fun providesProductStorage() = ProductStorage()
+    fun providesUserStorage() = UserStorage()
 }

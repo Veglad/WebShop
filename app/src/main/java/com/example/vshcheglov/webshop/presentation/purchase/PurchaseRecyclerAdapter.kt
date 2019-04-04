@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.R
-import com.example.vshcheglov.webshop.data.enteties.OrderProduct
+import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.bought_product_recycler_item.view.*
 import java.text.SimpleDateFormat

@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.di.modules
 
-import com.example.vshcheglov.webshop.data.enteties.mappers.BasketToOrderMapper
-import com.example.vshcheglov.webshop.data.enteties.mappers.ProductEntityDataMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.*
+import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseUserMapper
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import dagger.Module
 import dagger.Provides
@@ -16,9 +16,42 @@ class MappersModule {
 
     @Singleton
     @Provides
-    fun provideNetworkProductMapper() = ProductEntityDataMapper()
+    fun provideNetworkProductMapper() = ResponseProductMapper()
 
     @Singleton
     @Provides
     fun provideBasketToOrderMapper() = BasketToOrderMapper()
+
+    @Singleton
+    @Provides
+    fun provideResponseUserMapper() = ResponseUserMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmProductMapper() = RealmProductMapper()
+
+
+    @Singleton
+    @Provides
+    fun provideResponseOrderMapper() = ResponseOrderMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmResponseOrderMapper() = RealmResponseOrderMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmOrderMapper() = RealmOrderMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmOrderProductMapper() = RealmOrderProductMapper()
+
+    @Singleton
+    @Provides
+    fun provideResponseOrderProductMapper() = ResponseOrderProductMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmResponseOrderProductMapper() = RealmResponseOrderProductMapper()
 }

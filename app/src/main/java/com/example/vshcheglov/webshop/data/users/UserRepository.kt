@@ -1,17 +1,26 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.Order
-import com.example.vshcheglov.webshop.data.enteties.User
-import com.example.vshcheglov.webshop.data.users.network.UserNetworkDataSource
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
+import com.example.vshcheglov.webshop.data.enteties.RealmOrder
+import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmResponseOrderMapper
+import com.example.vshcheglov.webshop.domain.Order
+import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseUserMapper
 import javax.inject.Inject
+
 
 class UserRepository {
 
     @Inject
     lateinit var userNetwork: UserNetworkDataSource
+    @Inject
+    lateinit var mapper: ResponseUserMapper
+    @Inject
+    lateinit var userStorage: UserStorage
+    @Inject
+    lateinit var responseOrderMapper: ResponseOrderMapper
+    @Inject
+    lateinit var realmResponseOrderMapper: RealmResponseOrderMapper
 
     val isSignedIn: Boolean
         get() = userNetwork.isSignedIn
@@ -20,33 +29,47 @@ class UserRepository {
         App.appComponent.inject(this)
     }
 
-    fun registerUser(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    ) {
-        userNetwork.registerUser(email, password, completeCallback)
+    suspend fun registerUser(email: String, password: String) {
+        userNetwork.registerUser(email, password)
     }
 
-    fun signInUser(
-        email: String, password: String,
-        completeCallback: (task: Task<AuthResult>) -> Unit
-    ) {
-        userNetwork.signInUser(email, password, completeCallback)
+    suspend fun signInUser(email: String, password: String) {
+        userNetwork.signInUser(email, password)
     }
 
-    fun getCurrentUser(processUser: (user: User?) -> Unit) {
-        userNetwork.getCurrentUser(processUser)
-    }
+    suspend fun getCurrentUser() = mapper.map(userNetwork.getCurrentUser())
 
-    fun saveOrder(order: Order, onResult: (exception: Exception?) -> Unit) {
-        userNetwork.saveOrder(order, onResult)
+    suspend fun saveOrder(order: Order) {
+        val orderNetwork = responseOrderMapper.map(order)
+        userNetwork.saveOrder(orderNetwork)
     }
 
     fun logOut() {
         userNetwork.logOut()
+        userStorage.clear()
     }
 
-    fun getUserOrders(processOrders: (orderList: MutableList<Order>?) -> Unit) {
-        userNetwork.getUserOrders(processOrders)
+    suspend fun getUserOrders(): MutableList<Order> {
+        var orderList = mutableListOf<Order>()
+        try {
+            val networkOrders = userNetwork.getUserOrders()
+            orderList.apply {
+                for (orderNetwork in networkOrders) {
+                    add(responseOrderMapper.map(orderNetwork))
+                }
+            }
+
+            val realmOrderList = mutableListOf<RealmOrder>().apply {
+                for (orderNetwork in networkOrders) {
+                    add(realmResponseOrderMapper.map(orderNetwork))
+                }
+            }
+
+            userStorage.saveOrders(realmOrderList)
+        } catch (ex: Exception) {
+            orderList = userStorage.getUserOrders()
+        }
+
+        return orderList
     }
 }

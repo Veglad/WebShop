@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class ProductEntity(
+data class ProductResponse(
     var deviceId: Int = -1,
     var name: String = "Noname",
     var price: Double = 0.0,

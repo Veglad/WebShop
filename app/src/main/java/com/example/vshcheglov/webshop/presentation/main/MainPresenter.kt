@@ -1,24 +1,17 @@
 package com.example.vshcheglov.webshop.presentation.main
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.AllProductsEntity
-import com.example.vshcheglov.webshop.data.products.ProductRepository
-import com.example.vshcheglov.webshop.data.users.UserRepository
+import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import javax.inject.Inject
 
 class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
-    lateinit var productRepository: ProductRepository
-    @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var dataProvider: DataProvider
 
     private var isLoading = false
     private var isNetworkAvailable = false
@@ -26,7 +19,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private val job = Job()
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
-    private var allProducts: AllProductsEntity? = null
+    private var productList: MutableList<Product>? = null
+    private var promotionalProductList: MutableList<Product>? = null
 
     private lateinit var searchFilter: SearchFilter
 
@@ -49,19 +43,27 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
             Timber.d("Fetching products...")
 
             try {
-                if (allProducts == null || refresh) {
+                if (productList == null || promotionalProductList == null || refresh) {
                     isLoading = true
                     view?.showLoading(true)
-                    allProducts = productRepository.getAllProducts()
+
+                    val productsDeferred = uiCoroutineScope.async { dataProvider.getProducts() }
+                    val promotionalProductsDeferred = uiCoroutineScope.async { dataProvider.getPromotionalProducts() }
+                    productList = productsDeferred.await()
+                    promotionalProductList = promotionalProductsDeferred.await()
                 }
 
-                processUiWithAllProducts(allProducts!!)
+                productList?.let { products ->
+                    promotionalProductList?.let { promotionalProducts ->
+                        processUiWithProducts(products, promotionalProducts)
+                    }
+                }
 
                 if (!isNetworkAvailable) {
                     view?.showNoInternetWarning()
                 }
             } catch (ex: Exception) {
-                Timber.e("Products fetching error:" + ex)
+                Timber.e("Products fetching error:$ex")
                 view?.let {
                     it.showError(ex)
                 }
@@ -72,21 +74,27 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         }
     }
 
-    private fun processUiWithAllProducts(allProducts: AllProductsEntity) {
+    private fun processUiWithProducts(
+        productList: MutableList<Product>,
+        promotionalProductList: MutableList<Product>
+    ) {
         Timber.d("Products fetched successfully")
-        val promotionalList = allProducts.promotionalProducts.filter { it.percentageDiscount > 0 }
         view?.let {
-            it.showProductList(allProducts.products)
-            it.showPromotionalProductList(promotionalList)
+            it.showProductList(productList)
+            it.showPromotionalProductList(promotionalProductList)
         }
     }
 
     private fun showUserEmail() {
-        userRepository.getCurrentUser { user ->
-            user?.let {
-                view?.showUserEmail(it.email)
+        uiCoroutineScope.launch {
+            try {
+                val user = withContext(Dispatchers.IO) { dataProvider.getCurrentUser() }
+                view?.showUserEmail(user.email)
+            } catch (ex: Exception) {
+                view?.showEmailLoadError(ex)
             }
         }
+
     }
 
     override fun onTakeView(view: MainView?) {
@@ -97,14 +105,14 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     fun logOut() {
-        userRepository.logOut()
+        dataProvider.logOut()
         view?.startLoginActivity()
     }
 
     fun searchProducts(searchText: String) {
         view?.showLoading(true)
-        allProducts?.let {
-            val searchFilter = SearchFilter(it.products) { productList: List<Product>? ->
+        productList?.let {
+            val searchFilter = SearchFilter(it) { productList: List<Product>? ->
                 view?.showLoading(false)
                 if (productList == null || productList.isEmpty()) {
                     view?.showNoResults()
@@ -122,6 +130,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun showNoInternetWarning()
 
         fun showError(throwable: Throwable)
+
+        fun showEmailLoadError(throwable: Throwable)
 
         fun showProductList(productList: MutableList<Product>)
 

@@ -1,9 +1,15 @@
 package com.example.vshcheglov.webshop.presentation.di.components
 
+import com.example.vshcheglov.webshop.data.DataProvider
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmResponseOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
 import com.example.vshcheglov.webshop.data.products.ProductNetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
+import com.example.vshcheglov.webshop.data.products.ProductStorage
 import com.example.vshcheglov.webshop.data.users.UserRepository
-import com.example.vshcheglov.webshop.data.users.network.UserNetworkDataSource
+import com.example.vshcheglov.webshop.data.users.UserNetworkDataSource
+import com.example.vshcheglov.webshop.data.users.UserStorage
 import com.example.vshcheglov.webshop.presentation.basket.BasketPresenter
 import com.example.vshcheglov.webshop.presentation.purchase.PurchasePresenter
 import com.example.vshcheglov.webshop.presentation.di.modules.*
@@ -18,9 +24,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AppModule::class,
-        ProductNetworkModule::class,
-        ProductStorageModule::class,
-        UserRepositoryModule::class,
+        DataProviderModule::class,
         MappersModule::class
     ]
 )
@@ -35,4 +39,10 @@ interface AppComponent {
     fun inject(boughtPresenter: PurchasePresenter)
     fun inject(usersRepository: UserRepository)
     fun inject(userNetwork: UserNetworkDataSource)
+    fun inject(dataProvider: DataProvider)
+    fun inject(productStorage: ProductStorage)
+    fun inject(userStorage: UserStorage)
+    fun inject(realmOrderMapper: RealmOrderMapper)
+    fun inject(responseOrderMapper: ResponseOrderMapper)
+    fun inject(realmResponseOrderMapper: RealmResponseOrderMapper)
 }
