@@ -52,21 +52,28 @@ class UserRepository {
         userStorage.clear()
     }
 
-    suspend fun getUserOrders() : MutableList<Order> {
-        val networkOrders = userNetwork.getUserOrders()
+    suspend fun getUserOrders(): MutableList<Order> {
+        var orderList = mutableListOf<Order>()
+        try {
+            val networkOrders = userNetwork.getUserOrders()
 
-        val realmOrderList = mutableListOf<RealmOrder>().apply {
-            for (orderNetwork in networkOrders) {
-                add(realmOrderNetworkOrderMapper.map(orderNetwork))
+            orderList.apply {
+                for (orderNetwork in networkOrders) {
+                    add(orderNetworkOrderMapper.map(orderNetwork))
+                }
             }
+
+            val realmOrderList = mutableListOf<RealmOrder>().apply {
+                for (orderNetwork in networkOrders) {
+                    add(realmOrderNetworkOrderMapper.map(orderNetwork))
+                }
+            }
+
+            userStorage.saveOrders(realmOrderList)
+        } catch (ex: Exception) {
+            orderList = userStorage.getUserOrders()
         }
 
-        userStorage.saveOrders(realmOrderList)
-
-        return mutableListOf<Order>().apply {
-            for (orderNetwork in networkOrders) {
-                add(orderNetworkOrderMapper.map(orderNetwork))
-            }
-        }
+        return orderList
     }
 }
