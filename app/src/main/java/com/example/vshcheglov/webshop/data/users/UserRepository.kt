@@ -1,8 +1,10 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
+import com.example.vshcheglov.webshop.data.enteties.RealmOrder
 import com.example.vshcheglov.webshop.data.enteties.mappers.OrderNetworkOrderMapper
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderOrderNetworkMapper
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.users.mappers.UserNetworkUserMapper
 import javax.inject.Inject
@@ -19,7 +21,7 @@ class UserRepository {
     @Inject
     lateinit var orderNetworkOrderMapper: OrderNetworkOrderMapper
     @Inject
-    lateinit var realmOrderNetworkOrderMapper: OrderNetworkOrderMapper
+    lateinit var realmOrderNetworkOrderMapper: RealmOrderOrderNetworkMapper
     @Inject
     lateinit var realmOrderOrderMapper: RealmOrderOrderMapper
 
@@ -52,6 +54,14 @@ class UserRepository {
 
     suspend fun getUserOrders() : MutableList<Order> {
         val networkOrders = userNetwork.getUserOrders()
+
+        val realmOrderList = mutableListOf<RealmOrder>().apply {
+            for (orderNetwork in networkOrders) {
+                add(realmOrderNetworkOrderMapper.map(orderNetwork))
+            }
+        }
+
+        userStorage.saveOrders(realmOrderList)
 
         return mutableListOf<Order>().apply {
             for (orderNetwork in networkOrders) {
