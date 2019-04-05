@@ -78,4 +78,7 @@
     <string name="products_amount">Amount</string>
     <string name="bought_products">Bought products</string>
     <string name="back_to_products">Back to products</string>
+    <string name="set_profile_photo">Set profile photo</string>
+    <string name="from_camera">From camera</string>
+    <string name="from_gallery">From gallery</string>
 </resources>
