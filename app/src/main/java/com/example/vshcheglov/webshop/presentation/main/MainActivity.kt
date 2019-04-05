@@ -29,19 +29,24 @@ import kotlinx.android.synthetic.main.main_error_layout.*
 import kotlinx.android.synthetic.main.main_products.*
 import kotlinx.android.synthetic.main.main_search_empty.*
 import kotlinx.android.synthetic.main.main_search_list.*
-import kotlinx.android.synthetic.main.nav_main_header.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.view.animation.AnimationUtils.loadAnimation
+import android.app.Activity
+import android.widget.ImageView
 
 
 @RequiresPresenter(MainPresenter::class)
 class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.MainView {
+
+    companion object {
+        const val GALLERY_REQUEST_CODE = 14561
+        const val CAMERA_REQUEST_CODE = 14562
+    }
+
     private lateinit var searchView: SearchView
     private lateinit var headerUserEmail: TextView
+    private lateinit var navMainHeader: View
     private var snackbar: Snackbar? = null
     private val productsRecyclerAdapter = ProductsRecyclerAdapter(this)
     private val searchRecyclerAdapter = SearchRecyclerAdapter(this)
@@ -65,7 +70,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             }
         }
 
-        val navMainHeader = mainNavigationView.getHeaderView(0)
+        navMainHeader = mainNavigationView.getHeaderView(0)
         headerUserEmail = navMainHeader.findViewById(R.id.navMainHeaderEmail)
 
         val navHeaderAvatarImageButton = navMainHeader.findViewById<ImageButton>(R.id.navHeaderAvatarImageButton)
@@ -115,6 +120,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 R.id.nav_main_log_out -> presenter.logOut()
                 R.id.nav_main_basket -> startActivity(Intent(this, BasketActivity::class.java))
                 R.id.nav_main_bought -> startActivity(Intent(this, PurchaseActivity::class.java))
+                R.id.nav_main_from_camera -> loadImageFromCamera()
+                R.id.nav_main_from_gallery -> loadImageFromGallery()
             }
 
             mainDrawerLayout.closeDrawers()
@@ -124,6 +131,37 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         toggle = ActionBarDrawerToggle(this, mainDrawerLayout, R.string.open, R.string.close)
         mainDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+    }
+
+    private fun loadImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        val mimeTypes = arrayOf("image/jpeg", "image/png")
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+        startActivityForResult(intent, GALLERY_REQUEST_CODE)
+    }
+
+    private fun loadImageFromCamera() {
+
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                GALLERY_REQUEST_CODE -> {
+                    data?.let {
+                        val selectedImage = data.data
+
+                        val userPictureImageView = navMainHeader.findViewById<ImageView>(R.id.navHeaderUserImage)
+                        val navMainTitle = navMainHeader.findViewById<TextView>(R.id.navMainTitle)
+
+                        userPictureImageView.setImageURI(selectedImage)
+                        userPictureImageView.visibility = View.VISIBLE
+                        navMainTitle.visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 
     override fun showLoading(isLoading: Boolean) {
