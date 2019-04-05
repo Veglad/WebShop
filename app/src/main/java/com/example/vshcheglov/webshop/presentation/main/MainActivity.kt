@@ -33,7 +33,19 @@ import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
 import android.app.Activity
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
+import android.support.v4.content.FileProvider
 import android.widget.ImageView
+import android.widget.Toast
+import com.example.vshcheglov.webshop.BuildConfig
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 @RequiresPresenter(MainPresenter::class)
@@ -47,6 +59,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     private lateinit var searchView: SearchView
     private lateinit var headerUserEmail: TextView
     private lateinit var navMainHeader: View
+    private lateinit var currentPhotoPath: String
     private var snackbar: Snackbar? = null
     private val productsRecyclerAdapter = ProductsRecyclerAdapter(this)
     private val searchRecyclerAdapter = SearchRecyclerAdapter(this)
@@ -68,18 +81,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             if (isNetworkAvailable) {
                 snackbar?.dismiss()
             }
-        }
-
-        navMainHeader = mainNavigationView.getHeaderView(0)
-        headerUserEmail = navMainHeader.findViewById(R.id.navMainHeaderEmail)
-
-        val navHeaderAvatarImageButton = navMainHeader.findViewById<ImageButton>(R.id.navHeaderAvatarImageButton)
-        navHeaderAvatarImageButton.setOnClickListener {
-            val avatarGroupItem = mainNavigationView.menu.findItem(R.id.nav_main_avatar_group)
-            avatarGroupItem.isVisible = !avatarGroupItem.isVisible
-
-            val angle = navHeaderAvatarImageButton.rotation + 180F
-            navHeaderAvatarImageButton.animate().rotation(angle)
         }
 
         productsSwipeRefreshLayout.setOnRefreshListener {
@@ -113,7 +114,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         initNavigationDrawer()
     }
 
-
     private fun initNavigationDrawer() {
         mainNavigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -131,6 +131,26 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         toggle = ActionBarDrawerToggle(this, mainDrawerLayout, R.string.open, R.string.close)
         mainDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
+
+        initNavDrawerHeader()
+    }
+
+    private fun initNavDrawerHeader() {
+        navMainHeader = mainNavigationView.getHeaderView(0)
+        headerUserEmail = navMainHeader.findViewById(R.id.navMainHeaderEmail)
+
+        val navHeaderAvatarImageButton = navMainHeader.findViewById<ImageButton>(R.id.navHeaderAvatarImageButton)
+        navHeaderAvatarImageButton.setOnClickListener {
+            val avatarGroupItem = mainNavigationView.menu.findItem(R.id.nav_main_avatar_group)
+            avatarGroupItem.isVisible = !avatarGroupItem.isVisible
+
+            if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                mainNavigationView.menu.findItem(R.id.nav_main_from_camera).isVisible = false
+            }
+
+            val angle = navHeaderAvatarImageButton.rotation + 180F
+            navHeaderAvatarImageButton.animate().rotation(angle)
+        }
     }
 
     private fun loadImageFromGallery() {
@@ -142,23 +162,66 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     }
 
     private fun loadImageFromCamera() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    Toast.makeText(this, "Taking photo error", Toast.LENGTH_LONG).show()
+                    // Error occurred while creating the File
+                    //...
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        this,
+                        BuildConfig.APPLICATION_ID + ".provider",
+                        it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE)
+                }
+            }
+        }
+    }
 
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
+        val userPictureImageView = navMainHeader.findViewById<ImageView>(R.id.navHeaderUserImage)
+        val navMainTitle = navMainHeader.findViewById<TextView>(R.id.navMainTitle)
+
+        if (resultCode == Activity.RESULT_OK ||
+            //Always returns requestCode == -1 TODO: Investigate problem
+            requestCode == CAMERA_REQUEST_CODE && CAMERA_REQUEST_CODE != Activity.RESULT_CANCELED) {
             when (requestCode) {
                 GALLERY_REQUEST_CODE -> {
                     data?.let {
                         val selectedImage = data.data
 
-                        val userPictureImageView = navMainHeader.findViewById<ImageView>(R.id.navHeaderUserImage)
-                        val navMainTitle = navMainHeader.findViewById<TextView>(R.id.navMainTitle)
-
                         userPictureImageView.setImageURI(selectedImage)
                         userPictureImageView.visibility = View.VISIBLE
                         navMainTitle.visibility = View.GONE
                     }
+                }
+                CAMERA_REQUEST_CODE -> {
+                    userPictureImageView.setImageURI(Uri.parse(currentPhotoPath))
+                    userPictureImageView.visibility = View.VISIBLE
+                    navMainTitle.visibility = View.GONE
                 }
             }
         }

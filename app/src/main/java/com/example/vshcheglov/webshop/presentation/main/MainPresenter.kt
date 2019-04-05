@@ -7,6 +7,9 @@ import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
 import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
 import timber.log.Timber
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class MainPresenter : Presenter<MainPresenter.MainView>() {
@@ -123,6 +126,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
             searchFilter.filter.filter(searchText)
         }
     }
+
 
     interface MainView {
         fun showLoading(isLoading: Boolean)
