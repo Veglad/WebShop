@@ -34,7 +34,6 @@ import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
@@ -197,7 +196,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             storageDir /* directory */
         ).apply {
             // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
+            currentPhotoPath = "file://$absolutePath"
         }
     }
 
@@ -207,24 +206,42 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
         if (resultCode == Activity.RESULT_OK ||
             //Always returns requestCode == -1 TODO: Investigate problem
-            requestCode == CAMERA_REQUEST_CODE && CAMERA_REQUEST_CODE != Activity.RESULT_CANCELED) {
+            requestCode == CAMERA_REQUEST_CODE && CAMERA_REQUEST_CODE != Activity.RESULT_CANCELED
+        ) {
             when (requestCode) {
                 GALLERY_REQUEST_CODE -> {
                     data?.let {
                         val selectedImage = data.data
 
-                        userPictureImageView.setImageURI(selectedImage)
+                        selectedImage?.let {
+                            val profilePhotoBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage)
+                            presenter.saveUserProfilePhoto(profilePhotoBitmap, getNameFromUri(selectedImage))
+
+                            userPictureImageView.setImageBitmap(profilePhotoBitmap)
+                            userPictureImageView.visibility = View.VISIBLE
+                            navMainTitle.visibility = View.GONE
+                        }
+                    }
+                }
+                CAMERA_REQUEST_CODE -> {
+                    val photoUri =  Uri.parse(currentPhotoPath)
+                    val profilePhotoBitmap =
+                        MediaStore.Images.Media.getBitmap(contentResolver, photoUri)
+                    profilePhotoBitmap?.let {
+                        presenter.saveUserProfilePhoto(profilePhotoBitmap, getNameFromUri(photoUri))
+
+                        userPictureImageView.setImageBitmap(profilePhotoBitmap)
                         userPictureImageView.visibility = View.VISIBLE
                         navMainTitle.visibility = View.GONE
                     }
                 }
-                CAMERA_REQUEST_CODE -> {
-                    userPictureImageView.setImageURI(Uri.parse(currentPhotoPath))
-                    userPictureImageView.visibility = View.VISIBLE
-                    navMainTitle.visibility = View.GONE
-                }
             }
         }
+    }
+
+    private fun getNameFromUri(photoUri: Uri): String {
+        val uriString = photoUri.toString()
+        return uriString.substring(uriString.lastIndexOf('%') + 1)
     }
 
     override fun showLoading(isLoading: Boolean) {

@@ -1,5 +1,7 @@
 package com.example.vshcheglov.webshop.data.users
 
+import android.graphics.Bitmap
+import android.net.Uri
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.OrderResponse
 import com.example.vshcheglov.webshop.data.enteties.UserResponse
@@ -8,17 +10,26 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.*
 import timber.log.Timber
+import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import android.graphics.Bitmap.CompressFormat
+import android.R.attr.bitmap
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+
 
 class UserNetworkDataSource {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
     @Inject
     lateinit var firestore: FirebaseFirestore
+    @Inject
+    lateinit var firestoreStorage: FirebaseStorage
 
     val isSignedIn: Boolean
         get() = firebaseAuth.currentUser != null
@@ -150,5 +161,13 @@ class UserNetworkDataSource {
 
         val order = document.toObjects(OrderResponse::class.java)
         continuation.resume(order)
+    }
+
+    fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String) {
+        val byteOutputStream = ByteArrayOutputStream()
+        profilePhotoBitmap.compress(CompressFormat.PNG, 0 , byteOutputStream)
+        val bitmapData = byteOutputStream.toByteArray()
+        val byteInputStream = ByteArrayInputStream(bitmapData)
+        firestoreStorage.getReference("userImages/$name").putStream(byteInputStream)
     }
 }

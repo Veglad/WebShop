@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.data
 
+import android.graphics.Bitmap
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.products.ProductRepository
@@ -45,5 +46,9 @@ class DataProvider {
     }
 
     suspend fun getUserOrders()  = userRepository.getUserOrders()
+
+    fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String)  {
+        userRepository.saveUserProfilePhoto(profilePhotoBitmap, name)
+    }
 
 }

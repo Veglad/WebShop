@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.presentation.main
 
+import android.graphics.Bitmap
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.domain.Product
@@ -125,6 +126,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
             }
             searchFilter.filter.filter(searchText)
         }
+    }
+
+    fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String) {
+        dataProvider.saveUserProfilePhoto(profilePhotoBitmap, name)
     }
 
 

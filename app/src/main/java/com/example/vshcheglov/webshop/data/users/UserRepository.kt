@@ -1,5 +1,6 @@
 package com.example.vshcheglov.webshop.data.users
 
+import android.graphics.Bitmap
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
 import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
@@ -71,5 +72,9 @@ class UserRepository {
         }
 
         return orderList
+    }
+
+    fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String) {
+        userNetwork.saveUserProfilePhoto(profilePhotoBitmap, name)
     }
 }
