@@ -5,9 +5,6 @@ import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
-import com.example.vshcheglov.webshop.domain.User
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
 import javax.inject.Inject
 
 class DataProvider {
@@ -51,6 +48,6 @@ class DataProvider {
         userRepository.saveUserProfilePhoto(profilePhotoBitmap, name)
     }
 
-    suspend fun getUserAvatarBitmap() = userRepository.getUserAvatarBitmap()
+    suspend fun getUserAvatarByteArray() = userRepository.getUserAvatarByteArray()
 
 }

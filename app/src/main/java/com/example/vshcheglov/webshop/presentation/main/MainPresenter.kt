@@ -107,7 +107,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         uiCoroutineScope.launch {
             view?.setAvatarImageLoading(true)
             try {
-                val avatarByteArray = withContext(Dispatchers.IO) { dataProvider.getUserAvatarBitmap() }
+                val avatarByteArray = withContext(Dispatchers.IO) { dataProvider.getUserAvatarByteArray() }
                 val bitmap = withContext(Dispatchers.Default) {
                     BitmapFactory.decodeByteArray(avatarByteArray, 0, avatarByteArray.size)
                 }

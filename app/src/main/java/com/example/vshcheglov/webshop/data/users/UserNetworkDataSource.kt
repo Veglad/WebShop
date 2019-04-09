@@ -185,12 +185,12 @@ class UserNetworkDataSource {
         }
     }
 
-    suspend fun getUserAvatarBitmap(): ByteArray {
+    suspend fun getUserAvatarByteArray(): ByteArray {
         val avatarReference = getUserAvatarReference()
-        return getUserAvatarBitmap(avatarReference)
+        return getUserAvatarByteArray(avatarReference)
     }
 
-    private suspend fun getUserAvatarBitmap(avatarReference: String ) = suspendCancellableCoroutine<ByteArray> { continuation ->
+    private suspend fun getUserAvatarByteArray(avatarReference: String ) = suspendCancellableCoroutine<ByteArray> { continuation ->
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
             val reference = firestoreStorage.getReference(avatarReference)
