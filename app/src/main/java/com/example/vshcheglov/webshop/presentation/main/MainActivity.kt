@@ -39,8 +39,8 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -61,6 +61,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     private lateinit var searchView: SearchView
     private lateinit var headerUserEmail: TextView
     private lateinit var navHeaderUserImage: ImageView
+    private lateinit var navHeaderImageProgressBar: ProgressBar
     private lateinit var navMainHeader: View
     private lateinit var currentPhotoPath: String
     private var snackbar: Snackbar? = null
@@ -139,6 +140,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     private fun initNavDrawerHeader() {
         navMainHeader = mainNavigationView.getHeaderView(0)
         headerUserEmail = navMainHeader.findViewById(R.id.navMainHeaderEmail)
+        navHeaderImageProgressBar = navMainHeader.findViewById(R.id.navHeaderImageProgressBar)
 
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.profile_avatar_placeholder_large)
         setUserAvatarImage(bitmap)
@@ -173,11 +175,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     override fun setUserAvatarImage(bitmap: Bitmap) {
         navHeaderUserImage = navMainHeader.findViewById(R.id.navHeaderUserImage)
         Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(navHeaderUserImage)
-    }
-
-    override fun setUserAvatarImage(imageByteArray: ByteArray) {
-        val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
-        setUserAvatarImage(bitmap)
     }
 
     private fun getPickImageIntent() = Intent(Intent.ACTION_PICK).also { imagePickIntent ->
@@ -431,5 +428,9 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     override fun showAvatarLoadError(throwable: Throwable) {
         setUserAvatarImage(BitmapFactory.decodeResource(resources, R.drawable.profile_avatar_placeholder_large))
+    }
+
+    override fun setAvatarImageLoading(isLoading: Boolean) {
+        navHeaderImageProgressBar.visibility = if(isLoading) View.VISIBLE else View.GONE
     }
 }

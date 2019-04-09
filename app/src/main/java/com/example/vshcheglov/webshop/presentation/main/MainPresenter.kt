@@ -1,6 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.main
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.domain.Product
@@ -90,7 +91,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         }
     }
 
-    private fun showUserEmail() {
+    private fun loadUserEmail() {
         uiCoroutineScope.launch {
             try {
                 val user = withContext(Dispatchers.IO) { dataProvider.getCurrentUser() }
@@ -102,13 +103,19 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     }
 
-    private fun showUserAvatar() {
+    private fun loadUserAvatar() {
         uiCoroutineScope.launch {
+            view?.setAvatarImageLoading(true)
             try {
                 val avatarByteArray = withContext(Dispatchers.IO) { dataProvider.getUserAvatarBitmap() }
-                view?.setUserAvatarImage(avatarByteArray)
+                val bitmap = withContext(Dispatchers.Default) {
+                    BitmapFactory.decodeByteArray(avatarByteArray, 0, avatarByteArray.size)
+                }
+                view?.setUserAvatarImage(bitmap)
             } catch (ex: Exception) {
                 view?.showAvatarLoadError(ex)
+            } finally {
+                view?.setAvatarImageLoading(false)
             }
         }
 
@@ -121,8 +128,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
         view?.showLoading(isLoading)
         fetchProducts(false, isNetworkAvailable)
-        showUserEmail()
-        showUserAvatar()
+        loadUserEmail()
+        loadUserAvatar()
 
         profilePhotoBitmap?.let { photoBitmap ->
             uiCoroutineScope.launch {
@@ -190,6 +197,6 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
         fun showAvatarLoadError(throwable: Throwable)
 
-        fun setUserAvatarImage(imageByteArray: ByteArray)
+        fun setAvatarImageLoading(isLoading: Boolean)
     }
 }
