@@ -19,13 +19,15 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private var isLoading = false
     private var isNetworkAvailable = false
 
-    private var profilePhotoBitmap: Bitmap? = null
+    private var isNeedToSaveAvatar = false
 
     private lateinit var job: Job
     private lateinit var uiCoroutineScope: CoroutineScope
 
     private var productList: MutableList<Product>? = null
     private var promotionalProductList: MutableList<Product>? = null
+    private var userAvatarBitmap: Bitmap? = null
+    private var userEmail: String? = null
 
     private lateinit var searchFilter: SearchFilter
 
@@ -92,33 +94,37 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     private fun loadUserEmail() {
-        uiCoroutineScope.launch {
-            try {
-                val user = withContext(Dispatchers.IO) { dataProvider.getCurrentUser() }
-                view?.showUserEmail(user.email)
-            } catch (ex: Exception) {
-                view?.showEmailLoadError(ex)
+        if (userEmail == null) {
+            uiCoroutineScope.launch {
+                try {
+                    val user = withContext(Dispatchers.IO) { dataProvider.getCurrentUser() }
+                    userEmail = user.email
+                    view?.showUserEmail(userEmail)
+                } catch (ex: Exception) {
+                    view?.showEmailLoadError(ex)
+                }
             }
         }
-
     }
 
     private fun loadUserAvatar() {
-        uiCoroutineScope.launch {
-            view?.setAvatarImageLoading(true)
-            try {
-                val avatarByteArray = withContext(Dispatchers.IO) { dataProvider.getUserAvatarByteArray() }
-                val bitmap = withContext(Dispatchers.Default) {
-                    BitmapFactory.decodeByteArray(avatarByteArray, 0, avatarByteArray.size)
+        if (userAvatarBitmap == null) {
+            uiCoroutineScope.launch {
+                view?.setAvatarImageLoading(true)
+                try {
+                    val avatarByteArray = withContext(Dispatchers.IO) { dataProvider.getUserAvatarByteArray() }
+                    val avatarBitmap = withContext(Dispatchers.Default) {
+                        BitmapFactory.decodeByteArray(avatarByteArray, 0, avatarByteArray.size)
+                    }
+                    userAvatarBitmap = avatarBitmap
+                    view?.setUserAvatarImage(avatarBitmap)
+                } catch (ex: Exception) {
+                    view?.showAvatarLoadError(ex)
+                } finally {
+                    view?.setAvatarImageLoading(false)
                 }
-                view?.setUserAvatarImage(bitmap)
-            } catch (ex: Exception) {
-                view?.showAvatarLoadError(ex)
-            } finally {
-                view?.setAvatarImageLoading(false)
             }
         }
-
     }
 
 
@@ -131,13 +137,15 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         loadUserEmail()
         loadUserAvatar()
 
-        profilePhotoBitmap?.let { photoBitmap ->
-            uiCoroutineScope.launch {
-                view?.setUserAvatarImage(photoBitmap)
-                withContext(Dispatchers.IO) {
-                    dataProvider.saveUserProfilePhoto(photoBitmap, "JPEG_" + UUID.randomUUID())
+        if(isNeedToSaveAvatar) {
+            userAvatarBitmap?.let {
+                uiCoroutineScope.launch {
+                    view?.setUserAvatarImage(it)
+                    withContext(Dispatchers.IO) {
+                        dataProvider.saveUserProfilePhoto(it, "JPEG_" + UUID.randomUUID())
+                    }
+                    isNeedToSaveAvatar = false
                 }
-                profilePhotoBitmap = null
             }
         }
     }
@@ -169,7 +177,8 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     //This Method called from OnActivityResult (before onResume) => view == null
     fun updateUserProfilePhoto(profilePhotoBitmap: Bitmap) {
-        this.profilePhotoBitmap = profilePhotoBitmap
+        this.userAvatarBitmap = profilePhotoBitmap
+        isNeedToSaveAvatar = true
     }
 
     interface MainView {

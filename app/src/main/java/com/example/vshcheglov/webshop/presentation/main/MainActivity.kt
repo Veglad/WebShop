@@ -224,10 +224,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         ) {
             when (requestCode) {
                 PICK_IMAGE_REQUEST_CODE -> {
-                    if(currentPhotoPath.isNotEmpty()) {
-                        deleteTempPhotoFile(currentPhotoPath)
-                    }
-
                     val selectedImage: Uri
                     val isPhotoFromCamera = data == null
                     selectedImage = if (isPhotoFromCamera) {
@@ -246,6 +242,10 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                     profilePhotoBitmap?.let {
                         currentPhotoPath = ""
                         presenter.updateUserProfilePhoto(profilePhotoBitmap)
+                    }
+
+                    if(currentPhotoPath.isNotEmpty()) {
+                        deleteTempPhotoFile(currentPhotoPath)
                     }
                 }
             }
