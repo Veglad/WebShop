@@ -228,9 +228,16 @@ class UserNetworkDataSource {
                 .limit(1)
                 .get()
                 .addOnSuccessListener { documents ->
-                    for (document in documents) {
-                        onAvatarMapLoadSuccess(continuation, document)
-                        break
+                    if (documents.isEmpty) {
+                        onAvatarReferenceLoadError(
+                            Exception("User not authorized."),
+                            continuation, "AvatarLoadError"
+                        )
+                    } else {
+                        for (document in documents) {
+                            onAvatarMapLoadSuccess(continuation, document)
+                            break
+                        }
                     }
                 }
                 .addOnFailureListener {
@@ -239,7 +246,6 @@ class UserNetworkDataSource {
         } else {
             throw Exception("User not authorized.")
         }
-        //firestoreStorage.getReference("userImages/").getF
     }
 
     private fun onAvatarReferenceLoadError(
