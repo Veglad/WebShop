@@ -14,7 +14,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.ImageButton
 import android.widget.TextView
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
@@ -33,13 +32,18 @@ import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 import timber.log.Timber
 import android.app.Activity
-import android.content.pm.PackageManager
+import android.content.ComponentName
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
 import android.widget.Toast
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.vshcheglov.webshop.BuildConfig
 import java.io.File
 import java.io.IOException
@@ -51,12 +55,12 @@ import java.util.*
 class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.MainView {
 
     companion object {
-        const val GALLERY_REQUEST_CODE = 14561
-        const val CAMERA_REQUEST_CODE = 14562
+        const val PICK_IMAGE_REQUEST_CODE = 14561
     }
 
     private lateinit var searchView: SearchView
     private lateinit var headerUserEmail: TextView
+    private lateinit var navHeaderUserImage: ImageView
     private lateinit var navMainHeader: View
     private lateinit var currentPhotoPath: String
     private var snackbar: Snackbar? = null
@@ -119,8 +123,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 R.id.nav_main_log_out -> presenter.logOut()
                 R.id.nav_main_basket -> startActivity(Intent(this, BasketActivity::class.java))
                 R.id.nav_main_bought -> startActivity(Intent(this, PurchaseActivity::class.java))
-                R.id.nav_main_from_camera -> loadImageFromCamera()
-                R.id.nav_main_from_gallery -> loadImageFromGallery()
             }
 
             mainDrawerLayout.closeDrawers()
@@ -138,50 +140,68 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         navMainHeader = mainNavigationView.getHeaderView(0)
         headerUserEmail = navMainHeader.findViewById(R.id.navMainHeaderEmail)
 
-        val navHeaderAvatarImageButton = navMainHeader.findViewById<ImageButton>(R.id.navHeaderAvatarImageButton)
-        navHeaderAvatarImageButton.setOnClickListener {
-            val avatarGroupItem = mainNavigationView.menu.findItem(R.id.nav_main_avatar_group)
-            avatarGroupItem.isVisible = !avatarGroupItem.isVisible
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.profile_avatar_placeholder_large)
+        setUserAvatarImage(bitmap)
 
-            if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                mainNavigationView.menu.findItem(R.id.nav_main_from_camera).isVisible = false
-            }
-
-            val angle = navHeaderAvatarImageButton.rotation + 180F
-            navHeaderAvatarImageButton.animate().rotation(angle)
+        navHeaderUserImage.setOnClickListener {
+            mainDrawerLayout.closeDrawer(GravityCompat.START)
+            startActivityForImageResult()
         }
     }
 
-    private fun loadImageFromGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        val mimeTypes = arrayOf("image/jpeg", "image/png")
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
-        startActivityForResult(intent, GALLERY_REQUEST_CODE)
+    private fun startActivityForImageResult() {
+        val galleryIntent = getPickImageIntent()
+        val cameraIntent = getCaptureIntent()
+
+        val openInChooser = Intent.createChooser(cameraIntent, resources.getString(R.string.set_picture_with))
+
+        val resultInfoList = packageManager.queryIntentActivities(galleryIntent, 0)
+        val extraIntents = arrayOfNulls<Intent>(resultInfoList.size)
+        for (i in 0 until resultInfoList.size) {
+            val resultInfo = resultInfoList[i]
+            val packageName = resultInfo.activityInfo.packageName
+            extraIntents[i] = Intent().apply {
+                component = ComponentName(packageName, resultInfo.activityInfo.name)
+                action = Intent.ACTION_PICK
+            }
+        }
+
+        openInChooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, extraIntents)
+        startActivityForResult(openInChooser, PICK_IMAGE_REQUEST_CODE)
     }
 
-    private fun loadImageFromCamera() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    Toast.makeText(this, "Taking photo error", Toast.LENGTH_LONG).show()
-                    // Error occurred while creating the File
-                    //...
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        this,
-                        BuildConfig.APPLICATION_ID + ".provider",
-                        it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE)
-                }
+    override fun setUserAvatarImage(bitmap: Bitmap) {
+        navHeaderUserImage = navMainHeader.findViewById(R.id.navHeaderUserImage)
+        Glide.with(this).load(bitmap).apply(RequestOptions.circleCropTransform()).into(navHeaderUserImage)
+    }
+
+    override fun setUserAvatarImage(imageByteArray: ByteArray) {
+        val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+        setUserAvatarImage(bitmap)
+    }
+
+    private fun getPickImageIntent() = Intent(Intent.ACTION_PICK).also { imagePickIntent ->
+        imagePickIntent.type = "image/*"
+        val mimeTypes = arrayOf("image/jpeg", "image/png")
+        imagePickIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes)
+    }
+
+    private fun getCaptureIntent() = Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+        takePictureIntent.resolveActivity(packageManager)?.also {
+            // Create the File where the photo should go
+            val photoFile: File? = try {
+                createImageFile()
+            } catch (ex: IOException) {
+                Toast.makeText(this, resources.getString(R.string.taking_photo_error), Toast.LENGTH_LONG).show()
+                null
+            }
+            photoFile?.also {
+                val photoURI: Uri = FileProvider.getUriForFile(
+                    this,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    it
+                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             }
         }
     }
@@ -196,52 +216,49 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             storageDir /* directory */
         ).apply {
             // Save a file: path for use with ACTION_VIEW intents
-            currentPhotoPath = "file://$absolutePath"
+            currentPhotoPath = absolutePath
         }
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        val userPictureImageView = navMainHeader.findViewById<ImageView>(R.id.navHeaderUserImage)
-        val navMainTitle = navMainHeader.findViewById<TextView>(R.id.navMainTitle)
-
         if (resultCode == Activity.RESULT_OK ||
             //Always returns requestCode == -1 TODO: Investigate problem
-            requestCode == CAMERA_REQUEST_CODE && CAMERA_REQUEST_CODE != Activity.RESULT_CANCELED
+            requestCode == PICK_IMAGE_REQUEST_CODE && resultCode != Activity.RESULT_CANCELED
         ) {
             when (requestCode) {
-                GALLERY_REQUEST_CODE -> {
-                    data?.let {
-                        val selectedImage = data.data
+                PICK_IMAGE_REQUEST_CODE -> {
+                    if(currentPhotoPath.isNotEmpty()) {
+                        deleteTempPhotoFile(currentPhotoPath)
+                    }
 
-                        selectedImage?.let {
-                            val profilePhotoBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage)
-                            presenter.saveUserProfilePhoto(profilePhotoBitmap, getNameFromUri(selectedImage))
-
-                            userPictureImageView.setImageBitmap(profilePhotoBitmap)
-                            userPictureImageView.visibility = View.VISIBLE
-                            navMainTitle.visibility = View.GONE
+                    val selectedImage: Uri
+                    val isPhotoFromCamera = data == null
+                    selectedImage = if (isPhotoFromCamera) {
+                        Uri.parse("file://$currentPhotoPath")
+                    } else {
+                        data?.data ?: kotlin.run {
+                            Toast.makeText(
+                                this,
+                                resources.getString(R.string.taking_photo_error), Toast.LENGTH_LONG
+                            ).show()
+                            return
                         }
                     }
-                }
-                CAMERA_REQUEST_CODE -> {
-                    val photoUri =  Uri.parse(currentPhotoPath)
-                    val profilePhotoBitmap =
-                        MediaStore.Images.Media.getBitmap(contentResolver, photoUri)
-                    profilePhotoBitmap?.let {
-                        presenter.saveUserProfilePhoto(profilePhotoBitmap, getNameFromUri(photoUri))
 
-                        userPictureImageView.setImageBitmap(profilePhotoBitmap)
-                        userPictureImageView.visibility = View.VISIBLE
-                        navMainTitle.visibility = View.GONE
+                    val profilePhotoBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage)
+                    profilePhotoBitmap?.let {
+                        currentPhotoPath = ""
+                        presenter.updateUserProfilePhoto(profilePhotoBitmap)
                     }
                 }
             }
         }
     }
 
-    private fun getNameFromUri(photoUri: Uri): String {
-        val uriString = photoUri.toString()
-        return uriString.substring(uriString.lastIndexOf('%') + 1)
+
+    private fun deleteTempPhotoFile(currentPhotoPath: String) {
+        val file = File(currentPhotoPath)
+        file.delete()
     }
 
     override fun showLoading(isLoading: Boolean) {
@@ -410,5 +427,9 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     override fun showEmailLoadError(throwable: Throwable) {
         showUserEmail("")
+    }
+
+    override fun showAvatarLoadError(throwable: Throwable) {
+        setUserAvatarImage(BitmapFactory.decodeResource(resources, R.drawable.profile_avatar_placeholder_large))
     }
 }

@@ -77,4 +77,6 @@ class UserRepository {
     fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String) {
         userNetwork.saveUserProfilePhoto(profilePhotoBitmap, name)
     }
+
+    suspend fun getUserAvatarBitmap() = userNetwork.getUserAvatarBitmap()
 }

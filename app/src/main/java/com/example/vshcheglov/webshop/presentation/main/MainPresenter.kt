@@ -8,8 +8,6 @@ import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
 import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
 import timber.log.Timber
-import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -20,8 +18,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private var isLoading = false
     private var isNetworkAvailable = false
 
-    private val job = Job()
-    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+    private var profilePhotoBitmap: Bitmap? = null
+
+    private lateinit var job: Job
+    private lateinit var uiCoroutineScope: CoroutineScope
 
     private var productList: MutableList<Product>? = null
     private var promotionalProductList: MutableList<Product>? = null
@@ -43,6 +43,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     }
 
     private fun fetchProducts(refresh: Boolean, isNetworkAvailable: Boolean) {
+        initCoroutineJob()
         uiCoroutineScope.launch {
             Timber.d("Fetching products...")
 
@@ -101,11 +102,42 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     }
 
+    private fun showUserAvatar() {
+        uiCoroutineScope.launch {
+            try {
+                val avatarByteArray = withContext(Dispatchers.IO) { dataProvider.getUserAvatarBitmap() }
+                view?.setUserAvatarImage(avatarByteArray)
+            } catch (ex: Exception) {
+                view?.showAvatarLoadError(ex)
+            }
+        }
+
+    }
+
+
     override fun onTakeView(view: MainView?) {
         super.onTakeView(view)
+        initCoroutineJob()
+
         view?.showLoading(isLoading)
         fetchProducts(false, isNetworkAvailable)
         showUserEmail()
+        showUserAvatar()
+
+        profilePhotoBitmap?.let { photoBitmap ->
+            uiCoroutineScope.launch {
+                view?.setUserAvatarImage(photoBitmap)
+                withContext(Dispatchers.IO) {
+                    dataProvider.saveUserProfilePhoto(photoBitmap, "JPEG_" + UUID.randomUUID())
+                }
+                profilePhotoBitmap = null
+            }
+        }
+    }
+
+    private fun initCoroutineJob() {
+        job = Job()
+        uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
     }
 
     fun logOut() {
@@ -128,10 +160,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         }
     }
 
-    fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String) {
-        dataProvider.saveUserProfilePhoto(profilePhotoBitmap, name)
+    //This Method called from OnActivityResult (before onResume) => view == null
+    fun updateUserProfilePhoto(profilePhotoBitmap: Bitmap) {
+        this.profilePhotoBitmap = profilePhotoBitmap
     }
-
 
     interface MainView {
         fun showLoading(isLoading: Boolean)
@@ -153,5 +185,11 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun showNoResults()
 
         fun showSearchedProducts(productList: List<Product>)
+
+        fun setUserAvatarImage(bitmap: Bitmap)
+
+        fun showAvatarLoadError(throwable: Throwable)
+
+        fun setUserAvatarImage(imageByteArray: ByteArray)
     }
 }

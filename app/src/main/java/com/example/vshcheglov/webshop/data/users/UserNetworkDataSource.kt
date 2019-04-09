@@ -1,29 +1,29 @@
 package com.example.vshcheglov.webshop.data.users
 
 import android.graphics.Bitmap
-import android.net.Uri
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.OrderResponse
 import com.example.vshcheglov.webshop.data.enteties.UserResponse
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.*
 import timber.log.Timber
-import java.io.File
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import android.graphics.Bitmap.CompressFormat
-import android.R.attr.bitmap
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
 
 class UserNetworkDataSource {
+
+    companion object {
+        const val MAX_PHOTO_SIZE = 1024*1024 * 20L
+    }
+
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
     @Inject
@@ -157,17 +157,107 @@ class UserNetworkDataSource {
 
     private fun onGetUserOrdersSuccess(
         continuation: CancellableContinuation<MutableList<OrderResponse>>,
-        document: QuerySnapshot) {
+        document: QuerySnapshot
+    ) {
 
         val order = document.toObjects(OrderResponse::class.java)
         continuation.resume(order)
     }
 
     fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String) {
-        val byteOutputStream = ByteArrayOutputStream()
-        profilePhotoBitmap.compress(CompressFormat.PNG, 0 , byteOutputStream)
-        val bitmapData = byteOutputStream.toByteArray()
-        val byteInputStream = ByteArrayInputStream(bitmapData)
-        firestoreStorage.getReference("userImages/$name").putStream(byteInputStream)
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            val byteOutputStream = ByteArrayOutputStream()
+            profilePhotoBitmap.compress(CompressFormat.PNG, 0, byteOutputStream)
+            val bitmapData = byteOutputStream.toByteArray()
+            val byteInputStream = ByteArrayInputStream(bitmapData)
+
+            val avatarStorageReference = "userImages/$name"
+            val avatarMap = mapOf(
+                Pair("avatarStorageReference", avatarStorageReference),
+                Pair("timestamp", Timestamp.now())
+            )
+
+            firestoreStorage.getReference(avatarStorageReference).putStream(byteInputStream)
+            firestore.collection("users/${currentUser.uid}/avatars").add(avatarMap)
+        } else {
+            throw Exception("User not authorized.")
+        }
+    }
+
+    suspend fun getUserAvatarBitmap(): ByteArray {
+        val avatarReference = getUserAvatarReference()
+        return getUserAvatarBitmap(avatarReference)
+    }
+
+    private suspend fun getUserAvatarBitmap(avatarReference: String ) = suspendCancellableCoroutine<ByteArray> { continuation ->
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            val reference = firestoreStorage.getReference(avatarReference)
+            reference.getBytes(MAX_PHOTO_SIZE)
+                .addOnSuccessListener {
+                    continuation.resume(it)
+                }
+                .addOnFailureListener {
+                    onAvatarLoadError(continuation = continuation)
+                }
+        } else {
+            throw Exception("User not authorized.")
+        }
+    }
+
+    private fun onAvatarLoadError(
+        throwable: Throwable = java.lang.Exception("Avatar load error"),
+        continuation: CancellableContinuation<ByteArray>,
+        exceptionMessage: String = "Avatar load error"
+    ) {
+        if (continuation.isCancelled || !continuation.isActive) {
+            continuation.resumeWithException(CancellationException())
+        } else {
+            Timber.d("$exceptionMessage: $throwable")
+            continuation.resumeWithException(throwable)
+        }
+    }
+
+    private suspend fun getUserAvatarReference() = suspendCancellableCoroutine<String> { continuation ->
+        val currentUser = firebaseAuth.currentUser
+        if (currentUser != null) {
+            firestore.collection("users/${currentUser.uid}/avatars")
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(1)
+                .get()
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        onAvatarMapLoadSuccess(continuation, document)
+                        break
+                    }
+                }
+                .addOnFailureListener {
+                    onAvatarReferenceLoadError(it, continuation, "AvatarLoadError")
+                }
+        } else {
+            throw Exception("User not authorized.")
+        }
+        //firestoreStorage.getReference("userImages/").getF
+    }
+
+    private fun onAvatarReferenceLoadError(
+        throwable: Throwable = java.lang.Exception("Avatar load error"),
+        continuation: CancellableContinuation<String>,
+        exceptionMessage: String = "Avatar load error"
+    ) {
+        if (continuation.isCancelled || !continuation.isActive) {
+            continuation.resumeWithException(CancellationException())
+        } else {
+            Timber.d("$exceptionMessage: $throwable")
+            continuation.resumeWithException(throwable)
+        }
+    }
+
+    private fun onAvatarMapLoadSuccess(continuation: CancellableContinuation<String>, document: QueryDocumentSnapshot) {
+        val avatarMap = document.data
+        avatarMap["avatarStorageReference"]?.let {
+            continuation.resume(it as String)
+        } ?: onAvatarReferenceLoadError(continuation = continuation)
     }
 }

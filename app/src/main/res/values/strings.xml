@@ -81,4 +81,6 @@
     <string name="set_profile_photo">Set profile photo</string>
     <string name="from_camera">From camera</string>
     <string name="from_gallery">From gallery</string>
+    <string name="set_picture_with">Set picture with…</string>
+    <string name="taking_photo_error">Taking photo error</string>
 </resources>

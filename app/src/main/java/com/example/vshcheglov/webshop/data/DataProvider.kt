@@ -51,4 +51,6 @@ class DataProvider {
         userRepository.saveUserProfilePhoto(profilePhotoBitmap, name)
     }
 
+    suspend fun getUserAvatarBitmap() = userRepository.getUserAvatarBitmap()
+
 }
