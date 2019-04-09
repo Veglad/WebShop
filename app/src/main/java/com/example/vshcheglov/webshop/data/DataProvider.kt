@@ -42,9 +42,9 @@ class DataProvider {
         userRepository.logOut()
     }
 
-    suspend fun getUserOrders()  = userRepository.getUserOrders()
+    suspend fun getUserOrders() = userRepository.getUserOrders()
 
-    fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String)  {
+    fun saveUserProfilePhoto(profilePhotoBitmap: Bitmap, name: String) {
         userRepository.saveUserProfilePhoto(profilePhotoBitmap, name)
     }
 

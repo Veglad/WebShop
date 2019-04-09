@@ -110,7 +110,6 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     private fun loadUserAvatar() {
         if (userAvatarBitmap == null) {
             uiCoroutineScope.launch {
-                view?.setAvatarImageLoading(true)
                 try {
                     val avatarByteArray = withContext(Dispatchers.IO) { dataProvider.getUserAvatarByteArray() }
                     val avatarBitmap = withContext(Dispatchers.Default) {
@@ -120,8 +119,6 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
                     view?.setUserAvatarImage(avatarBitmap)
                 } catch (ex: Exception) {
                     view?.showAvatarLoadError(ex)
-                } finally {
-                    view?.setAvatarImageLoading(false)
                 }
             }
         }
@@ -137,14 +134,14 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         loadUserEmail()
         loadUserAvatar()
 
-        if(isNeedToSaveAvatar) {
+        if (isNeedToSaveAvatar) {
             userAvatarBitmap?.let {
                 uiCoroutineScope.launch {
                     view?.setUserAvatarImage(it)
                     withContext(Dispatchers.IO) {
                         dataProvider.saveUserProfilePhoto(it, "JPEG_" + UUID.randomUUID())
                     }
-                    isNeedToSaveAvatar = false
+                    isNeedToSaveAvatar = false//TODO: Handle if photo not saved
                 }
             }
         }
@@ -205,7 +202,5 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun setUserAvatarImage(bitmap: Bitmap)
 
         fun showAvatarLoadError(throwable: Throwable)
-
-        fun setAvatarImageLoading(isLoading: Boolean)
     }
 }

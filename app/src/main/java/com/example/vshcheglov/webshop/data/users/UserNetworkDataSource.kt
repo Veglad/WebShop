@@ -21,7 +21,7 @@ import java.io.ByteArrayOutputStream
 class UserNetworkDataSource {
 
     companion object {
-        const val MAX_PHOTO_SIZE = 1024*1024 * 20L
+        const val MAX_PHOTO_SIZE = 1024 * 1024 * 20L
     }
 
     @Inject
@@ -190,21 +190,22 @@ class UserNetworkDataSource {
         return getUserAvatarByteArray(avatarReference)
     }
 
-    private suspend fun getUserAvatarByteArray(avatarReference: String ) = suspendCancellableCoroutine<ByteArray> { continuation ->
-        val currentUser = firebaseAuth.currentUser
-        if (currentUser != null) {
-            val reference = firestoreStorage.getReference(avatarReference)
-            reference.getBytes(MAX_PHOTO_SIZE)
-                .addOnSuccessListener {
-                    continuation.resume(it)
-                }
-                .addOnFailureListener {
-                    onAvatarLoadError(continuation = continuation)
-                }
-        } else {
-            throw Exception("User not authorized.")
+    private suspend fun getUserAvatarByteArray(avatarReference: String) =
+        suspendCancellableCoroutine<ByteArray> { continuation ->
+            val currentUser = firebaseAuth.currentUser
+            if (currentUser != null) {
+                val reference = firestoreStorage.getReference(avatarReference)
+                reference.getBytes(MAX_PHOTO_SIZE)
+                    .addOnSuccessListener {
+                        continuation.resume(it)
+                    }
+                    .addOnFailureListener {
+                        onAvatarLoadError(continuation = continuation)
+                    }
+            } else {
+                throw Exception("User not authorized.")
+            }
         }
-    }
 
     private fun onAvatarLoadError(
         throwable: Throwable = java.lang.Exception("Avatar load error"),

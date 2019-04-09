@@ -244,7 +244,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                         presenter.updateUserProfilePhoto(profilePhotoBitmap)
                     }
 
-                    if(currentPhotoPath.isNotEmpty()) {
+                    if (currentPhotoPath.isNotEmpty()) {
                         deleteTempPhotoFile(currentPhotoPath)
                     }
                 }
@@ -428,9 +428,5 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
 
     override fun showAvatarLoadError(throwable: Throwable) {
         setUserAvatarImage(BitmapFactory.decodeResource(resources, R.drawable.profile_avatar_placeholder_large))
-    }
-
-    override fun setAvatarImageLoading(isLoading: Boolean) {
-        navHeaderImageProgressBar.visibility = if(isLoading) View.VISIBLE else View.GONE
     }
 }
