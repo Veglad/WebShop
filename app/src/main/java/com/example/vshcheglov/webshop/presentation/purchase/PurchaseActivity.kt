@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.presentation.purchase
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.MenuItem
 import android.view.View
 import com.example.vshcheglov.webshop.R
@@ -48,7 +48,7 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
 
     override fun showProducts(productToTimeStampList: List<Pair<OrderProduct, Timestamp>>) {
         boughtRecyclerAdapter = PurchaseRecyclerAdapter(this, productToTimeStampList)
-        purchaseRecyclerView.layoutManager = GridLayoutManager(this, COLUMNS_NUMBER)
+        purchaseRecyclerView.layoutManager = androidx.recyclerview.widget.GridLayoutManager(this, COLUMNS_NUMBER)
         purchaseRecyclerView.adapter = boughtRecyclerAdapter
     }
 

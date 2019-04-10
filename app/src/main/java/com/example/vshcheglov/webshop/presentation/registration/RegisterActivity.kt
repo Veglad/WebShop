@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.presentation.registration
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.text.InputType
 import android.view.MenuItem
 import android.view.MotionEvent

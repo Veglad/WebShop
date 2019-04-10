@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.presentation.basket.adapter
 
 import android.content.Context
 import android.graphics.Paint
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
 class BasketRecyclerAdapter( private val cardProductList: MutableList<ProductBasketCard>) :
-    RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
 
     var onProductNumberIncreasedListener: ((Int) -> Unit)? = null
     var onProductNumberDecreasedListener: ((Int) -> Unit)? = null
@@ -115,5 +115,5 @@ class BasketRecyclerAdapter( private val cardProductList: MutableList<ProductBas
         initTotalProductsPriceTitle(view, totalPrice, percentageDiscount)
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 }

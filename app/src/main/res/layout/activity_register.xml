@@ -8,12 +8,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@drawable/form_screen_background">
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
             android:id="@+id/registerActionBar"
             android:layout_width="match_parent"
             android:layout_height="?android:attr/actionBarSize"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".presentation.login.LoginActivity"
@@ -33,7 +33,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginBottom="80dp"
                 app:layout_constraintTop_toTopOf="parent"/>
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:theme="@style/TextInputLabel"
@@ -44,14 +44,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:errorEnabled="true">
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/registerEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:hint="@string/e_mail"
                     android:inputType="textEmailAddress"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
         <FrameLayout
                 android:id="@+id/registerPasswordFrameLayout"
                 android:layout_width="match_parent"
@@ -61,21 +61,21 @@
                 app:layout_constraintStart_toStartOf="@+id/registerEmailTextInput"
                 app:layout_constraintEnd_toEndOf="@+id/registerEmailTextInput"
                 android:layout_marginTop="8dp">
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/registerPasswordTextInput"
                     android:theme="@style/TextInputLabel"
                     app:errorTextAppearance="@style/TextInputLabelErrorState"
                     app:errorEnabled="true">
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/registerPassword"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textColor="@color/white"
                         android:hint="@string/password"
                         android:inputType="textPassword"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
             <ImageButton
                     android:id="@+id/registerShowPasswordButton"
                     android:layout_width="wrap_content"
@@ -95,21 +95,21 @@
                 app:layout_constraintStart_toStartOf="@+id/registerEmailTextInput"
                 app:layout_constraintEnd_toEndOf="@+id/registerEmailTextInput"
                 android:layout_marginTop="8dp">
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/registerConfirmPasswordTextInput"
                     android:theme="@style/TextInputLabel"
                     app:errorTextAppearance="@style/TextInputLabelErrorState"
                     app:errorEnabled="true">
-                <android.support.v7.widget.AppCompatEditText
+                <androidx.appcompat.widget.AppCompatEditText
                         android:id="@+id/registerConfirmPassword"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textColor="@color/white"
                         android:hint="@string/confirm_password"
                         android:inputType="textPassword"/>
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
             <ImageButton
                     android:id="@+id/showConfirmPasswordButton"
                     android:layout_width="wrap_content"
@@ -141,5 +141,5 @@
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent">
         </br.com.simplepass.loading_button_lib.customViews.CircularProgressButton>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

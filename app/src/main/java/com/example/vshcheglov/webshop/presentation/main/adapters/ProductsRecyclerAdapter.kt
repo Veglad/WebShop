@@ -4,14 +4,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearSnapHelper
-import android.support.v7.widget.RecyclerView
+import androidx.core.app.ActivityOptionsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.support.v4.util.Pair
+import androidx.core.util.Pair
 import android.widget.Filter
 import android.widget.Filterable
 import com.bumptech.glide.Glide
@@ -26,7 +26,7 @@ class ProductsRecyclerAdapter(
     private val context: Context,
     private var productList: MutableList<Product> = mutableListOf(),
     private var promotionalProductList: List<Product> = mutableListOf()
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     companion object {
         private const val PROMOTIONAL_POSITION = 1
@@ -51,10 +51,10 @@ class ProductsRecyclerAdapter(
         }
     }
 
-    private val viewPool = RecyclerView.RecycledViewPool()
-    private val linearSnapHelper = LinearSnapHelper()
+    private val viewPool = androidx.recyclerview.widget.RecyclerView.RecycledViewPool()
+    private val linearSnapHelper = androidx.recyclerview.widget.LinearSnapHelper()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder = when (viewType) {
         TITLE_TYPE -> {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.products_recycler_title, parent, false)
@@ -80,7 +80,7 @@ class ProductsRecyclerAdapter(
         else -> DEVICES_TYPE
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
 
         when (getItemViewType(position)) {
             TITLE_TYPE -> {
@@ -95,7 +95,7 @@ class ProductsRecyclerAdapter(
         }
     }
 
-    private fun bindTitles(holder: RecyclerView.ViewHolder, position: Int) {
+    private fun bindTitles(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         (holder as TitleViewHolder).apply {
             view.productsRecyclerTitleTextView.text = if (position == 0) {
                 view.context.getString(R.string.promotional_title)
@@ -105,9 +105,13 @@ class ProductsRecyclerAdapter(
         }
     }
 
-    private fun bindPromotionalList(holder: RecyclerView.ViewHolder) {
+    private fun bindPromotionalList(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         val promotionalViewHolder = (holder as PromotionalViewHolder)
-        val horizontalManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        val horizontalManager = androidx.recyclerview.widget.LinearLayoutManager(
+            context,
+            androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
+            false
+        )
         with(promotionalViewHolder.view.promotionalRecyclerView) {
             setRecycledViewPool(viewPool)
             layoutManager = horizontalManager
@@ -117,7 +121,7 @@ class ProductsRecyclerAdapter(
         }
     }
 
-    private fun bindProductsList(holder: RecyclerView.ViewHolder, position: Int) {
+    private fun bindProductsList(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         val view = (holder as ProductsViewHolder).view
         val product = getProductByPosition(position)
         with(product) {
@@ -178,9 +182,9 @@ class ProductsRecyclerAdapter(
         notifyItemChanged(PROMOTIONAL_POSITION)
     }
 
-    class ProductsViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class ProductsViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 
-    class PromotionalViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class PromotionalViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 
-    class TitleViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class TitleViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 }

@@ -1,8 +1,8 @@
 package com.example.vshcheglov.webshop.presentation.basket.adapter
 
 import android.graphics.Canvas
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
 class BasketRecyclerItemTouchHelper(
@@ -10,14 +10,14 @@ class BasketRecyclerItemTouchHelper(
     swipeDirs: Int,
     private val listener: BasketRecyclerItemTouchHelperListener
 ) : ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs) {
-    override fun onMove(recyclerView: RecyclerView, holder: RecyclerView.ViewHolder,
-                        targetHolder: RecyclerView.ViewHolder) = true
+    override fun onMove(recyclerView: androidx.recyclerview.widget.RecyclerView, holder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                        targetHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder) = true
 
-    override fun onSwiped(holder: RecyclerView.ViewHolder, direction: Int) {
+    override fun onSwiped(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int) {
         listener.onSwiped(holder, direction, holder.adapterPosition)
     }
 
-    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+    override fun onSelectedChanged(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder?, actionState: Int) {
         viewHolder?.let {
             val foregroundView = (viewHolder as BasketRecyclerAdapter.ViewHolder).view.basketItemViewForeground
             ItemTouchHelper.Callback.getDefaultUIUtil().onSelected(foregroundView)
@@ -26,8 +26,8 @@ class BasketRecyclerItemTouchHelper(
 
     override fun onChildDrawOver(
         c: Canvas,
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder?,
+        recyclerView: androidx.recyclerview.widget.RecyclerView,
+        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder?,
         dX: Float,
         dY: Float,
         actionState: Int,
@@ -38,15 +38,15 @@ class BasketRecyclerItemTouchHelper(
             actionState, isCurrentlyActive)
     }
 
-    override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+    override fun clearView(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
         val foregroundView = (viewHolder as BasketRecyclerAdapter.ViewHolder).view.basketItemViewForeground
         ItemTouchHelper.Callback.getDefaultUIUtil().clearView(foregroundView)
     }
 
     override fun onChildDraw(
         c: Canvas,
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
+        recyclerView: androidx.recyclerview.widget.RecyclerView,
+        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
         dX: Float,
         dY: Float,
         actionState: Int,
@@ -62,7 +62,7 @@ class BasketRecyclerItemTouchHelper(
     }
 
     interface BasketRecyclerItemTouchHelperListener {
-        fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int)
+        fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int, position: Int)
     }
 
 }

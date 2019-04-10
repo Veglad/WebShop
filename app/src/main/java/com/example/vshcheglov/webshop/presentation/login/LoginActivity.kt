@@ -3,7 +3,7 @@ package com.example.vshcheglov.webshop.presentation.login
 import android.content.Intent
 import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.text.InputType
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
