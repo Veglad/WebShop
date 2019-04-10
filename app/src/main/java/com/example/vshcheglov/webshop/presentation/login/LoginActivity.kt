@@ -1,10 +1,10 @@
 package com.example.vshcheglov.webshop.presentation.login
 
 import android.content.Intent
+import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.text.InputType
-import android.view.MotionEvent
 import android.widget.Toast
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
@@ -27,20 +27,24 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
         orderButton.setOnClickListener {
             emailTextInput.error = ""
             passwordTextInput.error = ""
-            presenter.logInUser(loginEmail.text.toString(),
-                loginPassword.text.toString(), isNetworkAvailable())
+            presenter.logInUser(
+                loginEmail.text.toString(),
+                loginPassword.text.toString(), isNetworkAvailable()
+            )
         }
 
         buttonRegister.setOnClickListener {
             presenter.registerUser()
         }
-        loginShowPasswordButton.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> loginPassword.inputType = InputType.TYPE_CLASS_TEXT
-                MotionEvent.ACTION_UP -> loginPassword.inputType =
-                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        useFingerprintButton.setOnClickListener {
+            Toast.makeText(this, "Fingerprint", Toast.LENGTH_LONG).show()
+        }
+        showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                loginPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            } else {
+                loginPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
-            true
         }
     }
 
