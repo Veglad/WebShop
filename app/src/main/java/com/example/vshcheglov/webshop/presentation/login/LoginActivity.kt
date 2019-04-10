@@ -1,13 +1,16 @@
 package com.example.vshcheglov.webshop.presentation.login
 
+import android.content.DialogInterface
 import android.content.Intent
-import android.hardware.biometrics.BiometricPrompt
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import android.text.InputType
 import android.widget.Toast
+import androidx.biometric.BiometricConstants.ERROR_NEGATIVE_BUTTON
+import androidx.biometric.BiometricPrompt
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
+import com.example.vshcheglov.webshop.presentation.helpres.MainThreadExecutor
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.example.vshcheglov.webshop.presentation.registration.RegisterActivity
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -37,7 +40,21 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
             presenter.registerUser()
         }
         useFingerprintButton.setOnClickListener {
-            Toast.makeText(this, "Fingerprint", Toast.LENGTH_LONG).show()
+            val biometricPrompt = BiometricPrompt(this, MainThreadExecutor(),
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        super.onAuthenticationSucceeded(result)
+                        onFingerprintSuccess()
+                    }
+                })
+
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle(getString(R.string.biometric_login_title))
+                .setDescription(getString(R.string.biometric_login_description))
+                .setNegativeButtonText(getString(R.string.cancel))
+                .build()
+
+            biometricPrompt.authenticate(promptInfo)
         }
         showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -46,6 +63,10 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
                 loginPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
         }
+    }
+
+    private fun onFingerprintSuccess() {
+        Toast.makeText(this@LoginActivity, "success", Toast.LENGTH_LONG).show()
     }
 
     override fun startMainActivity() {

@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.domain.common
+package com.example.vshcheglov.webshop.presentation.helpres
 
 enum class FingerprintState {
     NOT_SUPPORTED,

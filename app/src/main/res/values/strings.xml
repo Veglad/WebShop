@@ -84,4 +84,7 @@
     <string name="set_picture_with">Set picture with…</string>
     <string name="taking_photo_error">Taking photo error</string>
     <string name="show_password">Show password</string>
+    <string name="biometric_login_title">Login via Touch ID</string>
+    <string name="biometric_login_description">Use a fingerprint to verify your identity</string>
+    <string name="cancel">Cancel</string>
 </resources>
