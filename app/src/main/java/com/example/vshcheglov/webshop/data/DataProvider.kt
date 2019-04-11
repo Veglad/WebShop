@@ -5,6 +5,7 @@ import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.users.UserRepository
+import com.example.vshcheglov.webshop.domain.UserCredentials
 import javax.inject.Inject
 
 class DataProvider {
@@ -50,9 +51,15 @@ class DataProvider {
 
     suspend fun getUserAvatarByteArray() = userRepository.getUserAvatarByteArray()
 
-    fun saveUserCredentialsLocal(email: String, encryptedPassword: String) {
-        userRepository.saveUserCredentialsLocal(email, encryptedPassword)
+    fun saveUserCredentialsLocal(userCredentials: UserCredentials) {
+        userRepository.saveUserCredentialsLocal(userCredentials)
     }
 
     fun containsUserCredentials() = userRepository.containsUserCredentials()
+
+    fun getUserCredentials() = userRepository.getUserCredentials()
+
+    fun deleteUserCredentials() {
+        userRepository.deleteUserCredentials()
+    }
 }

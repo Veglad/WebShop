@@ -5,6 +5,7 @@ import com.example.vshcheglov.webshop.data.enteties.RealmOrder
 import com.example.vshcheglov.webshop.data.enteties.RealmUserCredentials
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderMapper
 import com.example.vshcheglov.webshop.domain.Order
+import com.example.vshcheglov.webshop.domain.UserCredentials
 import io.realm.Realm
 import io.realm.RealmList
 import javax.inject.Inject
@@ -42,7 +43,7 @@ class UserStorage {
             realm.executeTransaction { transactionRealm ->
                 val realmResults = transactionRealm.where(RealmOrder::class.java)
                     .findAll()
-                realmOrderList = mutableListOf<Order>().apply{
+                realmOrderList = mutableListOf<Order>().apply {
                     for (realmResult in realmResults) {
                         add(mapper.map(realmResult))
                     }
@@ -53,11 +54,10 @@ class UserStorage {
         return realmOrderList
     }
 
-    fun saveUserCredentialsLocal(email: String, encryptedPassword: String) {
+    fun saveUserCredentialsLocal(realmUserCredentials: RealmUserCredentials) {
         Realm.getDefaultInstance().use { realm ->
             realm.executeTransaction { transactionRealm ->
-                val userCredentials = RealmUserCredentials(email = email, encryptedPassword = encryptedPassword)
-                realm.insertOrUpdate(userCredentials)
+                realm.insertOrUpdate(realmUserCredentials)
             }
         }
     }
@@ -72,5 +72,30 @@ class UserStorage {
         }
 
         return containsCredentials
+    }
+
+    fun getUserCredentials(): RealmUserCredentials? {
+        var realmUserCredentials: RealmUserCredentials? = null
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction { transactionRealm ->
+                val realmResults = transactionRealm.where(RealmUserCredentials::class.java)
+                    .findFirst()
+                realmResults?.let {
+                    realmUserCredentials = RealmUserCredentials(realmResults.email, realmResults.encryptedPassword)
+                }
+            }
+        }
+
+        return realmUserCredentials
+    }
+
+    fun deleteUserCredentials() {
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction { transactionRealm ->
+                val realmResults = transactionRealm.where(RealmUserCredentials::class.java)
+                    .findFirst()
+                realmResults?.deleteFromRealm()
+            }
+        }
     }
 }

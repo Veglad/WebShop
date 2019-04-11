@@ -5,8 +5,10 @@ import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
 import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmResponseOrderMapper
+import com.example.vshcheglov.webshop.data.enteties.mappers.RealmUserCredentialsMapper
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseUserMapper
+import com.example.vshcheglov.webshop.domain.UserCredentials
 import javax.inject.Inject
 
 
@@ -22,6 +24,8 @@ class UserRepository {
     lateinit var responseOrderMapper: ResponseOrderMapper
     @Inject
     lateinit var realmResponseOrderMapper: RealmResponseOrderMapper
+    @Inject
+    lateinit var realmUserCredentialsMapper: RealmUserCredentialsMapper
 
     val isSignedIn: Boolean
         get() = userNetwork.isSignedIn
@@ -80,9 +84,18 @@ class UserRepository {
 
     suspend fun getUserAvatarByteArray() = userNetwork.getUserAvatarByteArray()
 
-    fun saveUserCredentialsLocal(email: String, encryptedPassword: String) {
-        userStorage.saveUserCredentialsLocal(email, encryptedPassword)
+    fun saveUserCredentialsLocal(userCredentials: UserCredentials) {
+        userStorage.saveUserCredentialsLocal(realmUserCredentialsMapper.map(userCredentials))
+    }
+
+    fun getUserCredentials() : UserCredentials? {
+        val realmCredentials = userStorage.getUserCredentials()
+        return realmCredentials?.let {  realmUserCredentialsMapper.map(it) }
     }
 
     fun containsUserCredentials() = userStorage.containsUserCredentials()
+
+    fun deleteUserCredentials() {
+        userStorage.deleteUserCredentials()
+    }
 }
