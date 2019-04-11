@@ -88,9 +88,9 @@ class UserRepository {
         userStorage.saveUserCredentialsLocal(realmUserCredentialsMapper.map(userCredentials))
     }
 
-    fun getUserCredentials() : UserCredentials? {
+    fun getUserCredentials(): UserCredentials? {
         val realmCredentials = userStorage.getUserCredentials()
-        return realmCredentials?.let {  realmUserCredentialsMapper.map(it) }
+        return realmCredentials?.let { realmUserCredentialsMapper.map(it) }
     }
 
     fun containsUserCredentials() = userStorage.containsUserCredentials()

@@ -15,15 +15,17 @@ import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
 
 @TargetApi(Build.VERSION_CODES.M)
-class Encryptor(private val keyAlias: String,
-                private val keyStoreName: String,
-                private val cipherTransformation: String) {
+class Encryptor(
+    private val keyAlias: String,
+    private val keyStoreName: String,
+    private val cipherTransformation: String
+) {
     private lateinit var keyStore: KeyStore
     private lateinit var keyPairGenerator: KeyPairGenerator
     private lateinit var cipher: Cipher
 
     val cryptoObject: BiometricPrompt.CryptoObject?
-        get(){
+        get() {
             return if (initComponents() && initCipherMode(Cipher.DECRYPT_MODE)) {
                 BiometricPrompt.CryptoObject(cipher)
             } else null
