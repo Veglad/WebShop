@@ -54,4 +54,5 @@ class DataProvider {
         userRepository.saveUserCredentialsLocal(email, encryptedPassword)
     }
 
+    fun containsUserCredentials() = userRepository.containsUserCredentials()
 }

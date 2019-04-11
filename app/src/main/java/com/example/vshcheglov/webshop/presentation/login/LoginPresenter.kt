@@ -58,9 +58,11 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
             try {
                 dataProvider.signInUser(email, password)
 
-                val encryptedPassword = encryptor.encode(password)
-                encryptedPassword?.let {
-                    dataProvider.saveUserCredentialsLocal(email, encryptedPassword)
+                if (!dataProvider.containsUserCredentials()) {
+                    val encryptedPassword = encryptor.encode(password)
+                    encryptedPassword?.let {
+                        dataProvider.saveUserCredentialsLocal(email, encryptedPassword)
+                    }
                 }
 
                 view?.startMainActivity()

@@ -61,4 +61,16 @@ class UserStorage {
             }
         }
     }
+
+    fun containsUserCredentials(): Boolean {
+        var containsCredentials = false
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction { transactionRealm ->
+                containsCredentials = transactionRealm.where(RealmUserCredentials::class.java)
+                    .findAll().isNotEmpty()
+            }
+        }
+
+        return containsCredentials
+    }
 }

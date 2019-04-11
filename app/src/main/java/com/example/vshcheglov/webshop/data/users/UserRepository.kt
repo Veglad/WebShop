@@ -83,4 +83,6 @@ class UserRepository {
     fun saveUserCredentialsLocal(email: String, encryptedPassword: String) {
         userStorage.saveUserCredentialsLocal(email, encryptedPassword)
     }
+
+    fun containsUserCredentials() = userStorage.containsUserCredentials()
 }
