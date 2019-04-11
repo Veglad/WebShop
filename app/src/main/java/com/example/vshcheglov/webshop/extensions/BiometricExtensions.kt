@@ -10,7 +10,7 @@ fun Context.canUseFingerprint(): Boolean {
     return FingerprintManagerCompat.from(this).isHardwareDetected
 }
 
-fun Context.checkSensorState(): FingerprintState {
+fun Context.getFingerprintSensorState(): FingerprintState {
     if (canUseFingerprint()) {
         val keyguardManager = this.getSystemService(KEYGUARD_SERVICE) as KeyguardManager
         if (!keyguardManager.isKeyguardSecure) {
