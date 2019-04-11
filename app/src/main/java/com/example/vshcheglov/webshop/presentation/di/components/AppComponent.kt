@@ -25,7 +25,8 @@ import javax.inject.Singleton
     modules = [
         AppModule::class,
         DataProviderModule::class,
-        MappersModule::class
+        MappersModule::class,
+        EncryptorModule::class
     ]
 )
 interface AppComponent {

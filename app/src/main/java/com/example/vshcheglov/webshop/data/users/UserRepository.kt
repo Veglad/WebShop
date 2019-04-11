@@ -79,4 +79,8 @@ class UserRepository {
     }
 
     suspend fun getUserAvatarByteArray() = userNetwork.getUserAvatarByteArray()
+
+    fun saveUserCredentialsLocal(email: String, encryptedPassword: String) {
+        userStorage.saveUserCredentialsLocal(email, encryptedPassword)
+    }
 }

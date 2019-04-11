@@ -50,4 +50,8 @@ class DataProvider {
 
     suspend fun getUserAvatarByteArray() = userRepository.getUserAvatarByteArray()
 
+    fun saveUserCredentialsLocal(email: String, encryptedPassword: String) {
+        userRepository.saveUserCredentialsLocal(email, encryptedPassword)
+    }
+
 }

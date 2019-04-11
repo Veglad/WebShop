@@ -1,12 +1,10 @@
 package com.example.vshcheglov.webshop.presentation.login
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import android.text.InputType
 import android.widget.Toast
-import androidx.biometric.BiometricConstants.ERROR_NEGATIVE_BUTTON
 import androidx.biometric.BiometricPrompt
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable

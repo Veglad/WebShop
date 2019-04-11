@@ -15,11 +15,9 @@ import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
 
 @TargetApi(Build.VERSION_CODES.M)
-object Encryptor {
-    private const val KEY_ALIAS = "key_for_pin"
-    private const val KEY_STORE = "AndroidKeyStore"
-    private const val CIPHER_TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
-
+class Encryptor(private val keyAlias: String,
+                private val keyStoreName: String,
+                private val cipherTransformation: String) {
     private lateinit var keyStore: KeyStore
     private lateinit var keyPairGenerator: KeyPairGenerator
     private lateinit var cipher: Cipher
@@ -63,7 +61,7 @@ object Encryptor {
 
     private fun initKeyStore(): Boolean {
         try {
-            keyStore = KeyStore.getInstance(KEY_STORE)
+            keyStore = KeyStore.getInstance(keyStoreName)
             keyStore.load(null)
             return true
         } catch (exception: Exception) {
@@ -77,7 +75,7 @@ object Encryptor {
     @TargetApi(Build.VERSION_CODES.M)
     private fun initKeyPairGenerator(): Boolean {
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, KEY_STORE)
+            keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, keyStoreName)
             return true
         } catch (exception: Exception) {
             exception.printStackTrace()
@@ -88,7 +86,7 @@ object Encryptor {
 
     private fun initCipher(): Boolean {
         try {
-            cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
+            cipher = Cipher.getInstance(cipherTransformation)
             return true
         } catch (exception: Exception) {
             exception.printStackTrace()
@@ -99,7 +97,7 @@ object Encryptor {
 
     private fun initKey(): Boolean {
         try {
-            return keyStore.containsAlias(KEY_ALIAS) || generateNewKey()
+            return keyStore.containsAlias(keyAlias) || generateNewKey()
         } catch (exception: Exception) {
             exception.printStackTrace()
         }
@@ -115,7 +113,7 @@ object Encryptor {
             try {
                 keyPairGenerator.initialize(
                     KeyGenParameterSpec.Builder(
-                        KEY_ALIAS,
+                        keyAlias,
                         KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                     )
                         .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
@@ -157,12 +155,12 @@ object Encryptor {
     }
 
     private fun initDecodeCipher(mode: Int) {
-        val key = keyStore.getKey(KEY_ALIAS, null) as PrivateKey
+        val key = keyStore.getKey(keyAlias, null) as PrivateKey
         cipher.init(mode, key)
     }
 
     private fun initEncodeCipher(mode: Int) {
-        val key = keyStore.getCertificate(KEY_ALIAS).publicKey
+        val key = keyStore.getCertificate(keyAlias).publicKey
 
         // workaround for using public key
         // from https://developer.android.com/reference/android/security/keystore/KeyGenParameterSpec.html
@@ -177,7 +175,7 @@ object Encryptor {
     private fun deleteInvalidKey() {
         if (initKeyStore()) {
             try {
-                keyStore.deleteEntry(KEY_ALIAS)
+                keyStore.deleteEntry(keyAlias)
             } catch (e: KeyStoreException) {
                 e.printStackTrace()
             }

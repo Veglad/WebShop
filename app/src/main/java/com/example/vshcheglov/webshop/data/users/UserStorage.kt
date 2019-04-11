@@ -2,6 +2,7 @@ package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.enteties.RealmOrder
+import com.example.vshcheglov.webshop.data.enteties.RealmUserCredentials
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderMapper
 import com.example.vshcheglov.webshop.domain.Order
 import io.realm.Realm
@@ -50,5 +51,14 @@ class UserStorage {
         }
 
         return realmOrderList
+    }
+
+    fun saveUserCredentialsLocal(email: String, encryptedPassword: String) {
+        Realm.getDefaultInstance().use { realm ->
+            realm.executeTransaction { transactionRealm ->
+                val userCredentials = RealmUserCredentials(email = email, encryptedPassword = encryptedPassword)
+                realm.insertOrUpdate(userCredentials)
+            }
+        }
     }
 }
