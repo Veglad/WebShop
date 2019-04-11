@@ -5,8 +5,8 @@ import android.security.keystore.KeyProperties
 import android.security.keystore.KeyGenParameterSpec
 import android.os.Build
 import android.annotation.TargetApi
-import android.hardware.biometrics.BiometricPrompt
 import android.util.Base64
+import androidx.biometric.BiometricPrompt
 import java.security.*
 import java.security.spec.MGF1ParameterSpec
 import java.security.spec.X509EncodedKeySpec
