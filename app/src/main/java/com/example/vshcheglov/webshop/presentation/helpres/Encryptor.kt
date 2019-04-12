@@ -7,6 +7,7 @@ import android.os.Build
 import android.annotation.TargetApi
 import android.util.Base64
 import androidx.biometric.BiometricPrompt
+import timber.log.Timber
 import java.security.*
 import java.security.spec.MGF1ParameterSpec
 import java.security.spec.X509EncodedKeySpec
@@ -15,11 +16,14 @@ import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
 
 @TargetApi(Build.VERSION_CODES.M)
-class Encryptor(
-    private val keyAlias: String,
-    private val keyStoreName: String,
-    private val cipherTransformation: String
-) {
+class Encryptor {
+
+    companion object {
+        private const val KEY_ALIAS = "key_for_pin"
+        private const val KEYSTORE_NAME = "AndroidKeyStore"
+        private const val CIPHER_TRANSFORMATION = "RSA/ECB/OAEPWithSHA-256AndMGF1Padding"
+    }
+
     private lateinit var keyStore: KeyStore
     private lateinit var keyPairGenerator: KeyPairGenerator
     private lateinit var cipher: Cipher
@@ -38,6 +42,7 @@ class Encryptor(
                 return Base64.encodeToString(bytes, Base64.NO_WRAP)
             }
         } catch (exception: Exception) {
+            Timber.e(exception, "Encode error")
             exception.printStackTrace()
         }
 
@@ -50,6 +55,7 @@ class Encryptor(
             val bytes = Base64.decode(encodedString, Base64.NO_WRAP)
             return String(cipher.doFinal(bytes))
         } catch (exception: Exception) {
+            Timber.e(exception, "Decode error")
             exception.printStackTrace()
         }
 
@@ -63,10 +69,11 @@ class Encryptor(
 
     private fun initKeyStore(): Boolean {
         try {
-            keyStore = KeyStore.getInstance(keyStoreName)
+            keyStore = KeyStore.getInstance(KEYSTORE_NAME)
             keyStore.load(null)
             return true
         } catch (exception: Exception) {
+            Timber.e(exception, "Keystore init error")
             exception.printStackTrace()
         }
 
@@ -77,9 +84,10 @@ class Encryptor(
     @TargetApi(Build.VERSION_CODES.M)
     private fun initKeyPairGenerator(): Boolean {
         try {
-            keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, keyStoreName)
+            keyPairGenerator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_RSA, KEYSTORE_NAME)
             return true
         } catch (exception: Exception) {
+            Timber.e(exception, "KeyPairGenerator init error")
             exception.printStackTrace()
         }
 
@@ -88,9 +96,10 @@ class Encryptor(
 
     private fun initCipher(): Boolean {
         try {
-            cipher = Cipher.getInstance(cipherTransformation)
+            cipher = Cipher.getInstance(CIPHER_TRANSFORMATION)
             return true
         } catch (exception: Exception) {
+            Timber.e(exception, "Cipher init error")
             exception.printStackTrace()
         }
 
@@ -99,8 +108,9 @@ class Encryptor(
 
     private fun initKey(): Boolean {
         try {
-            return keyStore.containsAlias(keyAlias) || generateNewKey()
+            return keyStore.containsAlias(KEY_ALIAS) || generateNewKey()
         } catch (exception: Exception) {
+            Timber.e(exception, "Key init error")
             exception.printStackTrace()
         }
         return false
@@ -115,7 +125,7 @@ class Encryptor(
             try {
                 keyPairGenerator.initialize(
                     KeyGenParameterSpec.Builder(
-                        keyAlias,
+                        KEY_ALIAS,
                         KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                     )
                         .setDigests(KeyProperties.DIGEST_SHA256, KeyProperties.DIGEST_SHA512)
@@ -126,6 +136,7 @@ class Encryptor(
                 keyPairGenerator.generateKeyPair()
                 return true
             } catch (exception: Exception) {
+                Timber.e(exception, "New key generation error")
                 exception.printStackTrace()
             }
 
@@ -147,9 +158,11 @@ class Encryptor(
             return true
 
         } catch (exception: KeyPermanentlyInvalidatedException) {
+            Timber.e(exception, "KeyPermanentlyInvalidatedException exception")
             exception.printStackTrace()
             deleteInvalidKey()
         } catch (exception: Exception) {
+            Timber.e(exception, "Cipher moder init error")
             exception.printStackTrace()
         }
 
@@ -157,12 +170,12 @@ class Encryptor(
     }
 
     private fun initDecodeCipher(mode: Int) {
-        val key = keyStore.getKey(keyAlias, null) as PrivateKey
+        val key = keyStore.getKey(KEY_ALIAS, null) as PrivateKey
         cipher.init(mode, key)
     }
 
     private fun initEncodeCipher(mode: Int) {
-        val key = keyStore.getCertificate(keyAlias).publicKey
+        val key = keyStore.getCertificate(KEY_ALIAS).publicKey
 
         // workaround for using public key
         // from https://developer.android.com/reference/android/security/keystore/KeyGenParameterSpec.html
@@ -177,9 +190,10 @@ class Encryptor(
     private fun deleteInvalidKey() {
         if (initKeyStore()) {
             try {
-                keyStore.deleteEntry(keyAlias)
-            } catch (e: KeyStoreException) {
-                e.printStackTrace()
+                keyStore.deleteEntry(KEY_ALIAS)
+            } catch (exception: KeyStoreException) {
+                Timber.e(exception, "Key deletion error")
+                exception.printStackTrace()
             }
 
         }

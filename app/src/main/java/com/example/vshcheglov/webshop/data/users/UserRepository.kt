@@ -8,7 +8,7 @@ import com.example.vshcheglov.webshop.data.enteties.mappers.RealmResponseOrderMa
 import com.example.vshcheglov.webshop.data.enteties.mappers.RealmUserCredentialsMapper
 import com.example.vshcheglov.webshop.domain.Order
 import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseUserMapper
-import com.example.vshcheglov.webshop.domain.UserCredentials
+import com.example.vshcheglov.webshop.domain.User.UserCredentials
 import javax.inject.Inject
 
 
@@ -20,6 +20,8 @@ class UserRepository {
     lateinit var mapper: ResponseUserMapper
     @Inject
     lateinit var userStorage: UserStorage
+    @Inject
+    lateinit var userCredentialsStorage: UserCredentialsStorage
     @Inject
     lateinit var responseOrderMapper: ResponseOrderMapper
     @Inject
@@ -84,18 +86,18 @@ class UserRepository {
 
     suspend fun getUserAvatarByteArray() = userNetwork.getUserAvatarByteArray()
 
-    fun saveUserCredentialsLocal(userCredentials: UserCredentials) {
-        userStorage.saveUserCredentialsLocal(realmUserCredentialsMapper.map(userCredentials))
+    fun saveUserCredentials(userCredentials: UserCredentials) {
+        userCredentialsStorage.saveUserCredentials(realmUserCredentialsMapper.map(userCredentials))
     }
 
     fun getUserCredentials(): UserCredentials? {
-        val realmCredentials = userStorage.getUserCredentials()
+        val realmCredentials = userCredentialsStorage.getUserCredentials()
         return realmCredentials?.let { realmUserCredentialsMapper.map(it) }
     }
 
-    fun containsUserCredentials() = userStorage.containsUserCredentials()
+    fun containsUserCredentials() = userCredentialsStorage.containsUserCredentials()
 
     fun deleteUserCredentials() {
-        userStorage.deleteUserCredentials()
+        userCredentialsStorage.deleteUserCredentials()
     }
 }

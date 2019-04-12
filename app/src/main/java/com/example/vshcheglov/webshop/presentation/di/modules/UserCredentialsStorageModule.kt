@@ -1,14 +1,14 @@
 package com.example.vshcheglov.webshop.presentation.di.modules
 
-import com.example.vshcheglov.webshop.presentation.helpres.Encryptor
+import com.example.vshcheglov.webshop.data.users.UserCredentialsStorage
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
 @Module
-class EncryptorModule() {
+class UserCredentialsStorageModule {
 
     @Provides
     @Singleton
-    fun providesEncryptor() = Encryptor()
+    fun providesUserCredentialsStorage() = UserCredentialsStorage()
 }

@@ -3,7 +3,7 @@ package com.example.vshcheglov.webshop.presentation.login
 import androidx.biometric.BiometricPrompt
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
-import com.example.vshcheglov.webshop.domain.UserCredentials
+import com.example.vshcheglov.webshop.domain.User.UserCredentials
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
 import com.example.vshcheglov.webshop.presentation.helpres.Encryptor
@@ -56,7 +56,7 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
                 if (!dataProvider.containsUserCredentials()) {
                     val encryptedPassword = encryptor.encode(password)
                     encryptedPassword?.let {
-                        dataProvider.saveUserCredentialsLocal(UserCredentials(email, encryptedPassword))
+                        dataProvider.saveUserCredentials(UserCredentials(email, encryptedPassword))
                     }
                 }
 
