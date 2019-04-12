@@ -1,37 +1,31 @@
 package com.example.vshcheglov.webshop.presentation.login
 
+import androidx.biometric.BiometricPrompt
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
-import com.example.vshcheglov.webshop.data.users.UserRepository
+import com.example.vshcheglov.webshop.domain.User.UserCredentials
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
+import com.example.vshcheglov.webshop.presentation.helpres.Encryptor
+import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
 import timber.log.Timber
 import java.lang.Exception
+import javax.crypto.Cipher
 import javax.inject.Inject
 
 class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     @Inject
     lateinit var dataProvider: DataProvider
+    @Inject
+    lateinit var encryptor: Encryptor
 
     private val job = Job()
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
 
     init {
         App.appComponent.inject(this)
-    }
-
-    override fun onTakeView(view: View?) {
-        super.onTakeView(view)
-        if (dataProvider.isSignedIn) {
-            Timber.d("user is authorized")
-            view?.startMainActivity()
-        }
     }
 
     fun logInUser(email: String, password: String, isNetworkAvailable: Boolean) {
@@ -47,17 +41,25 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
 
         if (isNetworkAvailable) {
             if (!isValid) return
-            signInUser(email, password)
+            performLogin(email, password)
         } else {
             view?.showNoInternetError()
         }
     }
 
-    private fun signInUser(email: String, password: String) {
+    private fun performLogin(email: String, password: String) {
         uiCoroutineScope.launch {
             view?.setShowProgress(true)
             try {
                 dataProvider.signInUser(email, password)
+
+                if (!dataProvider.containsUserCredentials()) {
+                    val encryptedPassword = encryptor.encode(password)
+                    encryptedPassword?.let {
+                        dataProvider.saveUserCredentials(UserCredentials(email, encryptedPassword))
+                    }
+                }
+
                 view?.startMainActivity()
             } catch (ex: Exception) {
                 Timber.e("user sign in error: $ex")
@@ -77,6 +79,48 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
         job.cancel()
     }
 
+    fun useBiometricPrompt() {
+        if (dataProvider.containsUserCredentials()) {
+            val credentials = dataProvider.getUserCredentials()
+            credentials?.let {
+                view?.showUserEmail(credentials.email)
+            }
+
+            val cryptoObject = encryptor.cryptoObject
+            if (cryptoObject != null) {
+                view?.showBiometricPrompt(cryptoObject)
+            } else {
+                dataProvider.deleteUserCredentials()
+                view?.showNewBiometricEnrolledError()
+            }
+        } else {
+            view?.hideBiometricPromptFeature()
+        }
+    }
+
+    fun authenticateUser(cipher: Cipher?, isNetworkAvailable: Boolean) {
+        val userCredentials = dataProvider.getUserCredentials()
+        if (cipher == null) {
+            view?.showBiometricError()
+            Timber.e("Cipher is null")
+        } else if (userCredentials == null) {
+            Timber.e("Incorrect saved credentials")
+            view?.showBiometricError()
+        } else {
+            val password = encryptor.decode(userCredentials.encryptedPassword, cipher)
+            if (password != null) {
+                if (isNetworkAvailable) {
+                    performLogin(userCredentials.email, password)
+                } else {
+                    view?.showNoInternetError()
+                }
+            } else {
+                Timber.e("Password decryption error")
+                view?.showBiometricError()
+            }
+        }
+    }
+
     interface View {
         fun startMainActivity()
 
@@ -91,5 +135,15 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
         fun showInvalidPassword()
 
         fun setShowProgress(isLoading: Boolean)
+
+        fun showBiometricPrompt(cryptoObject: BiometricPrompt.CryptoObject)
+
+        fun showBiometricError()
+
+        fun showNewBiometricEnrolledError()
+
+        fun hideBiometricPromptFeature()
+
+        fun showUserEmail(email: String)
     }
 }

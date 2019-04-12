@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.purchase
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ import java.util.*
 
 class PurchaseRecyclerAdapter(private val context: Context,
                               var productToTimeStampList: List<Pair<OrderProduct, Timestamp>> = mutableListOf()) :
-    RecyclerView.Adapter<PurchaseRecyclerAdapter.ViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<PurchaseRecyclerAdapter.ViewHolder>() {
 
     private val simpleDateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
@@ -46,5 +46,5 @@ class PurchaseRecyclerAdapter(private val context: Context,
         }
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 }

@@ -2,12 +2,18 @@ package com.example.vshcheglov.webshop.presentation.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import android.text.Editable
+import com.google.android.material.snackbar.Snackbar
 import android.text.InputType
-import android.view.MotionEvent
-import android.widget.Toast
+import android.view.View
+import android.widget.TextView
+import androidx.biometric.BiometricPrompt
 import com.example.vshcheglov.webshop.R
+import com.example.vshcheglov.webshop.extensions.canUseFingerprint
+import com.example.vshcheglov.webshop.extensions.getFingerprintSensorState
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
+import com.example.vshcheglov.webshop.presentation.helpres.FingerprintState
+import com.example.vshcheglov.webshop.presentation.helpres.MainThreadExecutor
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.example.vshcheglov.webshop.presentation.registration.RegisterActivity
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -27,21 +33,72 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
         orderButton.setOnClickListener {
             emailTextInput.error = ""
             passwordTextInput.error = ""
-            presenter.logInUser(loginEmail.text.toString(),
-                loginPassword.text.toString(), isNetworkAvailable())
+            presenter.logInUser(
+                loginEmail.text.toString(),
+                loginPassword.text.toString(), isNetworkAvailable()
+            )
         }
 
         buttonRegister.setOnClickListener {
             presenter.registerUser()
         }
-        loginShowPasswordButton.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> loginPassword.inputType = InputType.TYPE_CLASS_TEXT
-                MotionEvent.ACTION_UP -> loginPassword.inputType =
-                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-            }
-            true
+        useFingerprintButton.setOnClickListener {
+            prepareBiometricPrompt()
         }
+        showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                loginPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            } else {
+                loginPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
+        }
+    }
+
+    private fun prepareBiometricPrompt() {
+        if (canUseFingerprint() && getFingerprintSensorState() == FingerprintState.READY) {
+            presenter.useBiometricPrompt()
+        } else {
+            useFingerprintButton.visibility = View.GONE
+        }
+    }
+
+    override fun hideBiometricPromptFeature() {
+        useFingerprintButton.visibility = View.GONE
+    }
+
+    override fun onResume() {
+        super.onResume()
+        prepareBiometricPrompt()
+    }
+
+    override fun showUserEmail(email: String) {
+        loginEmail.setText(email, TextView.BufferType.EDITABLE)
+    }
+
+    override fun showBiometricPrompt(cryptoObject: BiometricPrompt.CryptoObject) {
+        val biometricPrompt = BiometricPrompt(this, MainThreadExecutor(),
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    presenter.authenticateUser(result.cryptoObject?.cipher, isNetworkAvailable())
+                }
+            })
+
+        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle(getString(R.string.biometric_login_title))
+            .setDescription(getString(R.string.biometric_login_description))
+            .setNegativeButtonText(getString(R.string.cancel))
+            .build()
+
+        biometricPrompt.authenticate(promptInfo, cryptoObject)
+    }
+
+    override fun showBiometricError() {
+        showMessage(getString(R.string.biometric_error))
+    }
+
+    override fun showNewBiometricEnrolledError() {
+        showMessage(getString(R.string.biometric_enrolled_error_text))
     }
 
     override fun startMainActivity() {
@@ -62,7 +119,7 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
                 resources.getString(R.string.unknown_error)
             }
         }
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
+        showMessage(errorMessage)
     }
 
     override fun startRegisterActivity() {
@@ -72,11 +129,11 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
     }
 
     override fun showNoInternetError() {
-        Snackbar.make(
-            loginConstraintLayout,
-            resources.getString(R.string.no_internet_connection_warning),
-            Snackbar.LENGTH_LONG
-        ).show()
+        showMessage(resources.getString(R.string.no_internet_connection_warning))
+    }
+
+    private fun showMessage(message: String) {
+        Snackbar.make(loginConstraintLayout, message, Snackbar.LENGTH_LONG).show()
     }
 
     override fun showInvalidEmail() {

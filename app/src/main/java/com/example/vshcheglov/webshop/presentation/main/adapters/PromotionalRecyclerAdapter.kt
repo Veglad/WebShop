@@ -4,12 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.app.ActivityOptionsCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.support.v4.util.Pair
+import androidx.core.util.Pair
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.presentation.detail.DetailActivity
 import com.example.vshcheglov.webshop.R
@@ -17,7 +17,7 @@ import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.promotional_recycler_item.view.*
 
 class PromotionalRecyclerAdapter(private val context: Context, var productList: List<Product>) :
-    RecyclerView.Adapter<PromotionalRecyclerAdapter.ViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<PromotionalRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -83,5 +83,5 @@ class PromotionalRecyclerAdapter(private val context: Context, var productList: 
         }
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 }

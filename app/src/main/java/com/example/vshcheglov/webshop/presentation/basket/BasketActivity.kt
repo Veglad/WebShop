@@ -1,13 +1,13 @@
 package com.example.vshcheglov.webshop.presentation.basket
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import com.google.android.material.snackbar.Snackbar
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.MenuItem
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
@@ -39,13 +39,13 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
 
     override fun showBasket(productBaseketCardList: MutableList<ProductBasketCard>) {
         with(basketRecyclerView) {
-            layoutManager = LinearLayoutManager(this@BasketActivity)
+            layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@BasketActivity)
             basketAdapter = BasketRecyclerAdapter(productBaseketCardList).also {
                 it.onProductNumberIncreasedListener = { position -> presenter?.productNumberIncreased(position) }
                 it.onProductNumberDecreasedListener = { position -> presenter?.productNumberDecreased(position) }
             }
             adapter = basketAdapter
-            itemAnimator = DefaultItemAnimator()
+            itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator()
             val itemTouchSimpleCallback =
                 BasketRecyclerItemTouchHelper(
                     0,
@@ -63,7 +63,7 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
         }
     }
 
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int, position: Int) {
+    override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int, position: Int) {
         val holder = viewHolder as? BasketRecyclerAdapter.ViewHolder
         holder?.let { presenter?.removeProductFromBasket(position) }
     }

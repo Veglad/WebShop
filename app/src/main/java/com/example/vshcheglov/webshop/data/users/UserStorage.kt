@@ -41,7 +41,7 @@ class UserStorage {
             realm.executeTransaction { transactionRealm ->
                 val realmResults = transactionRealm.where(RealmOrder::class.java)
                     .findAll()
-                realmOrderList = mutableListOf<Order>().apply{
+                realmOrderList = mutableListOf<Order>().apply {
                     for (realmResult in realmResults) {
                         add(mapper.map(realmResult))
                     }

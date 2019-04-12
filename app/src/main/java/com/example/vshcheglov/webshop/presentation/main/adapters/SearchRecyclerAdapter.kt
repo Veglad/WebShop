@@ -4,12 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.ActivityOptionsCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.app.ActivityOptionsCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.support.v4.util.Pair
+import androidx.core.util.Pair
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.presentation.detail.DetailActivity
 import com.example.vshcheglov.webshop.R
@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.product_recycler_item.view.*
 
 class SearchRecyclerAdapter(private val context: Context,
                             var productList: MutableList<Product> = mutableListOf()) :
-    RecyclerView.Adapter<SearchRecyclerAdapter.ViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<SearchRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -84,5 +84,5 @@ class SearchRecyclerAdapter(private val context: Context,
         }
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view)
 }

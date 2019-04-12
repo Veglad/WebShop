@@ -54,4 +54,8 @@ class MappersModule {
     @Singleton
     @Provides
     fun provideRealmResponseOrderProductMapper() = RealmResponseOrderProductMapper()
+
+    @Singleton
+    @Provides
+    fun provideRealmUserCredentialsMapper() = RealmUserCredentialsMapper()
 }

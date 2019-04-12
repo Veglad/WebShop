@@ -83,4 +83,10 @@
     <string name="from_gallery">From gallery</string>
     <string name="set_picture_with">Set picture with…</string>
     <string name="taking_photo_error">Taking photo error</string>
+    <string name="show_password">Show password</string>
+    <string name="biometric_login_title">Login via Touch ID</string>
+    <string name="biometric_login_description">Use a fingerprint to verify your identity</string>
+    <string name="cancel">Cancel</string>
+    <string name="biometric_enrolled_error_text">New fingerprint enrolled. Enter password, please.</string>
+    <string name="biometric_error">Something went wrong. Enter, password, please.</string>
 </resources>

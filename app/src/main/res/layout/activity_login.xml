@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,7 +26,7 @@
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginBottom="80dp"/>
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/TextInputLabel"
@@ -37,48 +37,59 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:errorEnabled="true">
-        <android.support.v7.widget.AppCompatEditText
+        <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/loginEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:hint="@string/e_mail"
                 android:inputType="textEmailAddress"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
     <FrameLayout
             android:id="@+id/loginPasswordFrameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/emailTextInput"
-            app:layout_constraintBottom_toTopOf="@+id/orderButton"
+            app:layout_constraintBottom_toTopOf="@+id/showPasswordCheckBox"
             app:layout_constraintStart_toStartOf="@+id/emailTextInput"
             app:layout_constraintEnd_toEndOf="@+id/emailTextInput"
             android:layout_marginTop="8dp">
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/passwordTextInput"
                 android:theme="@style/TextInputLabel"
                 app:errorTextAppearance="@style/TextInputLabelErrorState"
                 app:errorEnabled="true">
-            <android.support.v7.widget.AppCompatEditText
+            <androidx.appcompat.widget.AppCompatEditText
                     android:id="@+id/loginPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
                     android:hint="@string/password"
                     android:inputType="textPassword"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
         <ImageButton
-                android:id="@+id/loginShowPasswordButton"
+                android:id="@+id/useFingerprintButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="4dp"
-                android:src="@drawable/ic_show_password_white_24dp"/>
+                android:src="@drawable/ic_fingerprint_white_24dp"/>
     </FrameLayout>
+    <CheckBox
+            android:id="@+id/showPasswordCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_password"
+            android:textColor="@color/white"
+            android:theme="@style/checkBoxStyle"
+            app:layout_constraintTop_toBottomOf="@id/loginPasswordFrameLayout"
+            app:layout_constraintBottom_toTopOf="@id/orderButton"
+            app:layout_constraintStart_toStartOf="@+id/emailTextInput"
+            android:layout_marginTop="8dp"/>
     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
             android:id="@+id/orderButton"
             android:layout_width="match_parent"
@@ -93,7 +104,7 @@
             style="@style/ButtonPrimaryStyle"
             android:background="@drawable/login_button_drawable"
             android:foreground="?selectableItemBackground"
-            app:layout_constraintTop_toBottomOf="@+id/loginPasswordFrameLayout"
+            app:layout_constraintTop_toBottomOf="@+id/showPasswordCheckBox"
             app:layout_constraintBottom_toTopOf="@+id/signUpTitle"
             app:layout_constraintStart_toStartOf="@+id/loginPasswordFrameLayout"
             app:layout_constraintEnd_toEndOf="@+id/loginPasswordFrameLayout"
@@ -125,4 +136,4 @@
             app:layout_constraintStart_toStartOf="@+id/orderButton"
             app:layout_constraintEnd_toEndOf="@+id/orderButton"
             android:layout_marginTop="24dp"/>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
