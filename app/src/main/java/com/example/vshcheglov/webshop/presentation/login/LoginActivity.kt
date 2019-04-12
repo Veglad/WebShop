@@ -80,7 +80,7 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
             object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
-                    presenter.authenticateUser(result.cryptoObject?.cipher)
+                    presenter.authenticateUser(result.cryptoObject?.cipher, isNetworkAvailable())
                 }
             })
 

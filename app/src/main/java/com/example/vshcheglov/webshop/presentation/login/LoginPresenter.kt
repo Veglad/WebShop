@@ -98,7 +98,7 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
         }
     }
 
-    fun authenticateUser(cipher: Cipher?) {
+    fun authenticateUser(cipher: Cipher?, isNetworkAvailable: Boolean) {
         val userCredentials = dataProvider.getUserCredentials()
         if (cipher == null) {
             view?.showBiometricError()
@@ -109,7 +109,11 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
         } else {
             val password = encryptor.decode(userCredentials.encryptedPassword, cipher)
             if (password != null) {
-                performLogin(userCredentials.email, password)
+                if (isNetworkAvailable) {
+                    performLogin(userCredentials.email, password)
+                } else {
+                    view?.showNoInternetError()
+                }
             } else {
                 Timber.e("Password decryption error")
                 view?.showBiometricError()
