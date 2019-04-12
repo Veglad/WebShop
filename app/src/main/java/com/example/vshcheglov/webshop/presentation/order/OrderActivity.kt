@@ -10,7 +10,9 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.extensions.isNetworkAvailable
 import com.example.vshcheglov.webshop.presentation.entites.OrderCard
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
-import com.kinda.alert.KAlertDialog
+import com.shashank.sony.fancydialoglib.Animation
+import com.shashank.sony.fancydialoglib.FancyAlertDialog
+import com.shashank.sony.fancydialoglib.Icon
 import kotlinx.android.synthetic.main.activity_order.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
@@ -119,26 +121,35 @@ class OrderActivity : NucleusAppCompatActivity<OrderPresenter>(), OrderPresenter
     }
 
     override fun notifyOrderCompleted() {
-        KAlertDialog(this, KAlertDialog.SUCCESS_TYPE)
-            .setTitleText(getString(R.string.order_completed_title))
-            .setContentText(getString(R.string.order_completed_message))
-            .setConfirmText(getString(R.string.ok))
-            .setConfirmClickListener { sDialog ->
-                sDialog.dismissWithAnimation()
-                startMainScreen()
-            }
-            .show()
+        FancyAlertDialog.Builder(this)
+            .setTitle(getString(R.string.order_completed_title))
+            .setBackgroundColor(ContextCompat.getColor(this, R.color.dialogPositiveColor))
+            .setMessage(getString(R.string.order_completed_message))
+            .setNegativeBtnText(getString(R.string.cancel))
+            .setPositiveBtnBackground(ContextCompat.getColor(this, R.color.dialogPositiveColor))
+            .setPositiveBtnText(getString(R.string.ok))
+            .setNegativeBtnBackground(ContextCompat.getColor(this, R.color.dialogNeutralColor))
+            .setAnimation(Animation.POP)
+            .isCancellable(true)
+            .setIcon(R.drawable.ic_done_white_24dp, Icon.Visible)
+            .OnPositiveClicked { startMainScreen() }
+            .OnNegativeClicked { startMainScreen() }
+            .build()
     }
 
     override fun showOrderSaveError() {
-        KAlertDialog(this, KAlertDialog.ERROR_TYPE)
-            .setTitleText(getString(R.string.order_error_title))
-            .setContentText(getString(R.string.order_error_message))
-            .setConfirmText(getString(R.string.ok))
-            .setConfirmClickListener { sDialog ->
-                sDialog.dismissWithAnimation()
-            }
-            .show()
+        FancyAlertDialog.Builder(this)
+            .setTitle(getString(R.string.order_error_title))
+            .setBackgroundColor(ContextCompat.getColor(this, R.color.dialogNegativeColor))
+            .setMessage(getString(R.string.order_error_message))
+            .setNegativeBtnText(getString(R.string.cancel))
+            .setPositiveBtnBackground(ContextCompat.getColor(this, R.color.dialogNegativeColor))
+            .setPositiveBtnText(getString(R.string.ok))
+            .setNegativeBtnBackground(ContextCompat.getColor(this, R.color.dialogNeutralColor))
+            .setAnimation(Animation.POP)
+            .isCancellable(true)
+            .setIcon(R.drawable.ic_close_white_24dp, Icon.Visible)
+            .build()
     }
 
     private fun startMainScreen() {

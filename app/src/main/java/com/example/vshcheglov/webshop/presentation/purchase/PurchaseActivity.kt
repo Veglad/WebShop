@@ -9,12 +9,16 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.google.firebase.Timestamp
-import com.kinda.alert.KAlertDialog
 import kotlinx.android.synthetic.main.activity_bought.*
 import kotlinx.android.synthetic.main.purchase_error_layout.*
 import kotlinx.android.synthetic.main.purchase_list_layout.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
+import androidx.core.content.ContextCompat
+import com.shashank.sony.fancydialoglib.Animation
+import com.shashank.sony.fancydialoglib.FancyAlertDialog
+import com.shashank.sony.fancydialoglib.Icon
+
 
 @RequiresPresenter(PurchasePresenter::class)
 class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), PurchasePresenter.View {
@@ -53,15 +57,20 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
     }
 
     override fun showProductsFetchingError(exception: Exception) {
-        KAlertDialog(this, KAlertDialog.ERROR_TYPE)
-            .setTitleText(getString(R.string.bought_error_title))
-            .setContentText(getString(R.string.bought_error_message))
-            .setConfirmText(getString(R.string.ok))
-            .setConfirmClickListener { sDialog ->
-                sDialog.dismissWithAnimation()
-                startMainActivity()
-            }
-            .show()
+        FancyAlertDialog.Builder(this)
+            .setTitle(getString(R.string.bought_error_title))
+            .setBackgroundColor(ContextCompat.getColor(this, R.color.dialogNegativeColor))
+            .setMessage(getString(R.string.order_error_message))
+            .setNegativeBtnText(getString(R.string.cancel))
+            .setPositiveBtnBackground(ContextCompat.getColor(this, R.color.dialogNegativeColor))
+            .setPositiveBtnText(getString(R.string.ok))
+            .setNegativeBtnBackground(ContextCompat.getColor(this, R.color.dialogNeutralColor))
+            .setAnimation(Animation.POP)
+            .isCancellable(true)
+            .setIcon(R.drawable.ic_close_white_24dp, Icon.Visible)
+            .OnPositiveClicked { startMainActivity() }
+            .OnNegativeClicked { startMainActivity() }
+            .build()
     }
 
     private fun startMainActivity() {
