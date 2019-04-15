@@ -3,8 +3,10 @@ package com.example.vshcheglov.webshop.presentation.registration
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
 import com.example.vshcheglov.webshop.data.users.UserRepository
+import com.example.vshcheglov.webshop.domain.User
 import com.example.vshcheglov.webshop.extensions.isEmailValid
 import com.example.vshcheglov.webshop.extensions.isPasswordValid
+import com.example.vshcheglov.webshop.presentation.helpres.Encryptor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,6 +18,8 @@ import javax.inject.Inject
 class RegisterPresenter : Presenter<RegisterPresenter.View>() {
     @Inject
     lateinit var dataProvider: DataProvider
+    @Inject
+    lateinit var encryptor: Encryptor
 
     private val job = Job()
     private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
@@ -60,7 +64,14 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
             view?.setShowProgress(true)
             try {
                 dataProvider.registerUser(email, password)
-                Timber.d("user registration success")
+
+                if (!dataProvider.containsUserCredentials()) {
+                    val encryptedPassword = encryptor.encode(password)
+                    encryptedPassword?.let {
+                        dataProvider.saveUserCredentials(User.UserCredentials(email, encryptedPassword))
+                    }
+                }
+
                 view?.let {
                     it.setShowProgress(false)
                     it.startMainActivity()
