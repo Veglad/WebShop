@@ -100,13 +100,6 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
         basketItemsTextView.text = itemsNumber
     }
 
-    override fun showUndo(productName: String) {
-        val undoTitle = String.format(getString(R.string.removed_item_snackbar_format), productName)
-        val snackBar = Snackbar.make(basketFrameLayout, undoTitle, Snackbar.LENGTH_SHORT)
-        snackBar.setAction(getString(R.string.undo_uppercase)) { presenter?.restoreProductCard() }
-        snackBar.show()
-    }
-
     override fun setBasketIsEmptyWarning(isEmpty: Boolean) {
         if (isEmpty) {
             basketListLayout.visibility = View.INVISIBLE
@@ -120,6 +113,10 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
 
     override fun removeProductCard(position: Int) {
         basketAdapter.removeItem(position)
+        val undoTitle = getString(R.string.removed_item_snackbar)
+        val snackBar = Snackbar.make(basketFrameLayout, undoTitle, Snackbar.LENGTH_SHORT)
+        snackBar.setAction(getString(R.string.undo_uppercase)) { presenter?.restoreProductCard() }
+        snackBar.show()
     }
 
     override fun restoreSameProductsCard(deletedIndex: Int) {

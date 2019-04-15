@@ -79,11 +79,9 @@ class BasketPresenter : Presenter<BasketPresenter.BasketView>() {
 
         Basket.removeSameProducts(position)
 
-        val removedItemName = productToCount.first.name
         view?.let {
             it.removeProductCard(position)
             it.setBasketIsEmptyWarning(Basket.productsNumber == 0)
-            it.showUndo(removedItemName)
         }
 
         updateBasketInfo()
@@ -104,8 +102,6 @@ class BasketPresenter : Presenter<BasketPresenter.BasketView>() {
         fun setBasketAmount(amount: Double)
 
         fun setBasketItemsNumber(itemsNumber: String)
-
-        fun showUndo(productName: String)
 
         fun showBasket(productBaseketCardList: MutableList<ProductBasketCard>)
 
