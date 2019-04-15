@@ -15,4 +15,8 @@
     <color name="gray_transparent">#AA333333</color>
     <color name="gray">#333</color>
     <color name="transparent">#00000000</color>
+
+    <color name="dialogPositiveColor">#138721</color>
+    <color name="dialogNegativeColor">#af2a25</color>
+    <color name="dialogNeutralColor">#777</color>
 </resources>
