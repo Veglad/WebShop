@@ -1,14 +1,11 @@
 package com.example.vshcheglov.webshop.presentation.basket
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.MenuItem
+import android.view.View
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerItemTouchHelper
@@ -63,7 +60,11 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
         }
     }
 
-    override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int, position: Int) {
+    override fun onSwiped(
+        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+        direction: Int,
+        position: Int
+    ) {
         val holder = viewHolder as? BasketRecyclerAdapter.ViewHolder
         holder?.let { presenter?.removeProductFromBasket(position) }
     }
@@ -96,8 +97,8 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
         snackBar.show()
     }
 
-    override fun setOrderButtonIsEnabled(isEnabled: Boolean) {
-        basketMakeOrderButton.isEnabled = isEnabled
+    override fun setBasketIsEmptyWarning(isEmpty: Boolean) {
+        basketMakeOrderButton.visibility = if (isEmpty) View.GONE else View.VISIBLE
     }
 
     override fun removeProductCard(position: Int) {

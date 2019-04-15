@@ -26,7 +26,12 @@ class BasketPresenter : Presenter<BasketPresenter.BasketView>() {
 
     fun initProductListWithBasketInfo() {
         updateBasketInfo()
-        view?.showBasket(productBasketCardMapper.map(Basket))
+
+        val isBasketEmpty = Basket.productsNumber == 0
+        view?.setBasketIsEmptyWarning(isBasketEmpty)
+        if (!isBasketEmpty) {
+            view?.showBasket(productBasketCardMapper.map(Basket))
+        }
     }
 
     fun productNumberIncreased(position: Int) {
@@ -77,7 +82,7 @@ class BasketPresenter : Presenter<BasketPresenter.BasketView>() {
         val removedItemName = productToCount.first.name
         view?.let {
             it.removeProductCard(position)
-            it.setOrderButtonIsEnabled(Basket.productsNumber > 0)
+            it.setBasketIsEmptyWarning(Basket.productsNumber == 0)
             it.showUndo(removedItemName)
         }
 
@@ -88,7 +93,7 @@ class BasketPresenter : Presenter<BasketPresenter.BasketView>() {
         Basket.addProductToCountEntry(productToCount, deletedIndex)
         view?.let {
             it.restoreSameProductsCard(deletedIndex)
-            it.setOrderButtonIsEnabled(Basket.productsNumber > 0)
+            it.setBasketIsEmptyWarning(Basket.productsNumber == 0)
         }
         updateBasketInfo()
     }
@@ -104,7 +109,7 @@ class BasketPresenter : Presenter<BasketPresenter.BasketView>() {
 
         fun showBasket(productBaseketCardList: MutableList<ProductBasketCard>)
 
-        fun setOrderButtonIsEnabled(isEnabled: Boolean)
+        fun setBasketIsEmptyWarning(isEmpty: Boolean)
 
         fun removeProductCard(position: Int)
 
