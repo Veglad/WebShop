@@ -2,7 +2,6 @@ package com.example.vshcheglov.webshop.presentation.purchase
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
 import android.view.MenuItem
 import android.view.View
 import com.example.vshcheglov.webshop.R
@@ -10,7 +9,7 @@ import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.activity_bought.*
-import kotlinx.android.synthetic.main.purchase_error_layout.*
+import kotlinx.android.synthetic.main.message_with_action_layout.*
 import kotlinx.android.synthetic.main.purchase_list_layout.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
@@ -39,7 +38,7 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
             it.setTitle(R.string.bought_products)
         }
 
-        purchaseErrorLayoutButton.setOnClickListener { startMainActivity() }
+        messageActionLayoutButton.setOnClickListener { startMainActivity() }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

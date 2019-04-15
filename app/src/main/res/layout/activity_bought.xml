@@ -33,7 +33,7 @@
                 layout="@layout/purchase_list_layout"/>
         <include
                 android:id="@+id/purchaseErrorLayout"
-                layout="@layout/purchase_error_layout"
+                layout="@layout/message_with_action_layout"
                 android:visibility="gone"/>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

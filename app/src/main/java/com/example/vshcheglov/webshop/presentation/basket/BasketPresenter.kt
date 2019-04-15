@@ -92,8 +92,8 @@ class BasketPresenter : Presenter<BasketPresenter.BasketView>() {
     fun restoreProductCard() {
         Basket.addProductToCountEntry(productToCount, deletedIndex)
         view?.let {
-            it.restoreSameProductsCard(deletedIndex)
             it.setBasketIsEmptyWarning(Basket.productsNumber == 0)
+            it.restoreSameProductsCard(deletedIndex)
         }
         updateBasketInfo()
     }
