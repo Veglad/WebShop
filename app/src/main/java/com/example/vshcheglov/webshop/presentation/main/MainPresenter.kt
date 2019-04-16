@@ -47,19 +47,16 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     private fun fetchProducts(refresh: Boolean, isNetworkAvailable: Boolean) {
         initCoroutineJob()
+        if (productList != null && promotionalProductList != null && !refresh) return
         uiCoroutineScope.launch {
-            Timber.d("Fetching products...")
-
             try {
-                if (productList == null || promotionalProductList == null || refresh) {
-                    isLoading = true
-                    view?.showLoading(true)
+                isLoading = true
+                view?.showLoading(true)
 
-                    val productsDeferred = uiCoroutineScope.async { dataProvider.getProducts() }
-                    val promotionalProductsDeferred = uiCoroutineScope.async { dataProvider.getPromotionalProducts() }
-                    productList = productsDeferred.await()
-                    promotionalProductList = promotionalProductsDeferred.await()
-                }
+                val productsDeferred = uiCoroutineScope.async { dataProvider.getProducts() }
+                val promotionalProductsDeferred = uiCoroutineScope.async { dataProvider.getPromotionalProducts() }
+                productList = productsDeferred.await()
+                promotionalProductList = promotionalProductsDeferred.await()
 
                 productList?.let { products ->
                     promotionalProductList?.let { promotionalProducts ->

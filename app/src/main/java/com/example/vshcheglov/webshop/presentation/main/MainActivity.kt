@@ -218,6 +218,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK ||
             //Always returns requestCode == -1 TODO: Investigate problem
             requestCode == PICK_IMAGE_REQUEST_CODE && resultCode != Activity.RESULT_CANCELED
