@@ -344,26 +344,29 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             menuInflater.inflate(R.menu.main_menu, menu)
             val searchItem = menu.findItem(R.id.actionSearch)
             searchView = searchItem.actionView as SearchView
-            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+            with(searchView) {
+                queryHint = getString(R.string.search_hint)
+                val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+                setSearchableInfo(searchManager.getSearchableInfo(componentName))
+                imeOptions = EditorInfo.IME_ACTION_DONE
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(searchText: String?): Boolean {
-                    searchView.clearFocus()
-                    return true
-                }
-
-                override fun onQueryTextChange(searchText: String?): Boolean {
-                    if (searchText != null && searchText.isEmpty() || searchText == null) {
-                        showLayout(MainLayouts.SEARCH_EMPTY)
-                        mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
-                    } else {
-                        presenter.searchProducts(searchText)
+                setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(searchText: String?): Boolean {
+                        clearFocus()
+                        return true
                     }
-                    return true
-                }
-            })
+
+                    override fun onQueryTextChange(searchText: String?): Boolean {
+                        if (searchText != null && searchText.isEmpty() || searchText == null) {
+                            showLayout(MainLayouts.SEARCH_EMPTY)
+                            mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
+                        } else {
+                            presenter.searchProducts(searchText)
+                        }
+                        return true
+                    }
+                })
+            }
 
             searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
