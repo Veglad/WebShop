@@ -8,7 +8,7 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.google.firebase.Timestamp
-import kotlinx.android.synthetic.main.activity_bought.*
+import kotlinx.android.synthetic.main.activity_purchase.*
 import kotlinx.android.synthetic.main.message_with_action_layout.*
 import kotlinx.android.synthetic.main.purchase_list_layout.*
 import nucleus5.factory.RequiresPresenter
