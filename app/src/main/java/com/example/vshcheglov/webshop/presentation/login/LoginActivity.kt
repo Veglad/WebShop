@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.Editable
 import com.google.android.material.snackbar.Snackbar
 import android.text.InputType
+import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import androidx.biometric.BiometricPrompt
@@ -45,12 +46,14 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
         useFingerprintButton.setOnClickListener {
             prepareBiometricPrompt()
         }
-        showPasswordCheckBox.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                loginPassword.inputType = InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-            } else {
-                loginPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        showPasswordButton.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> loginPassword.inputType = InputType.TYPE_CLASS_TEXT
+                MotionEvent.ACTION_UP -> loginPassword.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
+
+            true
         }
     }
 
