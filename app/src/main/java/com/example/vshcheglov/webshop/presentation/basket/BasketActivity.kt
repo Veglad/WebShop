@@ -103,9 +103,11 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
     override fun setBasketIsEmptyWarning(isEmpty: Boolean) {
         if (isEmpty) {
             basketListLayout.visibility = View.INVISIBLE
+            basketMakeOrderButton.visibility = View.INVISIBLE
             basketEmptyLayout.visibility = View.VISIBLE
         } else {
             basketListLayout.visibility = View.VISIBLE
+            basketMakeOrderButton.visibility = View.VISIBLE
             basketEmptyLayout.visibility = View.GONE
         }
         basketMakeOrderButton.isEnabled = !isEmpty
@@ -114,7 +116,7 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
     override fun removeProductCard(position: Int) {
         basketAdapter.removeItem(position)
         val undoTitle = getString(R.string.removed_item_snackbar)
-        val snackBar = Snackbar.make(basketFrameLayout, undoTitle, Snackbar.LENGTH_SHORT)
+        val snackBar = Snackbar.make(basketCoordinatorLayout, undoTitle, Snackbar.LENGTH_SHORT)
         snackBar.setAction(getString(R.string.undo_uppercase)) { presenter?.restoreProductCard() }
         snackBar.show()
     }
