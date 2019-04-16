@@ -5,15 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityOptionsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
-import android.widget.Filter
-import android.widget.Filterable
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.presentation.detail.DetailActivity
 import com.example.vshcheglov.webshop.R
@@ -40,8 +36,16 @@ class ProductsRecyclerAdapter(
         private const val NOT_PRODUCTS_IN_LIST_COUNT = 3
     }
 
+    private var onBuyClickListener: ((product: Product) -> Unit)? = null
+
     private val promotionalRecyclerAdapter by lazy {
-        PromotionalRecyclerAdapter(context, promotionalProductList)
+        PromotionalRecyclerAdapter(context, promotionalProductList).also {
+            it.setOnBuyClickListener { product ->  onBuyClickListener?.invoke(product) }
+        }
+    }
+
+    fun setOnBuyClickListener(onBuyClickListener: (product: Product) -> Unit) {
+        this.onBuyClickListener = onBuyClickListener
     }
 
     fun setProductList(productList: MutableList<Product>) {
@@ -54,7 +58,7 @@ class ProductsRecyclerAdapter(
     private val viewPool = androidx.recyclerview.widget.RecyclerView.RecycledViewPool()
     private val linearSnapHelper = androidx.recyclerview.widget.LinearSnapHelper()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder = when (viewType) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
         TITLE_TYPE -> {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.products_recycler_title, parent, false)
@@ -123,7 +127,7 @@ class ProductsRecyclerAdapter(
 
     private fun bindProductsList(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         val view = (holder as ProductsViewHolder).view
-        val product = getProductByPosition(position)
+        val product = getProductByPosition(holder.adapterPosition)
         with(product) {
             Glide.with(view.context)
                 .load(imageThumbnailUrl)
@@ -139,6 +143,7 @@ class ProductsRecyclerAdapter(
                 view.context.getString(R.string.price_format),
                 price
             )
+            view.buyButton.setOnClickListener { onBuyClickListener?.invoke(product) }
         }
 
         holder.view.setOnClickListener {

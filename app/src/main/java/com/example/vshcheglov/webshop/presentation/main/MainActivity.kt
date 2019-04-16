@@ -96,12 +96,17 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 snackbar?.dismiss()
             }
         }
+
         productsSwipeRefreshLayout.setColorSchemeColors(
             ContextCompat.getColor(this, R.color.primary),
             ContextCompat.getColor(this, R.color.color_accent),
             ContextCompat.getColor(this, R.color.dark_gray)
         )
 
+        productsRecyclerAdapter.setOnBuyClickListener { product ->
+            presenter.buyProduct(product)
+            startBasketActivity()
+        }
         with(productsRecyclerView) {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
@@ -122,7 +127,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         mainNavigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_main_log_out -> presenter.logOut()
-                R.id.nav_main_basket -> startActivity(Intent(this, BasketActivity::class.java))
+                R.id.nav_main_basket -> startBasketActivity()
                 R.id.nav_main_bought -> startActivity(Intent(this, PurchaseActivity::class.java))
             }
 
@@ -330,11 +335,15 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 true
             }
             R.id.actionBasket -> {
-                startActivity(Intent(this, BasketActivity::class.java))
+                startBasketActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun startBasketActivity() {
+        startActivity(Intent(this, BasketActivity::class.java))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

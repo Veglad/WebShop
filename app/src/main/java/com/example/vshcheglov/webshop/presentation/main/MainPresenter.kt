@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
+import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
 import kotlinx.coroutines.*
@@ -175,6 +176,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         isNeedToSaveAvatar = true
     }
 
+    fun buyProduct(product: Product) {
+        Basket.addProduct(product)
+    }
+
     interface MainView {
         fun showLoading(isLoading: Boolean)
 
@@ -199,5 +204,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun setUserAvatarImage(bitmap: Bitmap)
 
         fun showAvatarLoadError(throwable: Throwable)
+
+        fun startBasketActivity()
     }
 }
