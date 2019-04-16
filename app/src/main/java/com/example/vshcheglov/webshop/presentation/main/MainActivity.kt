@@ -8,7 +8,6 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
@@ -42,9 +41,11 @@ import androidx.core.content.FileProvider
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.vshcheglov.webshop.BuildConfig
+import com.example.vshcheglov.webshop.presentation.helpres.ItemSnapHelper
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
