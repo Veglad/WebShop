@@ -30,7 +30,7 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_bought)
+        setContentView(R.layout.activity_purchase)
 
         setSupportActionBar(boughtToolbar)
         supportActionBar?.let {
