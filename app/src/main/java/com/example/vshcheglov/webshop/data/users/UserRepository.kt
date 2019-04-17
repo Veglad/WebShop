@@ -37,6 +37,7 @@ class UserRepository {
     }
 
     suspend fun registerUser(email: String, password: String) {
+        userStorage.clear()
         userNetwork.registerUser(email, password)
     }
 
@@ -87,6 +88,7 @@ class UserRepository {
     suspend fun getUserAvatarByteArray() = userNetwork.getUserAvatarByteArray()
 
     fun saveUserCredentials(userCredentials: UserCredentials) {
+        userStorage.clear()
         userCredentialsStorage.saveUserCredentials(realmUserCredentialsMapper.map(userCredentials))
     }
 
