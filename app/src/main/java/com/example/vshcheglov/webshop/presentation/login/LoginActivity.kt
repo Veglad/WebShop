@@ -69,11 +69,6 @@ class LoginActivity : NucleusAppCompatActivity<LoginPresenter>(), LoginPresenter
         useFingerprintButton.visibility = View.GONE
     }
 
-    override fun onResume() {
-        super.onResume()
-        prepareBiometricPrompt()
-    }
-
     override fun showUserEmail(email: String) {
         loginEmail.setText(email, TextView.BufferType.EDITABLE)
     }
