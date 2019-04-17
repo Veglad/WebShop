@@ -27,8 +27,8 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
     @Inject
     lateinit var basketToOrderMapper: BasketToOrderMapper
 
-    private val job = Job()
-    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+    private lateinit var job: Job
+    private lateinit var uiCoroutineScope: CoroutineScope
 
     init {
         App.appComponent.inject(this)
@@ -102,6 +102,16 @@ class OrderPresenter : Presenter<OrderPresenter.OrderView>() {
         } catch (ex: Exception) {
             view?.showOrderSaveError()
         }
+    }
+
+    private fun initCoroutineJob() {
+        job = Job()
+        uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+    }
+
+    override fun onTakeView(view: OrderView?) {
+        super.onTakeView(view)
+        initCoroutineJob()
     }
 
     override fun onDropView() {
