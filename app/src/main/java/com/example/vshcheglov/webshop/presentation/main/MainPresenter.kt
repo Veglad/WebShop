@@ -17,6 +17,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
     lateinit var dataProvider: DataProvider
 
+    init {
+        App.appComponent.inject(this)
+    }
+
     private var isLoading = false
     private var isNetworkAvailable = false
 
@@ -32,9 +36,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     private lateinit var searchFilter: SearchFilter
 
-    init {
-        App.appComponent.inject(this)
-    }
+
 
     fun loadProducts(isNetworkAvailable: Boolean) {
         this.isNetworkAvailable = isNetworkAvailable

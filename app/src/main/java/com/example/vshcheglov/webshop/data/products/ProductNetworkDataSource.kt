@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.data.products
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseProductMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.ResponseProductMapper
 import com.example.vshcheglov.webshop.data.products.network.WebShopApi
 import javax.inject.Inject
 

@@ -1,8 +1,8 @@
 package com.example.vshcheglov.webshop.data.users
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.RealmOrder
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderMapper
+import com.example.vshcheglov.webshop.data.entities.RealmOrder
+import com.example.vshcheglov.webshop.data.entities.mappers.RealmOrderMapper
 import com.example.vshcheglov.webshop.domain.Order
 import io.realm.Realm
 import io.realm.RealmList

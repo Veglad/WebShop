@@ -1,6 +1,6 @@
-package com.example.vshcheglov.webshop.data.enteties.mappers
+package com.example.vshcheglov.webshop.data.entities.mappers
 
-import com.example.vshcheglov.webshop.data.enteties.ProductResponse
+import com.example.vshcheglov.webshop.data.entities.ProductResponse
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.domain.common.Mapper
 

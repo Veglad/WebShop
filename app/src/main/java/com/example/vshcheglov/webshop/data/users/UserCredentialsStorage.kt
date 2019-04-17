@@ -1,6 +1,6 @@
 package com.example.vshcheglov.webshop.data.users
 
-import com.example.vshcheglov.webshop.data.enteties.RealmUserCredentials
+import com.example.vshcheglov.webshop.data.entities.RealmUserCredentials
 import io.realm.Realm
 
 class UserCredentialsStorage {

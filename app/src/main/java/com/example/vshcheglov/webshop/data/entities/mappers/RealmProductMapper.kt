@@ -1,6 +1,6 @@
-package com.example.vshcheglov.webshop.data.enteties.mappers
+package com.example.vshcheglov.webshop.data.entities.mappers
 
-import com.example.vshcheglov.webshop.data.enteties.RealmProduct
+import com.example.vshcheglov.webshop.data.entities.RealmProduct
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.domain.common.Mapper
 

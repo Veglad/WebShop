@@ -1,7 +1,7 @@
 package com.example.vshcheglov.webshop.presentation.di.modules
 
-import com.example.vshcheglov.webshop.data.enteties.mappers.*
-import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseUserMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.*
+import com.example.vshcheglov.webshop.data.entities.mappers.ResponseUserMapper
 import com.example.vshcheglov.webshop.presentation.entites.mappers.ProductBasketCardMapper
 import dagger.Module
 import dagger.Provides

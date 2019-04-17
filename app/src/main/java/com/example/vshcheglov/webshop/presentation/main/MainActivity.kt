@@ -108,12 +108,18 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             presenter.buyProduct(product)
             startBasketActivity()
         }
-        with(productsRecyclerView) {
+        searchRecyclerAdapter.setOnBuyClickListener { product ->
+            presenter.buyProduct(product)
+            startBasketActivity()
+        }
+        with(productsRecyclerView)
+        {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
         }
 
-        with(mainSearchRecyclerView) {
+        with(mainSearchRecyclerView)
+        {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
             adapter = searchRecyclerAdapter
         }

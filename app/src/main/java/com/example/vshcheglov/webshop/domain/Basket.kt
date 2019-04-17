@@ -2,7 +2,8 @@ package com.example.vshcheglov.webshop.domain
 
 object Basket {
 
-    var productToCountList = mutableListOf<Pair<Product, Int>>()
+    var productToCountList
+            = mutableListOf<Pair<Product, Int>>()
         private set
 
     var size = 0

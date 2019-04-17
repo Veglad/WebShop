@@ -1,4 +1,4 @@
-package com.example.vshcheglov.webshop.data.enteties
+package com.example.vshcheglov.webshop.data.entities
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

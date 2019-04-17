@@ -2,7 +2,7 @@ package com.example.vshcheglov.webshop.presentation.order
 
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
-import com.example.vshcheglov.webshop.data.enteties.mappers.BasketToOrderMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.BasketToOrderMapper
 import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.extensions.isCardNumberValid
 import com.example.vshcheglov.webshop.extensions.isCvvValid

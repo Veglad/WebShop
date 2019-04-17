@@ -1,9 +1,9 @@
 package com.example.vshcheglov.webshop.presentation.di.components
 
 import com.example.vshcheglov.webshop.data.DataProvider
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmOrderMapper
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmResponseOrderMapper
-import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.RealmOrderMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.RealmResponseOrderMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.ResponseOrderMapper
 import com.example.vshcheglov.webshop.data.products.ProductNetworkDataSource
 import com.example.vshcheglov.webshop.data.products.ProductRepository
 import com.example.vshcheglov.webshop.data.products.ProductStorage

@@ -20,6 +20,12 @@ class SearchRecyclerAdapter(private val context: Context,
                             var productList: MutableList<Product> = mutableListOf()) :
     androidx.recyclerview.widget.RecyclerView.Adapter<SearchRecyclerAdapter.ViewHolder>() {
 
+    private var onBuyClickListener: ((product: Product) -> Unit)? = null
+
+    fun setOnBuyClickListener(onBuyClickListener: (product: Product) -> Unit) {
+        this.onBuyClickListener = onBuyClickListener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.product_recycler_item, parent, false)
@@ -30,7 +36,7 @@ class SearchRecyclerAdapter(private val context: Context,
     override fun getItemCount() = productList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(productList[position]) {
+        with(productList[holder.adapterPosition]) {
             Glide.with(holder.view.context)
                 .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
@@ -48,6 +54,7 @@ class SearchRecyclerAdapter(private val context: Context,
                 holder.view.context.getString(com.example.vshcheglov.webshop.R.string.price_format),
                 price
             )
+            holder.view.buyButton.setOnClickListener { onBuyClickListener?.invoke(this) }
         }
 
         holder.view.setOnClickListener {
