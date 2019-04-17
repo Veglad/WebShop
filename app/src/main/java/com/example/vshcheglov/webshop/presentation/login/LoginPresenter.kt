@@ -77,11 +77,21 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
     override fun onDropView() {
         super.onDropView()
         job.cancel()
+        view?.setShowProgress(false)
     }
 
     override fun onTakeView(view: View?) {
         super.onTakeView(view)
         initCoroutineJob()
+
+        if (dataProvider.containsUserCredentials()) {
+            val credentials = dataProvider.getUserCredentials()
+            credentials?.let {
+                view?.showUserEmail(credentials.email)
+            }
+        } else {
+            view?.hideBiometricPromptFeature()
+        }
     }
 
     private fun initCoroutineJob() {
@@ -91,11 +101,6 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
 
     fun useBiometricPrompt() {
         if (dataProvider.containsUserCredentials()) {
-            val credentials = dataProvider.getUserCredentials()
-            credentials?.let {
-                view?.showUserEmail(credentials.email)
-            }
-
             val cryptoObject = encryptor.cryptoObject
             if (cryptoObject != null) {
                 view?.showBiometricPrompt(cryptoObject)
