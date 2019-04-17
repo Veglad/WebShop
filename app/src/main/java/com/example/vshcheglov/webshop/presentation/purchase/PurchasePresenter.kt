@@ -13,8 +13,8 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
     @Inject
     lateinit var dataProvider: DataProvider
 
-    private val job = Job()
-    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+    private lateinit var job: Job
+    private lateinit var uiCoroutineScope: CoroutineScope
 
     init {
         App.appComponent.inject(this)
@@ -22,6 +22,7 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
 
     override fun onTakeView(view: View?) {
         super.onTakeView(view)
+        initCoroutineJob()
         uiCoroutineScope.launch {
             try {
                 view?.setShowLoading(true)
@@ -42,6 +43,11 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
                 view?.setShowLoading(false)
             }
         }
+    }
+
+    private fun initCoroutineJob() {
+        job = Job()
+        uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
     }
 
     override fun onDropView() {
