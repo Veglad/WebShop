@@ -21,8 +21,8 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
     @Inject
     lateinit var encryptor: Encryptor
 
-    private val job = Job()
-    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+    private lateinit var job: Job
+    private lateinit var uiCoroutineScope: CoroutineScope
 
     init {
         App.appComponent.inject(this)
@@ -63,6 +63,7 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
         uiCoroutineScope.launch {
             view?.setShowProgress(true)
             try {
+                //dataProvider.
                 dataProvider.registerUser(email, password)
 
                 if (!dataProvider.containsUserCredentials()) {
@@ -85,9 +86,20 @@ class RegisterPresenter : Presenter<RegisterPresenter.View>() {
         }
     }
 
+    private fun initCoroutineJob() {
+        job = Job()
+        uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+    }
+
     override fun onDropView() {
         super.onDropView()
+        view?.setShowProgress(false)
         job.cancel()
+    }
+
+    override fun onTakeView(view: View?) {
+        super.onTakeView(view)
+        initCoroutineJob()
     }
 
     interface View {
