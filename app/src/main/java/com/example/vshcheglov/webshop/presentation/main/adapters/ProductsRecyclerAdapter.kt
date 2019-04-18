@@ -5,19 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityOptionsCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
-import android.widget.Filter
-import android.widget.Filterable
 import com.bumptech.glide.Glide
 import com.example.vshcheglov.webshop.presentation.detail.DetailActivity
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.domain.Product
+import com.example.vshcheglov.webshop.presentation.helpres.ItemSnapHelper
 import kotlinx.android.synthetic.main.product_recycler_item.view.*
 import kotlinx.android.synthetic.main.products_recycler_title.view.*
 import kotlinx.android.synthetic.main.promotional_recycler_view.view.*
@@ -26,7 +23,7 @@ class ProductsRecyclerAdapter(
     private val context: Context,
     private var productList: MutableList<Product> = mutableListOf(),
     private var promotionalProductList: List<Product> = mutableListOf()
-) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+) : ProductListAdapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     companion object {
         private const val PROMOTIONAL_POSITION = 1
@@ -41,7 +38,9 @@ class ProductsRecyclerAdapter(
     }
 
     private val promotionalRecyclerAdapter by lazy {
-        PromotionalRecyclerAdapter(context, promotionalProductList)
+        PromotionalRecyclerAdapter(context, promotionalProductList).also {
+            it.onBuyClickListener = { product ->  onBuyClickListener?.invoke(product) }
+        }
     }
 
     fun setProductList(productList: MutableList<Product>) {
@@ -52,9 +51,8 @@ class ProductsRecyclerAdapter(
     }
 
     private val viewPool = androidx.recyclerview.widget.RecyclerView.RecycledViewPool()
-    private val linearSnapHelper = androidx.recyclerview.widget.LinearSnapHelper()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder = when (viewType) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
         TITLE_TYPE -> {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.products_recycler_title, parent, false)
@@ -117,13 +115,13 @@ class ProductsRecyclerAdapter(
             layoutManager = horizontalManager
             adapter = promotionalRecyclerAdapter
             onFlingListener = null
-            linearSnapHelper.attachToRecyclerView(this)
+            ItemSnapHelper().attachToRecyclerView(this)
         }
     }
 
     private fun bindProductsList(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         val view = (holder as ProductsViewHolder).view
-        val product = getProductByPosition(position)
+        val product = getProductByPosition(holder.adapterPosition)
         with(product) {
             Glide.with(view.context)
                 .load(imageThumbnailUrl)
@@ -139,6 +137,7 @@ class ProductsRecyclerAdapter(
                 view.context.getString(R.string.price_format),
                 price
             )
+            view.buyButton.setOnClickListener { onBuyClickListener?.invoke(product) }
         }
 
         holder.view.setOnClickListener {

@@ -21,8 +21,8 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
     @Inject
     lateinit var encryptor: Encryptor
 
-    private val job = Job()
-    private val uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+    private lateinit var job: Job
+    private lateinit var uiCoroutineScope: CoroutineScope
 
     init {
         App.appComponent.inject(this)
@@ -77,15 +77,33 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
     override fun onDropView() {
         super.onDropView()
         job.cancel()
+        view?.setShowProgress(false)
     }
 
-    fun useBiometricPrompt() {
+    override fun onTakeView(view: View?) {
+        super.onTakeView(view)
+        initCoroutineJob()
+        showEmailFromCredentials()
+    }
+
+    private fun showEmailFromCredentials() {
         if (dataProvider.containsUserCredentials()) {
             val credentials = dataProvider.getUserCredentials()
             credentials?.let {
                 view?.showUserEmail(credentials.email)
             }
+        } else {
+            view?.hideBiometricPromptFeature()
+        }
+    }
 
+    private fun initCoroutineJob() {
+        job = Job()
+        uiCoroutineScope = CoroutineScope(Dispatchers.Main + job)
+    }
+
+    fun useBiometricPrompt() {
+        if (dataProvider.containsUserCredentials()) {
             val cryptoObject = encryptor.cryptoObject
             if (cryptoObject != null) {
                 view?.showBiometricPrompt(cryptoObject)

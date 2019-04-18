@@ -1,6 +1,6 @@
-package com.example.vshcheglov.webshop.data.enteties.mappers
+package com.example.vshcheglov.webshop.data.entities.mappers
 
-import com.example.vshcheglov.webshop.data.enteties.RealmUserCredentials
+import com.example.vshcheglov.webshop.data.entities.RealmUserCredentials
 import com.example.vshcheglov.webshop.domain.User.UserCredentials
 import com.example.vshcheglov.webshop.domain.common.Mapper
 

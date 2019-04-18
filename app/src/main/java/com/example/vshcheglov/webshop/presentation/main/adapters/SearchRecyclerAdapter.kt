@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.product_recycler_item.view.*
 
 class SearchRecyclerAdapter(private val context: Context,
                             var productList: MutableList<Product> = mutableListOf()) :
-    androidx.recyclerview.widget.RecyclerView.Adapter<SearchRecyclerAdapter.ViewHolder>() {
+    ProductListAdapter<SearchRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -30,7 +30,7 @@ class SearchRecyclerAdapter(private val context: Context,
     override fun getItemCount() = productList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(productList[position]) {
+        with(productList[holder.adapterPosition]) {
             Glide.with(holder.view.context)
                 .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
@@ -48,6 +48,7 @@ class SearchRecyclerAdapter(private val context: Context,
                 holder.view.context.getString(com.example.vshcheglov.webshop.R.string.price_format),
                 price
             )
+            holder.view.buyButton.setOnClickListener { onBuyClickListener?.invoke(this) }
         }
 
         holder.view.setOnClickListener {

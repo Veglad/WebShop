@@ -2,8 +2,8 @@ package com.example.vshcheglov.webshop.data.users
 
 import android.graphics.Bitmap
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.OrderResponse
-import com.example.vshcheglov.webshop.data.enteties.UserResponse
+import com.example.vshcheglov.webshop.data.entities.OrderResponse
+import com.example.vshcheglov.webshop.data.entities.UserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.*
@@ -38,7 +38,8 @@ class UserNetworkDataSource {
         App.appComponent.inject(this)
     }
 
-    suspend fun registerUser(email: String, password: String) = suspendCancellableCoroutine<Unit> { continuation ->
+    suspend fun registerUser(email: String, password: String) =
+        suspendCancellableCoroutine<Unit> { continuation ->
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {

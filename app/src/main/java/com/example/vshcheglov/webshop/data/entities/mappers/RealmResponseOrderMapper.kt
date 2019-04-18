@@ -1,10 +1,10 @@
-package com.example.vshcheglov.webshop.data.enteties.mappers
+package com.example.vshcheglov.webshop.data.entities.mappers
 
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.OrderResponse
-import com.example.vshcheglov.webshop.data.enteties.OrderResponseProduct
-import com.example.vshcheglov.webshop.data.enteties.RealmOrderProduct
-import com.example.vshcheglov.webshop.data.enteties.RealmOrder
+import com.example.vshcheglov.webshop.data.entities.OrderResponse
+import com.example.vshcheglov.webshop.data.entities.OrderResponseProduct
+import com.example.vshcheglov.webshop.data.entities.RealmOrderProduct
+import com.example.vshcheglov.webshop.data.entities.RealmOrder
 import com.example.vshcheglov.webshop.domain.common.Mapper
 import com.google.firebase.Timestamp
 import io.realm.RealmList

@@ -11,7 +11,7 @@ import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
 import kotlinx.android.synthetic.main.basket_recycler_item.view.*
 
-class BasketRecyclerAdapter( private val cardProductList: MutableList<ProductBasketCard>) :
+class BasketRecyclerAdapter(private val cardProductList: MutableList<ProductBasketCard>) :
     androidx.recyclerview.widget.RecyclerView.Adapter<BasketRecyclerAdapter.ViewHolder>() {
 
     var onProductNumberIncreasedListener: ((Int) -> Unit)? = null
@@ -44,8 +44,12 @@ class BasketRecyclerAdapter( private val cardProductList: MutableList<ProductBas
             view.productBasketTitle.text = name
             view.productBasketDescription.text = description
 
-            view.addImageButton.setOnClickListener { onProductNumberIncreasedListener?.invoke(position) }
-            view.removeImageButton.setOnClickListener { onProductNumberDecreasedListener?.invoke(position) }
+            view.addImageButton.setOnClickListener {
+                onProductNumberIncreasedListener?.invoke(holder.adapterPosition)
+            }
+            view.removeImageButton.setOnClickListener {
+                onProductNumberDecreasedListener?.invoke(holder.adapterPosition)
+            }
 
             initSaleTitle(view, this)
             initProductPrice(view, this)

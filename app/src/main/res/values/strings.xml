@@ -22,7 +22,7 @@
     <string name="saving">Saving</string>
     <string name="total_price">Total price</string>
     <string name="delete_uppercase">DELETE</string>
-    <string name="removed_item_snackbar_format">%s removed from basket.</string>
+    <string name="removed_item_snackbar">Grocery has been removed from the basket.</string>
     <string name="undo_uppercase">UNDO</string>
     <string name="order">order</string>
     <string name="cvv">CVV</string>
@@ -57,10 +57,13 @@
     <string name="password_not_match">Passwords do not match</string>
     <string name="log_out">Log out</string>
     <string name="basket">Basket</string>
+    <string name="basket_empty_title">Basket is empty</string>
+    <string name="basket_empty_text">Add groceries to basket and your will see them here.</string>
+    <string name="basket_empty_button_text">Back to shopping</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="search">Search</string>
-    <string name="search_hint">Search</string>
+    <string name="search_hint">Search…</string>
     <string name="search_list_empty_query">Type something to find products</string>
     <string name="no_search_result">No results</string>
     <string name="no_order_error_title">No Orders :(</string>

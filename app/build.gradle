@@ -31,6 +31,7 @@ android {
         }
         debug {
             minifyEnabled true
+            debuggable true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -59,7 +60,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1'
     implementation 'br.com.simplepass:loading-button-android:1.9.0'
-    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.github.Shashank02051997:FancyAlertDialog-Android:0.1'
     implementation 'com.github.Mostafa-MA-Saleh:EditCredit:1.7.1'
     implementation 'com.badoo.mobile:android-weak-handler:1.1'

@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import com.example.vshcheglov.webshop.App
 import com.example.vshcheglov.webshop.data.DataProvider
+import com.example.vshcheglov.webshop.domain.Basket
 import com.example.vshcheglov.webshop.domain.Product
 import com.example.vshcheglov.webshop.presentation.main.helpers.SearchFilter
 import kotlinx.coroutines.*
@@ -15,6 +16,10 @@ import javax.inject.Inject
 class MainPresenter : Presenter<MainPresenter.MainView>() {
     @Inject
     lateinit var dataProvider: DataProvider
+
+    init {
+        App.appComponent.inject(this)
+    }
 
     private var isLoading = false
     private var isNetworkAvailable = false
@@ -31,9 +36,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     private lateinit var searchFilter: SearchFilter
 
-    init {
-        App.appComponent.inject(this)
-    }
+
 
     fun loadProducts(isNetworkAvailable: Boolean) {
         this.isNetworkAvailable = isNetworkAvailable
@@ -47,19 +50,16 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
 
     private fun fetchProducts(refresh: Boolean, isNetworkAvailable: Boolean) {
         initCoroutineJob()
+        if (productList != null && promotionalProductList != null && !refresh) return
         uiCoroutineScope.launch {
-            Timber.d("Fetching products...")
-
             try {
-                if (productList == null || promotionalProductList == null || refresh) {
-                    isLoading = true
-                    view?.showLoading(true)
+                isLoading = true
+                view?.showLoading(true)
 
-                    val productsDeferred = uiCoroutineScope.async { dataProvider.getProducts() }
-                    val promotionalProductsDeferred = uiCoroutineScope.async { dataProvider.getPromotionalProducts() }
-                    productList = productsDeferred.await()
-                    promotionalProductList = promotionalProductsDeferred.await()
-                }
+                val productsDeferred = uiCoroutineScope.async { dataProvider.getProducts() }
+                val promotionalProductsDeferred = uiCoroutineScope.async { dataProvider.getPromotionalProducts() }
+                productList = productsDeferred.await()
+                promotionalProductList = promotionalProductsDeferred.await()
 
                 productList?.let { products ->
                     promotionalProductList?.let { promotionalProducts ->
@@ -178,6 +178,10 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         isNeedToSaveAvatar = true
     }
 
+    fun buyProduct(product: Product) {
+        Basket.addProduct(product)
+    }
+
     interface MainView {
         fun showLoading(isLoading: Boolean)
 
@@ -202,5 +206,7 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         fun setUserAvatarImage(bitmap: Bitmap)
 
         fun showAvatarLoadError(throwable: Throwable)
+
+        fun startBasketActivity()
     }
 }

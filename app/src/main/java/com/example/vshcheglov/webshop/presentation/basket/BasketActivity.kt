@@ -1,20 +1,20 @@
 package com.example.vshcheglov.webshop.presentation.basket
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.MenuItem
+import android.view.View
 import com.example.vshcheglov.webshop.R
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerAdapter
 import com.example.vshcheglov.webshop.presentation.basket.adapter.BasketRecyclerItemTouchHelper
 import com.example.vshcheglov.webshop.presentation.entites.ProductBasketCard
+import com.example.vshcheglov.webshop.presentation.main.MainActivity
 import com.example.vshcheglov.webshop.presentation.order.OrderActivity
 import kotlinx.android.synthetic.main.activity_basket.*
+import kotlinx.android.synthetic.main.activity_basket_list_layout.*
+import kotlinx.android.synthetic.main.message_with_action_layout.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
 
@@ -29,12 +29,19 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
         setContentView(R.layout.activity_basket)
 
         initActionBar()
+        initEmptyBasketLayout()
         basketMakeOrderButton.setOnClickListener { presenter?.makeOrder() }
     }
 
-    override fun onResume() {
-        super.onResume()
-        presenter?.initProductListWithBasketInfo()
+    private fun initEmptyBasketLayout() {
+        messageActionLayoutTitle.text = getString(R.string.basket_empty_title)
+        messageActionLayoutText.text = getString(R.string.basket_empty_text)
+        messageActionLayoutButton.text = getString(R.string.basket_empty_button_text)
+        messageActionLayoutButton.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java).also {
+                it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            })
+        }
     }
 
     override fun showBasket(productBaseketCardList: MutableList<ProductBasketCard>) {
@@ -63,7 +70,11 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
         }
     }
 
-    override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int, position: Int) {
+    override fun onSwiped(
+        viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+        direction: Int,
+        position: Int
+    ) {
         val holder = viewHolder as? BasketRecyclerAdapter.ViewHolder
         holder?.let { presenter?.removeProductFromBasket(position) }
     }
@@ -89,19 +100,25 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
         basketItemsTextView.text = itemsNumber
     }
 
-    override fun showUndo(productName: String) {
-        val undoTitle = String.format(getString(R.string.removed_item_snackbar_format), productName)
-        val snackBar = Snackbar.make(basketMainConstraint, undoTitle, Snackbar.LENGTH_SHORT)
-        snackBar.setAction(getString(R.string.undo_uppercase)) { presenter?.restoreProductCard() }
-        snackBar.show()
-    }
-
-    override fun setOrderButtonIsEnabled(isEnabled: Boolean) {
-        basketMakeOrderButton.isEnabled = isEnabled
+    override fun setBasketIsEmptyWarning(isEmpty: Boolean) {
+        if (isEmpty) {
+            basketListLayout.visibility = View.INVISIBLE
+            basketMakeOrderButton.visibility = View.INVISIBLE
+            basketEmptyLayout.visibility = View.VISIBLE
+        } else {
+            basketListLayout.visibility = View.VISIBLE
+            basketMakeOrderButton.visibility = View.VISIBLE
+            basketEmptyLayout.visibility = View.GONE
+        }
+        basketMakeOrderButton.isEnabled = !isEmpty
     }
 
     override fun removeProductCard(position: Int) {
         basketAdapter.removeItem(position)
+        val undoTitle = getString(R.string.removed_item_snackbar)
+        val snackBar = Snackbar.make(basketCoordinatorLayout, undoTitle, Snackbar.LENGTH_SHORT)
+        snackBar.setAction(getString(R.string.undo_uppercase)) { presenter?.restoreProductCard() }
+        snackBar.show()
     }
 
     override fun restoreSameProductsCard(deletedIndex: Int) {
@@ -121,5 +138,10 @@ class BasketActivity : NucleusAppCompatActivity<BasketPresenter>(), BasketPresen
     override fun setTotalProductPriceTitle(position: Int, totalPrice: Double, percentageDiscount: Double) {
         val view = basketRecyclerView.layoutManager?.findViewByPosition(position)
         view?.let { basketAdapter.updateCardTotalPriceTitle(position, totalPrice, view, percentageDiscount) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter?.initProductListWithBasketInfo()
     }
 }

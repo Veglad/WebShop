@@ -8,7 +8,6 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
@@ -30,7 +29,6 @@ import kotlinx.android.synthetic.main.main_search_empty.*
 import kotlinx.android.synthetic.main.main_search_list.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
-import timber.log.Timber
 import android.app.Activity
 import android.content.ComponentName
 import android.graphics.Bitmap
@@ -90,24 +88,28 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         productsSwipeRefreshLayout.setOnRefreshListener {
             val isNetworkAvailable = isNetworkAvailable()
 
-            Timber.d("Refresh data triggered")
             presenter?.loadProducts(isNetworkAvailable)
             if (isNetworkAvailable) {
                 snackbar?.dismiss()
             }
         }
+
         productsSwipeRefreshLayout.setColorSchemeColors(
             ContextCompat.getColor(this, R.color.primary),
             ContextCompat.getColor(this, R.color.color_accent),
             ContextCompat.getColor(this, R.color.dark_gray)
         )
 
-        with(productsRecyclerView) {
+        productsRecyclerAdapter.onBuyClickListener = { product -> onBuyClicked(product) }
+        searchRecyclerAdapter.onBuyClickListener = { product -> onBuyClicked(product) }
+        with(productsRecyclerView)
+        {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
             adapter = productsRecyclerAdapter
         }
 
-        with(mainSearchRecyclerView) {
+        with(mainSearchRecyclerView)
+        {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
             adapter = searchRecyclerAdapter
         }
@@ -118,11 +120,16 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         initNavigationDrawer()
     }
 
+    private fun onBuyClicked(product: Product) {
+        presenter.buyProduct(product)
+        startBasketActivity()
+    }
+
     private fun initNavigationDrawer() {
         mainNavigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_main_log_out -> presenter.logOut()
-                R.id.nav_main_basket -> startActivity(Intent(this, BasketActivity::class.java))
+                R.id.nav_main_basket -> startBasketActivity()
                 R.id.nav_main_bought -> startActivity(Intent(this, PurchaseActivity::class.java))
             }
 
@@ -218,6 +225,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK ||
             //Always returns requestCode == -1 TODO: Investigate problem
             requestCode == PICK_IMAGE_REQUEST_CODE && resultCode != Activity.RESULT_CANCELED
@@ -329,11 +337,15 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
                 true
             }
             R.id.actionBasket -> {
-                startActivity(Intent(this, BasketActivity::class.java))
+                startBasketActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun startBasketActivity() {
+        startActivity(Intent(this, BasketActivity::class.java))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -343,26 +355,29 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             menuInflater.inflate(R.menu.main_menu, menu)
             val searchItem = menu.findItem(R.id.actionSearch)
             searchView = searchItem.actionView as SearchView
-            val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+            with(searchView) {
+                queryHint = getString(R.string.search_hint)
+                val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+                setSearchableInfo(searchManager.getSearchableInfo(componentName))
+                imeOptions = EditorInfo.IME_ACTION_DONE
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(searchText: String?): Boolean {
-                    searchView.clearFocus()
-                    return true
-                }
-
-                override fun onQueryTextChange(searchText: String?): Boolean {
-                    if (searchText != null && searchText.isEmpty() || searchText == null) {
-                        showLayout(MainLayouts.SEARCH_EMPTY)
-                        mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
-                    } else {
-                        presenter.searchProducts(searchText)
+                setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(searchText: String?): Boolean {
+                        clearFocus()
+                        return true
                     }
-                    return true
-                }
-            })
+
+                    override fun onQueryTextChange(searchText: String?): Boolean {
+                        if (searchText != null && searchText.isEmpty() || searchText == null) {
+                            showLayout(MainLayouts.SEARCH_EMPTY)
+                            mainSearchEmptyTextView.text = resources.getString(R.string.search_list_empty_query)
+                        } else {
+                            presenter.searchProducts(searchText)
+                        }
+                        return true
+                    }
+                })
+            }
 
             searchItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(item: MenuItem?): Boolean {

@@ -87,7 +87,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/lastNameTextInput"
                         app:layout_constraintBottom_toTopOf="@id/cardMonthTextInput"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:nextFocusForward="@id/cardMonthTextInput"
                         android:id="@+id/cardNumberTextInput">
                     <mostafa.ma.saleh.gmail.com.editcredit.EditCredit
                             android:id="@+id/orderCardNumber"
@@ -95,6 +94,8 @@
                             android:layout_height="wrap_content"
                             android:hint="@string/card_number"
                             android:maxLength="20"
+                            android:nextFocusDown="@id/orderCardMonth"
+                            android:nextFocusForward="@id/orderCardMonth"
                             app:drawableGravity="end"
                             android:textColor="@color/dark_gray"
                             app:separator="spaces"/>
@@ -110,7 +111,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/cardNumberTextInput"
                         app:layout_constraintBottom_toTopOf="@id/orderButton"
                         android:id="@+id/cardMonthTextInput"
-                        android:nextFocusForward="@id/cardYearTextInput"
                         app:layout_constraintEnd_toStartOf="@+id/monthYearSeparator">
                     <androidx.appcompat.widget.AppCompatEditText
                             android:id="@+id/orderCardMonth"
@@ -120,6 +120,8 @@
                             android:inputType="numberSigned"
                             android:imeOptions="actionNext"
                             android:textColor="@color/dark_gray"
+                            android:nextFocusForward="@id/orderCardYear"
+                            android:nextFocusRight="@id/orderCardYear"
                             android:maxLength="2"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <TextView
@@ -153,6 +155,8 @@
                             android:inputType="numberSigned"
                             android:imeOptions="actionNext"
                             android:textColor="@color/dark_gray"
+                            android:nextFocusForward="@id/orderCardCvv"
+                            android:nextFocusRight="@id/orderCardCvv"
                             android:maxLength="2"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout

@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityOptionsCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,7 @@ import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.promotional_recycler_item.view.*
 
 class PromotionalRecyclerAdapter(private val context: Context, var productList: List<Product>) :
-    androidx.recyclerview.widget.RecyclerView.Adapter<PromotionalRecyclerAdapter.ViewHolder>() {
+    ProductListAdapter<PromotionalRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,7 +28,7 @@ class PromotionalRecyclerAdapter(private val context: Context, var productList: 
     override fun getItemCount() = productList.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(productList[position]) {
+        with(productList[holder.adapterPosition]) {
             Glide.with(holder.view.context)
                 .load(imageThumbnailUrl)
                 .error(R.drawable.no_image)
@@ -47,6 +46,10 @@ class PromotionalRecyclerAdapter(private val context: Context, var productList: 
                 holder.view.context.getString(com.example.vshcheglov.webshop.R.string.price_format),
                 price
             )
+            holder.view.buyButton.setOnClickListener {
+                val product = productList[holder.adapterPosition]
+                onBuyClickListener?.invoke(this)
+            }
         }
 
         holder.view.setOnClickListener {

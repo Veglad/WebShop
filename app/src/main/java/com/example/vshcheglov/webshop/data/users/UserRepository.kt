@@ -2,12 +2,12 @@ package com.example.vshcheglov.webshop.data.users
 
 import android.graphics.Bitmap
 import com.example.vshcheglov.webshop.App
-import com.example.vshcheglov.webshop.data.enteties.RealmOrder
-import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseOrderMapper
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmResponseOrderMapper
-import com.example.vshcheglov.webshop.data.enteties.mappers.RealmUserCredentialsMapper
+import com.example.vshcheglov.webshop.data.entities.RealmOrder
+import com.example.vshcheglov.webshop.data.entities.mappers.ResponseOrderMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.RealmResponseOrderMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.RealmUserCredentialsMapper
 import com.example.vshcheglov.webshop.domain.Order
-import com.example.vshcheglov.webshop.data.enteties.mappers.ResponseUserMapper
+import com.example.vshcheglov.webshop.data.entities.mappers.ResponseUserMapper
 import com.example.vshcheglov.webshop.domain.User.UserCredentials
 import javax.inject.Inject
 
@@ -37,6 +37,7 @@ class UserRepository {
     }
 
     suspend fun registerUser(email: String, password: String) {
+        userStorage.clear()
         userNetwork.registerUser(email, password)
     }
 
@@ -87,6 +88,7 @@ class UserRepository {
     suspend fun getUserAvatarByteArray() = userNetwork.getUserAvatarByteArray()
 
     fun saveUserCredentials(userCredentials: UserCredentials) {
+        userStorage.clear()
         userCredentialsStorage.saveUserCredentials(realmUserCredentialsMapper.map(userCredentials))
     }
 

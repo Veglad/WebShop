@@ -1,6 +1,6 @@
 package com.example.vshcheglov.webshop.data.products.network
 
-import com.example.vshcheglov.webshop.data.enteties.ProductResponse
+import com.example.vshcheglov.webshop.data.entities.ProductResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Path
