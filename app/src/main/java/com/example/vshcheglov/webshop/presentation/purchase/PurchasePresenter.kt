@@ -6,6 +6,7 @@ import com.example.vshcheglov.webshop.domain.OrderProduct
 import com.google.firebase.Timestamp
 import kotlinx.coroutines.*
 import nucleus5.presenter.Presenter
+import timber.log.Timber
 import javax.inject.Inject
 
 class PurchasePresenter : Presenter<PurchasePresenter.View>() {
@@ -28,16 +29,16 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
                 view?.setShowLoading(true)
                 val orderList = withContext(Dispatchers.IO) { dataProvider.getUserOrders() }
 
-                if (orderList.isNotEmpty()) {//TODO: Process empty list
+                if (orderList.isNotEmpty()) {
                     val productToTimeStampList = orderList.map { order ->
                         order.orderProducts.map { Pair(it, order.timestamp) }
                     }.flatten()
-
                     view?.showProducts(productToTimeStampList)
                 } else {
                     view?.showNoData()
                 }
             } catch (ex: Exception) {
+                Timber.d("Getting user products error: $ex")
                 view?.showProductsFetchingError(ex)
             } finally {
                 view?.setShowLoading(false)

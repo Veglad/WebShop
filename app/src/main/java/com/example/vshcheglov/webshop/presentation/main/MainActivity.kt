@@ -91,7 +91,6 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         productsSwipeRefreshLayout.setOnRefreshListener {
             val isNetworkAvailable = isNetworkAvailable()
 
-            Timber.d("Refresh data triggered")
             presenter?.loadProducts(isNetworkAvailable)
             if (isNetworkAvailable) {
                 snackbar?.dismiss()
