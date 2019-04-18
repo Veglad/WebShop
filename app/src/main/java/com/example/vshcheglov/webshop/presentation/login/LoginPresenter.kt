@@ -83,7 +83,10 @@ class LoginPresenter : Presenter<LoginPresenter.View>() {
     override fun onTakeView(view: View?) {
         super.onTakeView(view)
         initCoroutineJob()
+        initUiWithUserCredentials(view)
+    }
 
+    private fun initUiWithUserCredentials(view: View?) {
         if (dataProvider.containsUserCredentials()) {
             val credentials = dataProvider.getUserCredentials()
             credentials?.let {

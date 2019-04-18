@@ -103,14 +103,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             ContextCompat.getColor(this, R.color.dark_gray)
         )
 
-        productsRecyclerAdapter.setOnBuyClickListener { product ->
-            presenter.buyProduct(product)
-            startBasketActivity()
-        }
-        searchRecyclerAdapter.setOnBuyClickListener { product ->
-            presenter.buyProduct(product)
-            startBasketActivity()
-        }
+        productsRecyclerAdapter.onBuyClickListener = { product -> onBuyClickListener(product) }
+        searchRecyclerAdapter.onBuyClickListener = { product -> onBuyClickListener(product) }
         with(productsRecyclerView)
         {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
@@ -127,6 +121,11 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         initNavigationDrawer()
+    }
+
+    private fun onBuyClickListener(product: Product) {
+        presenter.buyProduct(product)
+        startBasketActivity()
     }
 
     private fun initNavigationDrawer() {

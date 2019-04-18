@@ -16,13 +16,7 @@ import com.example.vshcheglov.webshop.domain.Product
 import kotlinx.android.synthetic.main.promotional_recycler_item.view.*
 
 class PromotionalRecyclerAdapter(private val context: Context, var productList: List<Product>) :
-    androidx.recyclerview.widget.RecyclerView.Adapter<PromotionalRecyclerAdapter.ViewHolder>() {
-
-    private var onBuyClickListener: ((product: Product) -> Unit)? = null
-
-    fun setOnBuyClickListener(onBuyClickListener: (product: Product) -> Unit) {
-        this.onBuyClickListener = onBuyClickListener
-    }
+    ProductListAdapter<PromotionalRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)

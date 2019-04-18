@@ -24,6 +24,10 @@ class PurchasePresenter : Presenter<PurchasePresenter.View>() {
     override fun onTakeView(view: View?) {
         super.onTakeView(view)
         initCoroutineJob()
+        loadPurchasedProducts(view)
+    }
+
+    private fun loadPurchasedProducts(view: View?) {
         uiCoroutineScope.launch {
             try {
                 view?.setShowLoading(true)

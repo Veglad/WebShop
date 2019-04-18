@@ -18,13 +18,7 @@ import kotlinx.android.synthetic.main.product_recycler_item.view.*
 
 class SearchRecyclerAdapter(private val context: Context,
                             var productList: MutableList<Product> = mutableListOf()) :
-    androidx.recyclerview.widget.RecyclerView.Adapter<SearchRecyclerAdapter.ViewHolder>() {
-
-    private var onBuyClickListener: ((product: Product) -> Unit)? = null
-
-    fun setOnBuyClickListener(onBuyClickListener: (product: Product) -> Unit) {
-        this.onBuyClickListener = onBuyClickListener
-    }
+    ProductListAdapter<SearchRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)

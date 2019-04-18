@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Gravity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -24,7 +23,7 @@ class ProductsRecyclerAdapter(
     private val context: Context,
     private var productList: MutableList<Product> = mutableListOf(),
     private var promotionalProductList: List<Product> = mutableListOf()
-) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+) : ProductListAdapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     companion object {
         private const val PROMOTIONAL_POSITION = 1
@@ -38,16 +37,10 @@ class ProductsRecyclerAdapter(
         private const val NOT_PRODUCTS_IN_LIST_COUNT = 3
     }
 
-    private var onBuyClickListener: ((product: Product) -> Unit)? = null
-
     private val promotionalRecyclerAdapter by lazy {
         PromotionalRecyclerAdapter(context, promotionalProductList).also {
-            it.setOnBuyClickListener { product ->  onBuyClickListener?.invoke(product) }
+            it.onBuyClickListener = { product ->  onBuyClickListener?.invoke(product) }
         }
-    }
-
-    fun setOnBuyClickListener(onBuyClickListener: (product: Product) -> Unit) {
-        this.onBuyClickListener = onBuyClickListener
     }
 
     fun setProductList(productList: MutableList<Product>) {
