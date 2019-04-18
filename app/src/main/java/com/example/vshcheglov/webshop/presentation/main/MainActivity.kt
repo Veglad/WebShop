@@ -29,7 +29,6 @@ import kotlinx.android.synthetic.main.main_search_empty.*
 import kotlinx.android.synthetic.main.main_search_list.*
 import nucleus5.factory.RequiresPresenter
 import nucleus5.view.NucleusAppCompatActivity
-import timber.log.Timber
 import android.app.Activity
 import android.content.ComponentName
 import android.graphics.Bitmap
@@ -41,11 +40,9 @@ import androidx.core.content.FileProvider
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.vshcheglov.webshop.BuildConfig
-import com.example.vshcheglov.webshop.presentation.helpres.ItemSnapHelper
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
@@ -103,8 +100,8 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
             ContextCompat.getColor(this, R.color.dark_gray)
         )
 
-        productsRecyclerAdapter.onBuyClickListener = { product -> onBuyClickListener(product) }
-        searchRecyclerAdapter.onBuyClickListener = { product -> onBuyClickListener(product) }
+        productsRecyclerAdapter.onBuyClickListener = { product -> onBuyClicked(product) }
+        searchRecyclerAdapter.onBuyClickListener = { product -> onBuyClicked(product) }
         with(productsRecyclerView)
         {
             layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
@@ -123,7 +120,7 @@ class MainActivity : NucleusAppCompatActivity<MainPresenter>(), MainPresenter.Ma
         initNavigationDrawer()
     }
 
-    private fun onBuyClickListener(product: Product) {
+    private fun onBuyClicked(product: Product) {
         presenter.buyProduct(product)
         startBasketActivity()
     }
