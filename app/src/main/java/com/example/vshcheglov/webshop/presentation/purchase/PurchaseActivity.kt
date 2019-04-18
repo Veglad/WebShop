@@ -84,6 +84,6 @@ class PurchaseActivity : NucleusAppCompatActivity<PurchasePresenter>(), Purchase
     }
 
     override fun setShowLoading(isLoading: Boolean) {
-        purchaseProgressBar.visibility = if(isLoading) View.VISIBLE else View.GONE
+        purchaseProgressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }
